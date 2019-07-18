@@ -17,24 +17,26 @@
     <result column="updated" jdbcType="TIMESTAMP" property="updated" />
     <result column="default_sku_detail_ids" jdbcType="VARCHAR" property="defaultSkuDetailIds" />
     <result column="poster_image" jdbcType="VARCHAR" property="posterImage" />
+    <result column="is_ingredients" jdbcType="INTEGER" property="isIngredients" />
+
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, title, sku_type_ids, simple_desc,sell_point, price, num, limit_num, image, cid, `status`, created, updated,default_sku_detail_ids,poster_image
+    id, title, sku_type_ids, simple_desc,sell_point, price, num, limit_num, image, cid, `status`, created, updated,default_sku_detail_ids,poster_image,is_ingredients
   </sql>
   <insert id="addGoods" parameterType="com.ibay.tea.entity.TbItem">
     INSERT INTO tb_item (title, sell_point, price, num, limit_num, image, cid, `status`,
-                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image)
+                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image,is_ingredients)
     VALUES (#{title},#{sellPoint},#{price},#{num},#{limitNum},#{image},#{cid},#{status},
-      #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage}
+      #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage},#{isIngredients}
     )
   </insert>
 
   <insert id="saveUpdateGoods" parameterType="com.ibay.tea.entity.TbItem">
     INSERT INTO tb_item (id,title, sell_point, price, num, limit_num, image, cid, `status`,
-                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image)
+                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image,is_ingredients)
     VALUES (#{id},#{title},#{sellPoint},#{price},#{num},#{limitNum},#{image},#{cid},#{status},
-                     #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage}
+                     #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage},#{isIngredients}
     )
   </insert>
 

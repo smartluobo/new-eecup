@@ -2,7 +2,6 @@ package com.ibay.tea.common.utils;
 
 import com.ibay.tea.config.PrintSysProperties;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
@@ -126,39 +125,6 @@ public class PrintUtil {
 
     //方法1
     public String print(String sn,String content){
-
-        LOGGER.info("order print sn :{},content :{}",sn,content);
-        //标签说明：
-        //单标签:
-        //"<BR>"为换行,"<CUT>"为切刀指令(主动切纸,仅限切刀打印机使用才有效果)
-        //"<LOGO>"为打印LOGO指令(前提是预先在机器内置LOGO图片),"<PLUGIN>"为钱箱或者外置音响指令
-        //成对标签：
-        //"<CB></CB>"为居中放大一倍,"<B></B>"为放大一倍,"<C></C>"为居中,<L></L>字体变高一倍
-        //<W></W>字体变宽一倍,"<QR></QR>"为二维码,"<BOLD></BOLD>"为字体加粗,"<RIGHT></RIGHT>"为右对齐
-        //拼凑订单内容时可参考如下格式
-        //根据打印纸张的宽度，自行调整内容的格式，可参考下面的样例格式
-        if (StringUtils.isEmpty(content)){
-            content = "<CB>测试打印</CB><BR>";
-            content += "名称　　　　　 单价  数量 金额<BR>";
-            content += "--------------------------------<BR>";
-            content += "饭　　　　　　 1.0    1   1.0<BR>";
-            content += "炒饭　　　　　 10.0   10  10.0<BR>";
-            content += "蛋炒饭　　　　 10.0   10  100.0<BR>";
-            content += "鸡蛋炒饭　　　 100.0  1   100.0<BR>";
-            content += "番茄蛋炒饭　　 1000.0 1   100.0<BR>";
-            content += "西红柿蛋炒饭　 1000.0 1   100.0<BR>";
-            content += "西红柿鸡蛋炒饭 100.0  10  100.0<BR>";
-            content += "备注：加辣<BR>";
-            content += "--------------------------------<BR>";
-            content += "合计：xx.0元<BR>";
-            content += "送货地点：广州市南沙区xx路xx号<BR>";
-            content += "联系电话：13888888888888<BR>";
-            content += "订餐时间：2016-08-08 08:08:08<BR>";
-            content += "<QR>http://www.dzist.com</QR>";
-        }
-
-
-
         //通过POST请求，发送打印信息到服务器
         RequestConfig requestConfig = RequestConfig.custom()
                 .setSocketTimeout(30000)//读取超时
@@ -181,8 +147,8 @@ public class PrintUtil {
         nvps.add(new BasicNameValuePair("times","1"));//打印联数
 
         CloseableHttpResponse response = null;
-        String result = null;
-        return execute(httpClient, post, nvps, response, result);
+
+        return execute(httpClient, post, nvps, response, content);
 
     }
 
@@ -281,6 +247,8 @@ public class PrintUtil {
             post.setEntity(new UrlEncodedFormEntity(nvps,"utf-8"));
             response = httpClient.execute(post);
             int stateCode = response.getStatusLine().getStatusCode();
+            LOGGER.info("order print starting content : {},return http code : {}",result,stateCode);
+
             if(stateCode == 200){
                 HttpEntity httpentity = response.getEntity();
                 if (httpentity != null){

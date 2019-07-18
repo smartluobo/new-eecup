@@ -60,34 +60,48 @@ public class ApiMapServiceImpl implements ApiMapService {
         if (targetStore != null){
             LOGGER.info("当前用户最终选择店铺"+targetStore.getStoreName()+"相距"+minDistance+"米");
             targetStore.setDistance(String.valueOf(minDistance));
-            if (minDistance < 5000){
+            if (minDistance < 3000){
                 String origin = targetStore.getLongitude()+","+targetStore.getLatitude();
                 String destination = longitude+","+latitude;
 
-                String url = mapSysProperties.getStoreDistanceUrl()+mapSysProperties.getKey()
-                        +"&origin="+origin+"&destination="+destination;
-                String result = HttpUtil.get(url);
-                Map map = JSON.parseObject(result, Map.class);
-                if ("0".equals(String.valueOf(map.get("errcode")))){
-                    Map<String,Object> dataMap = (Map<String, Object>) map.get("data");
-                    if (dataMap != null){
-                        List<Map<String,Object>> dataList = (List<Map<String, Object>>) dataMap.get("paths");
-                        if (dataList != null){
-                            Map<String, Object> detailMap = dataList.get(0);
-                            Object distance = detailMap.get("distance");
-                            if (distance != null){
-                                int distanceInt = Integer.parseInt(String.valueOf(distance));
-                                if (distanceInt > 0){
-                                    targetStore.setDistance(String.valueOf(distance));
-                                    LOGGER.info("当前用户与店铺 : {} ,本地计算距离: {} 米,骑行距离:{}",targetStore.getStoreName(),minDistance,distance);
-                                }
+                int distance = calculateDistance(origin, destination);
+                if (distance > 0){
+                    targetStore.setDistance(String.valueOf(minDistance));
+                }
+                LOGGER.info("当前用户与店铺 : {} ,本地计算距离: {} 米,骑行距离:{}",targetStore.getStoreName(),minDistance,distance);
+            }
+        }
+        return targetStore;
+    }
+
+    public int calculateDistance(String origin, String destination) {
+        try {
+            String url = mapSysProperties.getStoreDistanceUrl()+mapSysProperties.getKey()
+                    +"&origin="+origin+"&destination="+destination;
+            String result = HttpUtil.get(url);
+            Map map = JSON.parseObject(result, Map.class);
+            LOGGER.info("calculateDistance return result : {}",map);
+            if ("0".equals(String.valueOf(map.get("errcode")))){
+                Map<String,Object> dataMap = (Map<String, Object>) map.get("data");
+                if (dataMap != null){
+                    List<Map<String,Object>> dataList = (List<Map<String, Object>>) dataMap.get("paths");
+                    if (dataList != null){
+                        Map<String, Object> detailMap = dataList.get(0);
+                        Object distance = detailMap.get("distance");
+                        if (distance != null){
+                            int distanceInt = Integer.parseInt(String.valueOf(distance));
+                            if (distanceInt > 0){
+                                return distanceInt;
                             }
                         }
                     }
                 }
             }
+            return 0;
+        }catch (Exception e){
+            LOGGER.error("calculateDistance happen exception origin : {}, destination : {}",origin,destination,e);
+            return 0;
         }
-        return targetStore;
     }
 
     @Override

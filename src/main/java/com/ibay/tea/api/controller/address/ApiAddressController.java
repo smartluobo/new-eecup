@@ -1,5 +1,6 @@
 package com.ibay.tea.api.controller.address;
 
+import com.alibaba.fastjson.JSON;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.responseVo.ApiAddressVo;
 import com.ibay.tea.api.service.address.ApiAddressService;
@@ -7,6 +8,8 @@ import com.ibay.tea.api.service.map.ApiMapService;
 import com.ibay.tea.cache.StoreCache;
 import com.ibay.tea.common.service.SendSmsService;
 import com.ibay.tea.common.utils.EecupMapCalculateUtil;
+import com.ibay.tea.common.utils.HttpUtil;
+import com.ibay.tea.config.MapSysProperties;
 import com.ibay.tea.entity.TbApiUserAddress;
 import com.ibay.tea.entity.TbStore;
 import org.apache.commons.lang3.StringUtils;
@@ -82,6 +85,7 @@ public class ApiAddressController {
             resultInfo.setData(userAddressById);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("findUserAddressById happen exception params : {}",params,e);
             return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -105,9 +109,9 @@ public class ApiAddressController {
            if (!flag){
                return ResultInfo.newFailResultInfo("验证码不正确");
            }
-           boolean distanceFlag = checkDistance(tbApiUserAddress);
+           boolean distanceFlag = checkDistance(tbApiUserAddress,false);
            if (!distanceFlag){
-               return ResultInfo.newFailResultInfo("当前地址超出店铺配送范围，请重新选择收获地址");
+               return ResultInfo.newFailResultInfo("超出配送距离");
            }
            apiAddressService.insertApiUserAddress(tbApiUserAddress);
            return ResultInfo.newSuccessResultInfo();
@@ -117,19 +121,43 @@ public class ApiAddressController {
        }
    }
 
-    private boolean checkDistance(TbApiUserAddress tbApiUserAddress) {
+    private boolean checkDistance(TbApiUserAddress tbApiUserAddress, boolean isUpdate) {
 
         TbStore storeById = storeCache.findStoreById(tbApiUserAddress.getStoreId());
         if (storeById == null){
             return false;
         }
+        if (isUpdate && tbApiUserAddress.getLatitude() == null){
+            return true;
+        }
         int twoPointsDistance = EecupMapCalculateUtil.getDistanceFromTwoPoints(new BigDecimal(storeById.getLatitude()).doubleValue(),
                 new BigDecimal(storeById.getLongitude()).doubleValue(),
                 new BigDecimal(tbApiUserAddress.getLatitude()).doubleValue(),
                 new BigDecimal(tbApiUserAddress.getLongitude()).doubleValue());
-        LOGGER.info("current address with store 相距 : {} 米,address : {},name : {},adname : {}",
-                twoPointsDistance,tbApiUserAddress.getAddress(),tbApiUserAddress.getName(),tbApiUserAddress.getAdname());
-        return twoPointsDistance <= storeById.getDistributionDistance();
+        LOGGER.info("current address with store 直线距离 : {}",twoPointsDistance);
+        if (twoPointsDistance > 2000){
+            LOGGER.info("current address with store 相距 : {} 米,address : {},name : {},adname : {}",
+                    twoPointsDistance,tbApiUserAddress.getAddress(),tbApiUserAddress.getName(),tbApiUserAddress.getAdname());
+            return false;
+        }else {
+            //计算骑行距离
+            String origin = storeById.getLongitude()+","+storeById.getLatitude();
+            String destination = tbApiUserAddress.getLongitude()+","+tbApiUserAddress.getLatitude();
+            int distance = apiMapService.calculateDistance(origin, destination);
+            if (distance == 0){
+                LOGGER.info("current address with store 相距 : {} 米,address : {},name : {},adname : {}",
+                        twoPointsDistance,tbApiUserAddress.getAddress(),tbApiUserAddress.getName(),tbApiUserAddress.getAdname());
+                tbApiUserAddress.setDistance(twoPointsDistance);
+                return twoPointsDistance <= storeById.getDistributionDistance();
+            }else {
+                LOGGER.info("current address with store 相距骑行距离 : {} 米,address : {},name : {},adname : {}",
+                        distance,tbApiUserAddress.getAddress(),tbApiUserAddress.getName(),tbApiUserAddress.getAdname());
+                tbApiUserAddress.setDistance(distance);
+                return distance <= storeById.getDistributionDistance();
+            }
+
+        }
+
     }
 
 
@@ -140,13 +168,14 @@ public class ApiAddressController {
             if (tbApiUserAddress == null){
                 return ResultInfo.newEmptyParamsResultInfo();
             }
-            //boolean distanceFlag = checkDistance(tbApiUserAddress);
-//            if (!distanceFlag){
-//                return ResultInfo.newFailResultInfo("当前地址超出店铺配送范围，请重新选择收获地址");
-//            }
+            boolean distanceFlag = checkDistance(tbApiUserAddress,true);
+            if (!distanceFlag){
+                return ResultInfo.newFailResultInfo("超出配送范围");
+            }
             apiAddressService.updateUserAddress(tbApiUserAddress);
             return ResultInfo.newSuccessResultInfo();
         }catch (Exception e){
+            LOGGER.error("updateUserAddress happen exception addressInfo: {}",tbApiUserAddress,e);
             return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -164,6 +193,7 @@ public class ApiAddressController {
             resultInfo.setData(address);
         	return resultInfo;
         }catch (Exception e){
+            LOGGER.error("getAddressList happen exception : {}",params,e);
         	return ResultInfo.newExceptionResultInfo();
         }
 

@@ -32,6 +32,7 @@ public class OrderItemPrintUtil {
     public String sendContent(TbPrinter tbPrinter, String content){
         String machineCode = tbPrinter.getPrinterSn();
         LOGGER.info("machine_code : {},printSysProperties info : {}",tbPrinter.getPrinterSn(),printSysProperties);
+        LOGGER.info("orderItem print info: {}",content);
         try{
             Map<String,String> params=new HashMap<String,String>();
             params.put("partner", printSysProperties.getOrderItemUserId());
@@ -60,7 +61,7 @@ public class OrderItemPrintUtil {
             //获取输入流
             InputStream is = conn.getInputStream();
 
-            System.out.println(conn.getResponseCode());
+            LOGGER.info("orderItem print return result code : {}",conn.getResponseCode());
             if (conn.getResponseCode() == 200) {
                 int i = -1;
                 byte[] b = new byte[1024];
@@ -69,7 +70,7 @@ public class OrderItemPrintUtil {
                     result.append(new String(b, 0, i));
                 }
                 String resultStr = result.toString();
-                LOGGER.info("print orderItem content : {}, result: {}",content,resultStr);
+                LOGGER.info("print orderItem return result: {}",resultStr);
                 return resultStr;
             }
             return null;

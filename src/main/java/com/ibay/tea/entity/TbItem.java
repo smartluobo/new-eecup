@@ -58,6 +58,8 @@ public class TbItem implements Comparable<TbItem>{
 
     private String posterImage;
 
+    private int isIngredients;
+
     public Long getId() {
         return id;
     }
@@ -258,6 +260,14 @@ public class TbItem implements Comparable<TbItem>{
 
     public void setPosterImage(String posterImage) {
         this.posterImage = posterImage;
+    }
+
+    public int getIsIngredients() {
+        return isIngredients;
+    }
+
+    public void setIsIngredients(int isIngredients) {
+        this.isIngredients = isIngredients;
     }
 
     @Override

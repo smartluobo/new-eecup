@@ -185,4 +185,27 @@ public class TbApiUserAddress {
     public void setDistance(int distance) {
         this.distance = distance;
     }
+
+    @Override
+    public String toString() {
+        return "TbApiUserAddress{" +
+                "id=" + id +
+                ", oppenId='" + oppenId + '\'' +
+                ", addressName='" + addressName + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                ", bindNum='" + bindNum + '\'' +
+                ", userName='" + userName + '\'' +
+                ", storeId=" + storeId +
+                ", isDefault=" + isDefault +
+                ", verificationCode='" + verificationCode + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", location='" + location + '\'' +
+                ", address='" + address + '\'' +
+                ", adname='" + adname + '\'' +
+                ", name='" + name + '\'' +
+                ", distance=" + distance +
+                '}';
+    }
 }

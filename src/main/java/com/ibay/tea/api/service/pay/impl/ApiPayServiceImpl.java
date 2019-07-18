@@ -155,7 +155,7 @@ public class ApiPayServiceImpl implements ApiPayService {
                 }
                 //异步调用订单打印
                 TbStore store = storeCache.findStoreById(tbOrder.getStoreId());
-                sendExecutorService.submit(() -> printService.printOrder(tbOrder, store, ApiConstant.PRINT_TYPE_ORDER_ALL));
+                printService.printOrder(tbOrder, store, ApiConstant.PRINT_TYPE_ORDER_ALL);
             } else {
                 //支付失败更新
                 //更新支付记录状态，库存和订单状态不用修改

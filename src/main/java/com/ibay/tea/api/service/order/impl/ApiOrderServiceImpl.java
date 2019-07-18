@@ -162,11 +162,16 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         tbOrderMapper.insert(tbOrder);
         LOGGER.info("order insert db success");
 
-        if ("oHqQ75F9LGcWIblYeuGpHgla5G8k".equals(oppenId) || "oHqQ75BT_yefBUhcpnDNPLlWXgIE".equals(oppenId)){
+        if ("oHqQ75F9LGcWIblYeuGpHgla5G8k".equals(oppenId) ||
+                "oHqQ75BT_yefBUhcpnDNPLlWXgIE".equals(oppenId) ||
+                "oHqQ75GRLFLgbdQdsPKHpeOA1ULE".equals(oppenId) ||
+                "oHqQ75Nq2unkZYnshI5s-QBBGKrg".equals(oppenId)
+                ){
             LOGGER.info("current oppenId : {} create order no pay",oppenId);
             Map<String, Object> payMap = new HashMap<>();
             //调用打印机
             printService.printOrder(tbOrder,store,ApiConstant.PRINT_TYPE_ORDER_ALL);
+            tbCartMapper.deleteCartItemByIds(Arrays.asList(cartItemIdArr));
             return payMap;
         }
 
@@ -367,6 +372,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         if (cartItemIds != null && cartItemIds.trim().length() > 0) {
             //订单总商品数
             int totalGoodsCount = 0;
+            int realGoodsCount = 0;
             //订单总价格
             double orderTotalPrice = 0.0;
 
@@ -390,6 +396,9 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                         maxPriceValue = tbItem.getCartPrice();
                     }
                     orderTotalPrice += tbItem.getCartTotalPrice();
+                    if (tbItem.getIsIngredients() == 0){
+                        realGoodsCount += cartItem.getItemCount();
+                    }
                     goodsList.add(tbItem);
                 }
                 LOGGER.info("info :title:{},price:{},cartPrice:{},cartTotalPrice:{},itemCount:{},skuDesc:{}",tbItem.getTitle(),tbItem.getPrice(),tbItem.getCartPrice(),tbItem.getCartTotalPrice(),tbItem.getCartItemCount(),tbItem.getSkuDetailDesc());
@@ -425,11 +434,15 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             String groupGiveName = null;
             String fullReduceName = null;
             String couponsName = null;
-            if (totalGoodsCount >=6){
+
+            if (realGoodsCount >=6){
                 //走满五赠一的流程，数量6 赠送一杯付款五杯价钱 数量12 赠送两杯 付款十杯价钱
-                int giveCount = totalGoodsCount / 6;
+                List<TbItem> newGoodsList = new ArrayList<>();
+                newGoodsList.addAll(newGoodsList);
+                newGoodsList.removeIf(tbItem -> tbItem.getIsIngredients() == 1);
+                int giveCount = realGoodsCount / 6;
                 groupGiveName = "满"+(giveCount*5)+"杯送"+giveCount+"杯";
-                Collections.sort(goodsList);
+                Collections.sort(newGoodsList);
                 for (int i = 0; i< goodsList.size() && giveCount > 0; i++){
                     TbItem tbItem = goodsList.get(i);
                     if (tbItem.getCartItemCount() >= giveCount){
@@ -480,6 +493,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             if (isCreateOrder){
                 calculateReturnVo.setGoodsList(goodsList);
             }
+            LOGGER.info("current order totalGoodsCount : {},realGoodsCount:{}",totalGoodsCount,realGoodsCount);
             return calculateReturnVo;
         }
 

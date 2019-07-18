@@ -12,4 +12,6 @@ public interface ApiMapService {
     TbStore selectStore(List<TbStore> storeList, Map<String, String> params);
 
     List<ApiAddressVo> getAddressList(Map<String, String> params);
+
+    int calculateDistance(String origin, String destination);
 }

@@ -86,7 +86,7 @@ public class PrintServiceImpl implements PrintService {
         if (tbOrder.getSelfGet() == ApiConstant.ORDER_TAKE_WAY_SEND){
             TbApiUserAddress tbApiUserAddress = tbApiUserAddressMapper.selectByPrimaryKey(tbOrder.getUserAddressId());
             printContent += "-----------------------------<BR>";
-            printContent += "电话: "+tbApiUserAddress.getPhoneNum()+"<BR>";
+            printContent += "电话: "+tbApiUserAddress.getPhoneNum()+"("+tbApiUserAddress.getUserName()+")<BR>";
             String addressName = tbApiUserAddress.getName() == null ? tbApiUserAddress.getAdname():tbApiUserAddress.getName();
             String address = "";
             if (addressName.length() > 12){
@@ -102,7 +102,7 @@ public class PrintServiceImpl implements PrintService {
             }
             printContent += "地址: "+ address +"<BR>";
             if (StringUtils.isNotBlank(tbApiUserAddress.getHouseNumber())){
-                printContent += "门牌号: "+tbApiUserAddress.getHouseNumber()+"<BR>";
+                printContent += "详细地址: "+tbApiUserAddress.getHouseNumber()+"<BR>";
             }
         }
 
@@ -124,10 +124,8 @@ public class PrintServiceImpl implements PrintService {
 
         TbPrinter printer = tbPrinterMapper.findById(store.getOrderItemPrinterId());
 
-        LOGGER.info("orderItem ");
-
         for (int i = 0;i < orderItem.getNum();i++){
-            String printContent = buildOrderItemPrintContent(tbOrder,orderItem);
+            String printContent = buildOrderItemPrintContent(store,tbOrder,orderItem);
             orderItemPrintUtil.sendContent(printer,printContent);
         }
         return null;
@@ -142,16 +140,22 @@ public class PrintServiceImpl implements PrintService {
         return null;
     }
 
-    private String buildOrderItemPrintContent(TbOrder tbOrder,TbOrderItem orderItem) {
+    private String buildOrderItemPrintContent(TbStore store,TbOrder tbOrder,TbOrderItem orderItem) {
+        String away = "外送";
+        if (tbOrder.getSelfGet() == ApiConstant.ORDER_TAKE_WAY_SELF_GET){
+            away = "自提";
+        }
+
         //订单商品数量
         int goodsCount = tbOrder.getGoodsTotalCount();
         int currentIndex = tbOrder.getCurrentIndex();
         String printContent = "";
         printContent += "\r   订单号:"+tbOrder.getTakeCode()+"   数量:"+currentIndex+"/"+goodsCount+"\r\r";
         printContent += "   <FB><FS>"+orderItem.getTitle()+"</FS></FB>\r";
-        printContent += "   "+orderItem.getSkuDetailDesc()+"\r\r";
-        printContent += "   时间:"+ DateUtil.viewDateFormat(tbOrder.getCreateTime())+"\r";
+        printContent += "   "+orderItem.getSkuDetailDesc()+"\r\\r\"";
 
+        printContent += "   时间:"+ DateUtil.viewDateFormat(tbOrder.getCreateTime())+"\r";
+        printContent += "           "+away+"/"+store.getStoreName();
         tbOrder.setCurrentIndex(++currentIndex);
         return printContent;
     }
