@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbStoreGoodsMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbStoreGoods">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_inventory" jdbcType="INTEGER" property="goodsInventory" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, goods_id, goods_name, goods_inventory, create_time, update_time, store_id, store_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_store_goods where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findRecordByCondition" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" /> from tb_store_goods where store_id = #{storeId}
+      <if test="goodsIds != null">
+        and goods_id in
+        <foreach item="item" index="index" collection="goodsIds"
+                 open="(" separator="," close=")">
+          #{item}
+        </foreach>
+
+      </if>
+
+  </select>
+
+  <select id="findAllByStoreId" resultMap="BaseResultMap" parameterType="int">
+    select <include refid="Base_Column_List" /> from tb_store_goods where store_id = #{storeId,jdbcType=INTEGER}
+  </select>
+
+  <select id="findGoodsInventory" resultType="java.lang.Integer" parameterType="map">
+    SELECT goods_inventory FROM tb_store_goods WHERE goods_id = #{goodsId} and store_id = #{storeId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_store_goods where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <delete id="deleteByStoreId" parameterType="int">
+    DELETE  FROM tb_store_goods WHERE store_id = #{storeId}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbStoreGoods">
+    insert into tb_store_goods (goods_id, goods_name,
+      goods_inventory, create_time, update_time, 
+      store_id, store_name)
+    values (#{goodsId,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR},
+      #{goodsInventory,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{storeId,jdbcType=INTEGER}, #{storeName,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="saveUpdateMenu" parameterType="com.ibay.tea.entity.TbStoreGoods">
+    insert into tb_store_goods (id, goods_id, goods_name,
+                                goods_inventory, create_time, update_time,
+                                store_id, store_name)
+    values (#{id,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR},
+            #{goodsInventory,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+            #{storeId,jdbcType=INTEGER}, #{storeName,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertBatch" parameterType="list">
+    insert into tb_store_goods (goods_id, goods_name,
+    goods_inventory, create_time, update_time,
+    store_id, store_name)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.goodsId,jdbcType=INTEGER}, #{item.goodsName,jdbcType=VARCHAR},
+      #{item.goodsInventory,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP},
+      #{item.storeId,jdbcType=INTEGER}, #{item.storeName,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
+  <update id="updateInventory" parameterType="map">
+    UPDATE tb_store_goods SET goods_inventory = goods_inventory - #{num} where goods_id = #{goodsId} and store_id = #{storeId}
+  </update>
+
+</mapper>

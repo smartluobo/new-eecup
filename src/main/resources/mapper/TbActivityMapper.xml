@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbActivityMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbActivity">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="start_date" jdbcType="INTEGER" property="startDate" />
+    <result column="end_date" jdbcType="INTEGER" property="endDate" />
+    <result column="start_hour" jdbcType="INTEGER" property="startHour" />
+    <result column="end_hour" jdbcType="INTEGER" property="endHour" />
+    <result column="activity_type" jdbcType="INTEGER" property="activityType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="activity_name" jdbcType="VARCHAR" property="activityName" />
+    <result column="tips" jdbcType="VARCHAR" property="tips" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="no_start_poster" jdbcType="VARCHAR" property="noStartPoster" />
+    <result column="starting_poster" jdbcType="VARCHAR" property="startingPoster" />
+    <result column="win_poster" jdbcType="VARCHAR" property="winPoster" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, start_date, end_date, start_hour, end_hour, activity_type, create_time, update_time, 
+    activity_name,tips,store_id,no_start_poster,starting_poster,win_poster
+  </sql>
+
+  <insert id="addActivity" parameterType="com.ibay.tea.entity.TbActivity">
+      INSERT INTO tb_activity (start_date, end_date, start_hour, end_hour, activity_type, activity_name, create_time, tips,store_id,
+                               no_start_poster,starting_poster,win_poster)
+      VALUES (#{startDate},#{endDate},#{startHour},#{endHour},#{activityType},#{activityName},#{createTime},#{tips},#{storeId},
+              #{noStartPoster},#{startingPoster},#{winPoster})
+  </insert>
+
+  <insert id="saveUpdateActivity" parameterType="com.ibay.tea.entity.TbActivity">
+    INSERT INTO tb_activity (id,start_date, end_date, start_hour, end_hour, activity_type, activity_name, create_time, tips,store_id,
+                             no_start_poster,starting_poster,win_poster)
+    VALUES (#{id},#{startDate},#{endDate},#{startHour},#{endHour},#{activityType},#{activityName},#{createTime},#{tips},#{storeId},
+                  #{noStartPoster},#{startingPoster},#{winPoster})
+  </insert>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" /> from tb_activity where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+      SELECT * from tb_activity
+  </select>
+
+  <select id="findHolidayActivity" resultMap="BaseResultMap" parameterType="map">
+        SELECT * FROM tb_activity
+          <![CDATA[ WHERE  start_date <= #{currentDate} AND end_date >= #{currentDate} AND activity_type = 2 and store_id =#{storeId}]]>
+  </select>
+
+  <select id="findRegularActivity" resultMap="BaseResultMap" parameterType="map">
+    SELECT * FROM tb_activity
+          <![CDATA[ WHERE  start_date <= #{currentDate} AND end_date >= #{currentDate} AND activity_type = 1 and store_id = #{storeId}]]>
+  </select>
+
+  <select id="findFullActivity" resultMap="BaseResultMap">
+    SELECT * FROM tb_activity
+          <![CDATA[ WHERE  start_date <= #{currentDate} AND end_date >= #{currentDate} AND activity_type = 3 and store_id =#{storeId}]]>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_activity where id = #{id,jdbcType=INTEGER}
+  </delete>
+</mapper>

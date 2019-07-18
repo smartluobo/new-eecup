@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: ibay-tea
+  datasource:
+    url: jdbc:mysql://localhost:3306/novel_tea
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  mvc:
+    static-path-pattern: /image/**
+  resources:
+#    static-locations: file:/data/eecup/image
+    static-locations: file:D:/tea_img/
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+server:
+  port: 8888
+  servlet:
+    context-path: /tea
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+wechat:
+  info:
+    appId: wx4123b4481a5e6e66
+    mchId: 1540685681
+    signType: MD5
+    secret: bf861f60fbc30bf11ad07a73b4fbcf98
+    tradeType: JSAPI
+    apiKey: eecup2019outlookcom1234567891234
+    clientIp: 114.119.117.159
+    notifyUrl: https://114.119.117.159:9001/api/order/payUpdateOrder?orderId=
+    loginUrl: https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code&
+    createOrderUrl: https://api.mch.weixin.qq.com/pay/unifiedorder
+    tokenUrl: https://api.weixin.qq.com/cgi-bin/token
+    orderPayTemplateId: GdULC46QEOpKeMtSwtONLUSVvPu5js7ZbyDcXdCMF5U
+    orderMakeCompleteTemplateId: jmcqiI2nIAtWzGqVLDNYi9CzV3gG5X1_g-Rn0AuKo6k
+    orderCloseTemplateId: GLM5uGwErx4h3-04KHlht50wtHY_ZfCwLFggAyh2H0E
+    sendTemplateMessageUrl: https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=
+    orderCompleteTips: 您的订单已经制作完成，为不影响口感，请尽快到店提取。
+    orderCloseTips: 客官，您好！感谢你的信任。每天有抢券活动，记得来参加哦。
+
+cms:
+  sys:
+    imageUrlPrefix: http://localhost:8888/tea/image/
+    imagePath: D:/tea_img/
+api:
+  sys:
+    certPath: E:/ibay/cert/
+    environment: pro
+print:
+  sys:
+    printUrl: http://api.feieyun.cn/Api/Open/
+    printUserName: eecup2019@outlook.com
+    printUKey: kx3B8LCMtFNN5KsL
+    orderItemUrl: http://open.10ss.net:8888
+    orderItemUserId: 43183489
+    orderItemApiKey: 7604f4cf63901f543c4008ef3d697aecbc8ec2f0
+sms:
+  sys:
+    product: Dysmsapi
+    domain: dysmsapi.aliyuncs.com
+    accessKeyId: LTAIT4w96KLheJlT
+    accessKeySecret: ei4ApL1TaOG2KAiihSjzGFBLrRwZhP
+    signName: eecupe杯
+    templateCode: SMS_169111760
+
+map:
+  sys:
+    keyName: ecup_searchAddr
+    key: b7c8d3724ef6f0d6b2fd5f6aa5ad3cde
+    storeDistanceUrl: https://restapi.amap.com/v4/direction/bicycling?key=
+    mapAddressListUrl: https://restapi.amap.com/v3/assistant/inputtips?key=
+    mapAroundUrl: https://restapi.amap.com/v3/place/around?key=

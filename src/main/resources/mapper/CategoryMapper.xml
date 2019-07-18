@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.Category">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, category_name, status, create_time, update_time, weight
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" /> from t_category where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll"  resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" /> from t_category
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_category where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.Category">
+    insert into t_category (category_name, status, weight )
+    values ( #{categoryName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{weight,jdbcType=INTEGER} )
+  </insert>
+
+
+
+  <update id="updateByPrimaryKey" parameterType="com.ibay.tea.entity.Category">
+    update t_category
+    set category_name = #{categoryName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      weight = #{weight,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

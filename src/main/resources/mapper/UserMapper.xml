@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="wechat_nick_name" jdbcType="VARCHAR" property="wechatNickName" />
+    <result column="wechat_number" jdbcType="VARCHAR" property="wechatNumber" />
+    <result column="wechat_oppen_id" jdbcType="VARCHAR" property="wechatOppenId" />
+    <result column="wechat_phone" jdbcType="VARCHAR" property="wechatPhone" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, wechat_nick_name, wechat_number, wechat_oppen_id, wechat_phone, phone, create_time, 
+    update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from t_user where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_user where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.User">
+    insert into t_user (wechat_nick_name, wechat_number,
+      wechat_oppen_id, wechat_phone, phone)
+    values (#{wechatNickName,jdbcType=VARCHAR}, #{wechatNumber,jdbcType=VARCHAR},
+      #{wechatOppenId,jdbcType=VARCHAR}, #{wechatPhone,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR})
+  </insert>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.ibay.tea.entity.User">
+    update t_user
+    set wechat_nick_name = #{wechatNickName,jdbcType=VARCHAR},
+      wechat_number = #{wechatNumber,jdbcType=VARCHAR},
+      wechat_oppen_id = #{wechatOppenId,jdbcType=VARCHAR},
+      wechat_phone = #{wechatPhone,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

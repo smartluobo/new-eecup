@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.GoodsMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.Goods">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="goods_name" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goods_poster" jdbcType="VARCHAR" property="goodsPoster" />
+    <result column="goods_price" jdbcType="VARCHAR" property="goodsPrice" />
+    <result column="goods_activity_price" jdbcType="VARCHAR" property="goodsActivityPrice" />
+    <result column="show_activity_price" jdbcType="INTEGER" property="showActivityPrice" />
+    <result column="activity_start_time" jdbcType="TIMESTAMP" property="activityStartTime" />
+    <result column="activity_end_time" jdbcType="TIMESTAMP" property="activityEndTime" />
+    <result column="detail1_img_url" jdbcType="VARCHAR" property="detail1ImgUrl" />
+    <result column="detail2_img_url" jdbcType="VARCHAR" property="detail2ImgUrl" />
+    <result column="detail3_img_url" jdbcType="VARCHAR" property="detail3ImgUrl" />
+    <result column="detail4_img_url" jdbcType="VARCHAR" property="detail4ImgUrl" />
+    <result column="detail5_img_url" jdbcType="VARCHAR" property="detail5ImgUrl" />
+    <result column="have_sku" jdbcType="INTEGER" property="haveSku" />
+    <result column="goods_status" jdbcType="INTEGER" property="goodsStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, goods_name, goods_poster, goods_price, goods_activity_price, show_activity_price, 
+    activity_start_time, activity_end_time, detail1_img_url, detail2_img_url, detail3_img_url, 
+    detail4_img_url, detail5_img_url, have_sku, goods_status, create_time, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from t_goods where id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="findGoodsListByPage" resultMap="BaseResultMap" parameterType="int">
+        SELECT <include refid="Base_Column_List" /> from t_goods
+    </select>
+
+  <select id="countGoodsByCondition" resultType="java.lang.Long" parameterType="map">
+    SELECT count(1) FROM t_goods
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_goods where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.Goods">
+    insert into t_goods (goods_name, goods_poster,
+      goods_price, goods_activity_price, show_activity_price, 
+      activity_start_time, activity_end_time, 
+      detail1_img_url, detail2_img_url, detail3_img_url, 
+      detail4_img_url, detail5_img_url, have_sku, 
+      goods_status
+      )
+    values (#{goodsName,jdbcType=VARCHAR}, #{goodsPoster,jdbcType=VARCHAR},
+      #{goodsPrice,jdbcType=VARCHAR}, #{goodsActivityPrice,jdbcType=VARCHAR}, #{showActivityPrice,jdbcType=INTEGER}, 
+      #{activityStartTime,jdbcType=TIMESTAMP}, #{activityEndTime,jdbcType=TIMESTAMP}, 
+      #{detail1ImgUrl,jdbcType=VARCHAR}, #{detail2ImgUrl,jdbcType=VARCHAR}, #{detail3ImgUrl,jdbcType=VARCHAR}, 
+      #{detail4ImgUrl,jdbcType=VARCHAR}, #{detail5ImgUrl,jdbcType=VARCHAR}, #{haveSku,jdbcType=INTEGER}, 
+      #{goodsStatus,jdbcType=INTEGER})
+  </insert>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.ibay.tea.entity.Goods">
+    update t_goods
+    set goods_name = #{goodsName,jdbcType=VARCHAR},
+      goods_poster = #{goodsPoster,jdbcType=VARCHAR},
+      goods_price = #{goodsPrice,jdbcType=VARCHAR},
+      goods_activity_price = #{goodsActivityPrice,jdbcType=VARCHAR},
+      show_activity_price = #{showActivityPrice,jdbcType=INTEGER},
+      activity_start_time = #{activityStartTime,jdbcType=TIMESTAMP},
+      activity_end_time = #{activityEndTime,jdbcType=TIMESTAMP},
+      detail1_img_url = #{detail1ImgUrl,jdbcType=VARCHAR},
+      detail2_img_url = #{detail2ImgUrl,jdbcType=VARCHAR},
+      detail3_img_url = #{detail3ImgUrl,jdbcType=VARCHAR},
+      detail4_img_url = #{detail4ImgUrl,jdbcType=VARCHAR},
+      detail5_img_url = #{detail5ImgUrl,jdbcType=VARCHAR},
+      have_sku = #{haveSku,jdbcType=INTEGER},
+      goods_status = #{goodsStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

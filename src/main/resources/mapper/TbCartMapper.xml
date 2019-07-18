@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbCartMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbCart">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="oppen_id" jdbcType="VARCHAR" property="oppenId" />
+    <result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="item_count" jdbcType="INTEGER" property="itemCount" />
+    <result column="show_price" jdbcType="DOUBLE" property="showPrice" />
+    <result column="sku_detail_ids" jdbcType="VARCHAR" property="skuDetailIds" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="sku_detail_desc" jdbcType="VARCHAR" property="skuDetailDesc" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, oppen_id, goods_id, show_price, sku_detail_ids, create_time,item_count,sku_detail_desc,store_id
+  </sql>
+  <update id="updateCartItemCount" parameterType="map">
+      UPDATE tb_cart SET item_count = item_count + #{count} where id = #{id} and oppen_id = #{oppenId}
+  </update>
+  <delete id="cartGoodsDelete">
+      DELETE FROM tb_cart WHERE oppen_id = #{oppenId} and id = #{id}
+  </delete>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+      select <include refid="Base_Column_List" /> from tb_cart where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findCartGoodsListByOppenId" resultMap="BaseResultMap" parameterType="string">
+      SELECT * from tb_cart WHERE oppen_id =#{oppenId}
+  </select>
+  <select id="findCartItemByIds" resultMap="BaseResultMap" parameterType="list">
+    SELECT * from tb_cart WHERE id IN
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="getCartItemCountByOppenId" resultType="java.lang.Integer" parameterType="string">
+      SELECT SUM(item_count) FROM tb_cart where oppen_id = #{oppenId}
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_cart where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <delete id="deleteCartItemByIds" parameterType="list">
+      DELETE FROM tb_cart WHERE id IN
+      <foreach item="item" index="index" collection="list"
+               open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </delete>
+
+
+    <insert id="insert" parameterType="com.ibay.tea.entity.TbCart">
+    insert into tb_cart (oppen_id, goods_id,
+      show_price, sku_detail_ids, create_time,item_count,sku_detail_desc,store_id
+      )
+    values (#{oppenId,jdbcType=VARCHAR}, #{goodsId,jdbcType=INTEGER},
+      #{showPrice,jdbcType=DOUBLE}, #{skuDetailIds,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{itemCount},#{skuDetailDesc,jdbcType=VARCHAR},#{storeId}
+      )
+  </insert>
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbUserPayRecordMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbUserPayRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="oppen_id" jdbcType="VARCHAR" property="oppenId" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="order_payment" jdbcType="DECIMAL" property="orderPayment" />
+    <result column="payment" jdbcType="DECIMAL" property="payment" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="nonce_str" jdbcType="VARCHAR" property="nonceStr" />
+    <result column="prepay_id" jdbcType="VARCHAR" property="prepayId" />
+    <result column="pay_status" jdbcType="INTEGER" property="payStatus" />
+    <result column="transaction_id" jdbcType="VARCHAR" property="transactionId" />
+
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, oppen_id, order_id, order_payment, payment, create_time, update_time,nonce_str,prepay_id,pay_status,transaction_id
+  </sql>
+
+  <update id="updatePayStatus" parameterType="map">
+    UPDATE tb_user_pay_record SET pay_status = #{payStatus},update_time = #{updateTime} ,transaction_id = #{transactionId} where order_id = #{orderId}
+  </update>
+  <update id="updatePayCloseStatus" parameterType="map">
+    UPDATE tb_user_pay_record SET pay_status = #{payStatus},update_time = #{updateTime} where order_id = #{orderId}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_user_pay_record where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findPayRecordByOrderId" resultMap="BaseResultMap" parameterType="string">
+    SELECT <include refid="Base_Column_List" /> from tb_user_pay_record where order_id = #{orderId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_user_pay_record where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbUserPayRecord">
+    insert into tb_user_pay_record (id,oppen_id, order_id,
+      order_payment, payment, create_time, 
+     nonce_str,prepay_id)
+    values (#{id},#{oppenId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR},
+      #{orderPayment,jdbcType=DECIMAL}, #{payment,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{nonceStr},#{prepayId})
+  </insert>
+
+</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbCouponsMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbCoupons">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="coupons_type" jdbcType="INTEGER" property="couponsType" />
+    <result column="coupons_name" jdbcType="VARCHAR" property="couponsName" />
+    <result column="coupons_ratio" jdbcType="VARCHAR" property="couponsRatio" />
+    <result column="consume_amount" jdbcType="INTEGER" property="consumeAmount" />
+    <result column="reduce_amount" jdbcType="INTEGER" property="reduceAmount" />
+    <result column="consume_count" jdbcType="INTEGER" property="consumeCount" />
+    <result column="give_count" jdbcType="INTEGER" property="giveCount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="coupons_poster" jdbcType="VARCHAR" property="couponsPoster" />
+    <result column="use_rules" jdbcType="VARCHAR" property="useRules" />
+    <result column="use_scope" jdbcType="VARCHAR" property="useScope" />
+
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, coupons_type, coupons_name, coupons_ratio, consume_amount, reduce_amount, consume_count, 
+    give_count, create_time, update_time,coupons_poster,use_rules,use_scope
+  </sql>
+
+  <insert id="addCoupons" parameterType="com.ibay.tea.entity.TbCoupons">
+      INSERT INTO tb_coupons (coupons_type, coupons_name, coupons_ratio, consume_amount, reduce_amount,
+                              consume_count, give_count, create_time, update_time,coupons_poster,use_rules,use_scope)
+      VALUES (#{couponsType},#{couponsName},#{couponsRatio},#{consumeAmount},#{reduceAmount},
+          #{consumeCount},#{giveCount},#{createTime},#{updateTime},#{couponsPoster},#{useRules},#{useScope}
+      )
+  </insert>
+
+  <insert id="saveUpdateCoupons" parameterType="com.ibay.tea.entity.TbCoupons">
+    INSERT INTO tb_coupons (id,coupons_type, coupons_name, coupons_ratio, consume_amount, reduce_amount,
+    consume_count, give_count, create_time, update_time,coupons_poster,use_rules,use_scope)
+    VALUES (#{id},#{couponsType},#{couponsName},#{couponsRatio},#{consumeAmount},#{reduceAmount},
+    #{consumeCount},#{giveCount},#{createTime},#{updateTime},#{couponsPoster},#{useRules},#{useScope}
+    )
+  </insert>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_coupons where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+      SELECT * FROM tb_coupons
+  </select>
+  <select id="findFullReduceCoupons" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from tb_coupons where coupons_type = 2 ORDER BY consume_amount DESC
+  </select>
+
+    <delete id="deleteCoupons" parameterType="java.lang.Integer">
+    delete from tb_coupons where id = #{id}
+  </delete>
+</mapper>

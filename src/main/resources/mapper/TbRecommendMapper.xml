@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbRecommendMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbRecommend">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="goods_id" jdbcType="INTEGER" property="goodsId" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, goods_id, store_id
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_recommend where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findStoreRecommend" resultType="java.lang.Long" parameterType="string">
+     SELECT goods_id from tb_recommend WHERE store_id = #{storeId} or store_id = -1
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_recommend where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbRecommend">
+    insert into tb_recommend (goods_id, store_id )
+    values (#{goodsId,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER} )
+  </insert>
+
+</mapper>

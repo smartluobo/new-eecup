@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbSkuDetailMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbSkuDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sku_type_id" jdbcType="INTEGER" property="skuTypeId" />
+    <result column="sku_detail_name" jdbcType="VARCHAR" property="skuDetailName" />
+    <result column="sku_detail_price" jdbcType="INTEGER" property="skuDetailPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, sku_type_id, sku_detail_name, sku_detail_price, create_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_sku_detail where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+      SELECT * from tb_sku_detail
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sku_detail where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="addSkuDetail" parameterType="com.ibay.tea.entity.TbSkuDetail">
+    insert into tb_sku_detail (sku_type_id, sku_detail_name,
+      sku_detail_price, create_time)
+    values (#{skuTypeId,jdbcType=INTEGER}, #{skuDetailName,jdbcType=VARCHAR},
+      #{skuDetailPrice,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="saveUpdateSkuDetail" parameterType="com.ibay.tea.entity.TbSkuDetail">
+    insert into tb_sku_detail (id,sku_type_id, sku_detail_name,
+    sku_detail_price, create_time)
+    values (#{id},#{skuTypeId,jdbcType=INTEGER}, #{skuDetailName,jdbcType=VARCHAR},
+    #{skuDetailPrice,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+</mapper>

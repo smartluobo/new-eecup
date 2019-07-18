@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbActivityCouponsRecordMapper">
+
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbActivityCouponsRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="activity_id" jdbcType="INTEGER" property="activityId" />
+    <result column="activity_name" jdbcType="VARCHAR" property="activityName" />
+    <result column="coupons_id" jdbcType="INTEGER" property="couponsId" />
+    <result column="coupons_name" jdbcType="VARCHAR" property="couponsName" />
+    <result column="coupons_count" jdbcType="INTEGER" property="couponsCount" />
+    <result column="coupons_poster" jdbcType="VARCHAR" property="couponsPoster" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, activity_id, activity_name, coupons_id, coupons_name, coupons_count,coupons_poster
+  </sql>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbActivityCouponsRecord">
+    INSERT INTO tb_activity_coupons_record (activity_id, activity_name, coupons_id, coupons_name, coupons_count, coupons_poster)
+            VALUES (#{activityId},#{activityName},#{couponsId},#{couponsName},#{couponsCount},#{couponsPoster})
+  </insert>
+  <update id="updateRecord" parameterType="com.ibay.tea.entity.TbActivityCouponsRecord">
+    UPDATE tb_activity_coupons_record SET coupons_count = #{couponsCount} where id = #{id}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" /> from tb_activity_coupons_record where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+      SELECT <include refid="Base_Column_List" />  FROM tb_activity_coupons_record
+  </select>
+
+  <select id="getJackpotInfo" resultMap="BaseResultMap" parameterType="int">
+    SELECT <include refid="Base_Column_List" /> FROM tb_activity_coupons_record WHERE activity_id = #{activityId}
+  </select>
+
+  <select id="findCouponsByActivityId" resultMap="BaseResultMap" parameterType="int">
+      SELECT <include refid="Base_Column_List" /> FROM tb_activity_coupons_record WHERE activity_id = #{activityId}
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_activity_coupons_record where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="activityDeleteCoupons" parameterType="map">
+    DELETE FROM tb_activity_coupons_record WHERE id = #{id} and activity_id = #{activityId}
+  </delete>
+</mapper>

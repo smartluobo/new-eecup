@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbApiUserAddressMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbApiUserAddress">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="oppen_id" jdbcType="VARCHAR" property="oppenId" />
+    <result column="address_name" jdbcType="VARCHAR" property="addressName" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="bind_num" jdbcType="VARCHAR" property="bindNum" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="is_default" jdbcType="INTEGER" property="isDefault" />
+    <result column="house_number" jdbcType="VARCHAR" property="houseNumber" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="adname" jdbcType="VARCHAR" property="adname" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="distance" jdbcType="INTEGER" property="distance" />
+
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, oppen_id, address_name, longitude, latitude, phone_num, bind_num,user_name,store_id,is_default,
+      house_Number,address,adname,`name`,distance
+  </sql>
+    <update id="updateAddressNotDefault" parameterType="map">
+      UPDATE tb_api_user_address SET is_default = 0 WHERE oppen_id=#{oppenId} AND store_id = #{storeId}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_api_user_address where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findUserAddressByOppenId" resultMap="BaseResultMap" parameterType="string">
+    select <include refid="Base_Column_List" /> from tb_api_user_address where oppen_id = #{oppenId} and store_id = #{storeId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="int">
+    delete from tb_api_user_address where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteApiUserAddress" parameterType="map">
+    delete from tb_api_user_address where id = #{id,jdbcType=INTEGER} and oppen_id = #{oppenId}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbApiUserAddress">
+    insert into tb_api_user_address (oppen_id, address_name,
+      longitude, latitude, phone_num, 
+      bind_num,user_name,store_id,is_default,house_Number,
+      address,adname,`name`,distance)
+    values (#{oppenId,jdbcType=VARCHAR}, #{addressName,jdbcType=VARCHAR},
+      #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR}, 
+      #{bindNum,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{storeId},#{isDefault},#{houseNumber},
+      #{address},#{adname},#{name},#{distance})
+  </insert>
+  <insert id="saveUpdateApiUserAddress" parameterType="com.ibay.tea.entity.TbApiUserAddress">
+      insert into tb_api_user_address (id,oppen_id, address_name,
+                                       longitude, latitude, phone_num,
+                                       bind_num,user_name,store_id,is_default,house_Number,
+                                       address,adname,`name`,distance)
+      values (#{id},#{oppenId,jdbcType=VARCHAR}, #{addressName,jdbcType=VARCHAR},
+              #{longitude,jdbcType=VARCHAR}, #{latitude,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR},
+              #{bindNum,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},#{storeId},#{isDefault},#{houseNumber},
+              #{address},#{adname},#{name},#{distance})
+  </insert>
+
+</mapper>

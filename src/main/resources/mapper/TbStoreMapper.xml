@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbStoreMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbStore">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="store_name" jdbcType="VARCHAR" property="storeName" />
+    <result column="store_address" jdbcType="VARCHAR" property="storeAddress" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="extra_price" jdbcType="VARCHAR" property="extraPrice" />
+    <result column="order_printer_id" jdbcType="INTEGER" property="orderPrinterId" />
+    <result column="order_item_printer_id" jdbcType="INTEGER" property="orderItemPrinterId" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <result column="distribution_distance" jdbcType="INTEGER" property="distributionDistance" />
+
+
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, store_name, store_address, create_time, update_time,extra_price,order_printer_id,order_item_printer_id,longitude,latitude,distribution_distance
+  </sql>
+
+  <insert id="addStore" parameterType="com.ibay.tea.entity.TbStore">
+    INSERT INTO tb_store (store_name, store_address, create_time, extra_price,order_printer_id,order_item_printer_id,longitude,latitude,distribution_distance)
+    VALUES (#{storeName},#{storeAddress},#{createTime},#{extraPrice},#{orderPrinterId},#{orderItemPrinterId},#{longitude},#{latitude},#{distributionDistance})
+  </insert>
+
+  <insert id="saveUpdateStore" parameterType="com.ibay.tea.entity.TbStore">
+    INSERT INTO tb_store (id,store_name, store_address, create_time, extra_price,order_printer_id,order_item_printer_id,longitude,latitude,distribution_distance)
+    VALUES (#{id},#{storeName},#{storeAddress},#{createTime},#{extraPrice},#{orderPrinterId},#{orderItemPrinterId},#{longitude},#{latitude},#{distributionDistance})
+  </insert>
+
+  <delete id="deleteStore" parameterType="int">
+    DELETE FROM tb_store WHERE id = #{id}
+  </delete>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_store where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_store
+  </select>
+
+  <select id="findByIds" resultMap="BaseResultMap" parameterType="list">
+    SELECT <include refid="Base_Column_List" /> from tb_store WHERE id IN
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+</mapper>

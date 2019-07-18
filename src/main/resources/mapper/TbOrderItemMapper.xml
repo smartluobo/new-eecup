@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbOrderItemMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbOrderItem">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="item_id" jdbcType="INTEGER" property="itemId" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="total_fee" jdbcType="DECIMAL" property="totalFee" />
+    <result column="pic_path" jdbcType="VARCHAR" property="picPath" />
+    <result column="sku_detail_ids" jdbcType="VARCHAR" property="skuDetailIds" />
+    <result column="sku_detail_desc" jdbcType="VARCHAR" property="skuDetailDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, item_id, order_id, num, title, price, total_fee, pic_path, sku_detail_ids,sku_detail_desc
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_order_item where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findOrderItemByOrderId" resultMap="BaseResultMap" parameterType="string">
+    SELECT <include refid="Base_Column_List" /> from tb_order_item where order_id = #{orderId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="int">
+    delete from tb_order_item where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbOrderItem">
+    insert into tb_order_item (item_id, order_id,
+      num, title, price, 
+      total_fee, pic_path, sku_detail_ids,sku_detail_desc
+      )
+    values (#{itemId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR},
+      #{num,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{totalFee,jdbcType=DECIMAL}, #{picPath,jdbcType=VARCHAR}, #{skuDetailIds,jdbcType=VARCHAR},#{skuDetailDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+
+    <insert id="insertBatch" parameterType="list">
+      insert into tb_order_item (item_id, order_id,
+                                 num, title, price,
+                                 total_fee, pic_path, sku_detail_ids ,sku_detail_desc
+      )
+      VALUES
+      <foreach collection="list" item="item" index="index" separator=",">
+        (#{item.itemId,jdbcType=VARCHAR}, #{item.orderId,jdbcType=VARCHAR},
+        #{item.num,jdbcType=INTEGER}, #{item.title,jdbcType=VARCHAR}, #{item.price,jdbcType=DECIMAL},
+        #{item.totalFee,jdbcType=DECIMAL}, #{item.picPath,jdbcType=VARCHAR}, #{item.skuDetailIds,jdbcType=VARCHAR},#{item.skuDetailDesc,jdbcType=VARCHAR}
+        )
+      </foreach>
+
+    </insert>
+
+</mapper>

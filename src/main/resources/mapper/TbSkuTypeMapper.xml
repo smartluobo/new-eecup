@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbSkuTypeMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbSkuType">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sku_type_name" jdbcType="VARCHAR" property="skuTypeName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, sku_type_name, create_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_sku_type where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+      SELECT * from tb_sku_type
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sku_type where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="addSkuType" parameterType="com.ibay.tea.entity.TbSkuType">
+    insert into tb_sku_type (sku_type_name, create_time
+      )
+    values (#{skuTypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+  <insert id="saveUpdateSkuType" parameterType="com.ibay.tea.entity.TbSkuType">
+    insert into tb_sku_type (id,sku_type_name, create_time
+    )
+    values (#{id},#{skuTypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+    )
+  </insert>
+
+</mapper>

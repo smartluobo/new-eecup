@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbPrinterMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbPrinter">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="printer_sn" jdbcType="VARCHAR" property="printerSn" />
+    <result column="printer_key" jdbcType="VARCHAR" property="printerKey" />
+    <result column="printer_remark" jdbcType="VARCHAR" property="printerRemark" />
+    <result column="printer_carnum" jdbcType="VARCHAR" property="printerCarnum" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="printer_type" jdbcType="INTEGER" property="printerType" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id,printer_sn,printer_key,printer_remark,printer_carnum,create_time,printer_type
+  </sql>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbPrinter">
+    insert into tb_printer (printer_sn, printer_key,
+      printer_remark, printer_carnum, create_time,
+      printer_type)
+    values (#{printerSn,jdbcType=VARCHAR}, #{printerKey,jdbcType=VARCHAR},
+      #{printerRemark,jdbcType=VARCHAR}, #{printerCarnum,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{printerType,jdbcType=INTEGER})
+  </insert>
+
+  <insert id="saveUpdatePrinter" parameterType="com.ibay.tea.entity.TbPrinter">
+    insert into tb_printer (id,printer_sn, printer_key,
+                            printer_remark, printer_carnum, create_time,
+                            printer_type)
+    values (#{id},#{printerSn,jdbcType=VARCHAR}, #{printerKey,jdbcType=VARCHAR},
+            #{printerRemark,jdbcType=VARCHAR}, #{printerCarnum,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{printerType,jdbcType=INTEGER})
+  </insert>
+
+  <delete id="deletePrinter" parameterType="int">
+    DELETE FROM tb_printer WHERE id = #{id}
+  </delete>
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="int">
+      SELECT <include refid="Base_Column_List" /> FROM tb_printer WHERE id = #{printerId}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM tb_printer
+  </select>
+
+</mapper>

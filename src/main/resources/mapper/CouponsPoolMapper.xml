@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.CouponsPoolMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.CouponsPool">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="coupons_code" jdbcType="VARCHAR" property="couponsCode" />
+    <result column="coupons_start_time" jdbcType="TIMESTAMP" property="couponsStartTime" />
+    <result column="coupons_end_time" jdbcType="TIMESTAMP" property="couponsEndTime" />
+    <result column="coupons_type" jdbcType="INTEGER" property="couponsType" />
+    <result column="coupons_condition" jdbcType="INTEGER" property="couponsCondition" />
+    <result column="coupons_ratio" jdbcType="VARCHAR" property="couponsRatio" />
+    <result column="coupons_amount" jdbcType="INTEGER" property="couponsAmount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, coupons_code, coupons_start_time, coupons_end_time, coupons_type, coupons_condition, 
+    coupons_ratio, coupons_amount, create_time, update_time
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />from t_coupons_pool where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_coupons_pool where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.CouponsPool">
+    insert into t_coupons_pool (coupons_code, coupons_start_time,
+      coupons_end_time, coupons_type, coupons_condition, 
+      coupons_ratio, coupons_amount)
+    values (#{couponsCode,jdbcType=VARCHAR},
+            #{couponsStartTime,jdbcType=TIMESTAMP},
+            #{couponsEndTime,jdbcType=TIMESTAMP},
+            #{couponsType,jdbcType=INTEGER},
+            #{couponsCondition,jdbcType=INTEGER},
+            #{couponsRatio,jdbcType=VARCHAR},
+            #{couponsAmount,jdbcType=INTEGER})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.ibay.tea.entity.CouponsPool">
+    update t_coupons_pool
+    set coupons_code = #{couponsCode,jdbcType=VARCHAR},
+      coupons_start_time = #{couponsStartTime,jdbcType=TIMESTAMP},
+      coupons_end_time = #{couponsEndTime,jdbcType=TIMESTAMP},
+      coupons_type = #{couponsType,jdbcType=INTEGER},
+      coupons_condition = #{couponsCondition,jdbcType=INTEGER},
+      coupons_ratio = #{couponsRatio,jdbcType=VARCHAR},
+      coupons_amount = #{couponsAmount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

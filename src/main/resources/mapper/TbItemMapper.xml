@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbItemMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbItem">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="simple_desc" jdbcType="VARCHAR" property="simpleDesc" />
+    <result column="sku_type_ids" jdbcType="VARCHAR" property="skuTypeIds" />
+    <result column="sell_point" jdbcType="VARCHAR" property="sellPoint" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="limit_num" jdbcType="INTEGER" property="limitNum" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="cid" jdbcType="BIGINT" property="cid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    <result column="default_sku_detail_ids" jdbcType="VARCHAR" property="defaultSkuDetailIds" />
+    <result column="poster_image" jdbcType="VARCHAR" property="posterImage" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, title, sku_type_ids, simple_desc,sell_point, price, num, limit_num, image, cid, `status`, created, updated,default_sku_detail_ids,poster_image
+  </sql>
+  <insert id="addGoods" parameterType="com.ibay.tea.entity.TbItem">
+    INSERT INTO tb_item (title, sell_point, price, num, limit_num, image, cid, `status`,
+                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image)
+    VALUES (#{title},#{sellPoint},#{price},#{num},#{limitNum},#{image},#{cid},#{status},
+      #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage}
+    )
+  </insert>
+
+  <insert id="saveUpdateGoods" parameterType="com.ibay.tea.entity.TbItem">
+    INSERT INTO tb_item (id,title, sell_point, price, num, limit_num, image, cid, `status`,
+                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image)
+    VALUES (#{id},#{title},#{sellPoint},#{price},#{num},#{limitNum},#{image},#{cid},#{status},
+                     #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage}
+    )
+  </insert>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select  <include refid="Base_Column_List" /> from tb_item where id = #{id,jdbcType=BIGINT}
+  </select>
+
+    <select id="getGoodsListByCategoryId" resultMap="BaseResultMap" parameterType="long">
+      SELECT * from tb_item WHERE cid = #{cid}
+    </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from tb_item WHERE `status` = 1
+  </select>
+  <select id="findGoodsListByPage" resultMap="BaseResultMap" parameterType="map">
+      SELECT <include refid="Base_Column_List" /> FROM tb_item
+      <where>
+        <if test="title != null">
+          title like #{title}
+        </if>
+        <if test="cid != null">
+          and cid = #{cid}
+        </if>
+      </where>
+      LIMIT #{startIndex} , #{pageSize}
+  </select>
+  <select id="countGoodsByCondition" resultType="java.lang.Long" parameterType="map">
+    SELECT count(1) FROM tb_item
+    <where>
+      <if test="title != null">
+        title like #{title}
+      </if>
+      <if test="cid != null">
+        and cid = #{cid}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteGoods" parameterType="java.lang.Long">
+    delete from tb_item where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+</mapper>
