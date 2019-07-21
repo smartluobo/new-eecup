@@ -32,6 +32,7 @@ public class WechatSendServiceImpl implements WechatSendService {
     private WechatInfoProperties wechatInfoProperties;
 
     public String sendDataToWechatServer(String sendXml) throws Exception {
+        LOGGER.info("create order call wechat send request body : {}",sendXml);
         String result  = "";
         KeyStore keyStore = WechatSignUtil.getKeyStore(wechatInfoProperties.getMchId());
         if (keyStore == null){

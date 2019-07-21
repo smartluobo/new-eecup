@@ -28,4 +28,6 @@ public interface TbUserCouponsMapper {
     List<TbUserCoupons> findUserValidCoupons(String oppenId);
 
     List<TbUserCoupons> getUserCouponsByOppenId(String oppenId);
+
+    TbUserCoupons findCurrentDayUserCoupons(@Param("oppenId") String oppenId, @Param("currentDate") String currentDate);
 }

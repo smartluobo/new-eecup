@@ -1,11 +1,13 @@
 package com.ibay.tea.local;
 
 import com.ibay.tea.common.constant.ApiConstant;
+import com.ibay.tea.common.utils.PriceCalculateUtil;
 import com.ibay.tea.entity.TbApiUserAddress;
 import com.ibay.tea.entity.TbOrder;
 import com.ibay.tea.entity.TbOrderItem;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,17 +20,20 @@ public class LocalTest {
 
     public static void main(String[] args) {
 
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 10 ; i++) {
-            list.add(i);
-        }
-        List<Integer> newList = new ArrayList<>();
-        newList.addAll(list);
+        int i = PriceCalculateUtil.intOrderTbPrice(new BigDecimal(String.valueOf(22.40)));
+        System.out.println(i);
 
-        newList.removeIf(integer -> integer % 2 == 0);
-
-        System.out.println(newList);
-        System.out.println(list);
+//        List<Integer> list = new ArrayList<>();
+//        for (int i = 0; i < 10 ; i++) {
+//            list.add(i);
+//        }
+//        List<Integer> newList = new ArrayList<>();
+//        newList.addAll(list);
+//
+//        newList.removeIf(integer -> integer % 2 == 0);
+//
+//        System.out.println(newList);
+//        System.out.println(list);
 
 
 //        for (int i = 0; i < 10; i++) {

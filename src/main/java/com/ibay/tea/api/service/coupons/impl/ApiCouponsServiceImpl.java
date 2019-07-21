@@ -82,4 +82,10 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
         coverUserCoupon(userCouponsList);
         return userCouponsList;
     }
+
+    @Override
+    public TbUserCoupons findCurrentDayUserCoupons(String oppenId, String currentDate) {
+
+        return tbUserCouponsMapper.findCurrentDayUserCoupons(oppenId,currentDate);
+    }
 }

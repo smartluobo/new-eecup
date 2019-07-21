@@ -106,7 +106,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             return null;
         }
         CalculateReturnVo calculateReturnVo = calculateCartOrderPrice(cartOrderParamVo,true);
-        LOGGER.info("calculate success......");
+        LOGGER.info("create order calculate order price  success......calculateReturnVo ; {}",calculateReturnVo);
         if (calculateReturnVo == null){
             return null;
         }
@@ -164,7 +164,6 @@ public class ApiOrderServiceImpl implements ApiOrderService {
 
         if ("oHqQ75F9LGcWIblYeuGpHgla5G8k".equals(oppenId) ||
                 "oHqQ75BT_yefBUhcpnDNPLlWXgIE".equals(oppenId) ||
-                "oHqQ75GRLFLgbdQdsPKHpeOA1ULE".equals(oppenId) ||
                 "oHqQ75Nq2unkZYnshI5s-QBBGKrg".equals(oppenId)
                 ){
             LOGGER.info("current oppenId : {} create order no pay",oppenId);
@@ -435,16 +434,17 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             String fullReduceName = null;
             String couponsName = null;
 
-            if (realGoodsCount >=6){
+            if (realGoodsCount >= 6){
                 //走满五赠一的流程，数量6 赠送一杯付款五杯价钱 数量12 赠送两杯 付款十杯价钱
                 List<TbItem> newGoodsList = new ArrayList<>();
-                newGoodsList.addAll(newGoodsList);
+                newGoodsList.addAll(goodsList);
                 newGoodsList.removeIf(tbItem -> tbItem.getIsIngredients() == 1);
                 int giveCount = realGoodsCount / 6;
                 groupGiveName = "满"+(giveCount*5)+"杯送"+giveCount+"杯";
                 Collections.sort(newGoodsList);
-                for (int i = 0; i< goodsList.size() && giveCount > 0; i++){
-                    TbItem tbItem = goodsList.get(i);
+
+                for (int i = 0; i< newGoodsList.size() && giveCount > 0; i++){
+                    TbItem tbItem = newGoodsList.get(i);
                     if (tbItem.getCartItemCount() >= giveCount){
                         groupGiveAmount += PriceCalculateUtil.multy(tbItem.getCartPrice(),String.valueOf(giveCount));
                         break;

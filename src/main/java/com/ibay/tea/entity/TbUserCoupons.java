@@ -36,6 +36,8 @@ public class TbUserCoupons {
 
     private String useScope;
 
+    private int activityId;
+
     public Integer getId() {
         return id;
     }
@@ -159,5 +161,13 @@ public class TbUserCoupons {
 
     public void setUseScope(String useScope) {
         this.useScope = useScope;
+    }
+
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
     }
 }

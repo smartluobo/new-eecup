@@ -60,6 +60,7 @@ public class ApiPayServiceImpl implements ApiPayService {
     @Resource
     private StoreCache storeCache;
 
+    @Resource
     private TbUserCouponsMapper tbUserCouponsMapper;
 
     @Override
@@ -131,6 +132,7 @@ public class ApiPayServiceImpl implements ApiPayService {
             updateMap.put("orderId",orderId);
             updateMap.put("updateTime",new Date());
             if (resultMap.get("result_code").equals("SUCCESS")) {
+                LOGGER.info("current order orderId : {orderId} pay success",orderId);
                 //支付成功更新
                 //1更新订单状态
                 updateMap.put("orderStatus",1);
@@ -156,6 +158,7 @@ public class ApiPayServiceImpl implements ApiPayService {
                 //异步调用订单打印
                 TbStore store = storeCache.findStoreById(tbOrder.getStoreId());
                 printService.printOrder(tbOrder, store, ApiConstant.PRINT_TYPE_ORDER_ALL);
+                LOGGER.info("pay call back print order success orderId : {}",tbOrder.getOrderId());
             } else {
                 //支付失败更新
                 //更新支付记录状态，库存和订单状态不用修改
@@ -195,7 +198,7 @@ public class ApiPayServiceImpl implements ApiPayService {
         LOGGER.info("order pay notifyUrl : {}",notifyUrl);
         request.setNotify_url(notifyUrl);
         request.setSign_type(wechatInfoProperties.getSignType());
-        request.setTotal_fee(PriceCalculateUtil.intOrderTbPrice(new BigDecimal(tbOrder.getPayment())));
+        request.setTotal_fee(PriceCalculateUtil.intOrderTbPrice(new BigDecimal(String.valueOf(tbOrder.getPayment()))));
         request.setTrade_type(wechatInfoProperties.getTradeType());
         request.setOut_trade_no(tbOrder.getOrderId());
         request.setSpbill_create_ip(wechatInfoProperties.getClientIp());

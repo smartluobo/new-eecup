@@ -4,12 +4,10 @@ import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.activity.ApiActivityService;
 import com.ibay.tea.api.service.coupons.ApiCouponsService;
 import com.ibay.tea.api.service.user.ApiUserService;
+import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.DateUtil;
-import com.ibay.tea.entity.TbActivity;
-import com.ibay.tea.entity.TbActivityCouponsRecord;
-import com.ibay.tea.entity.TbApiUser;
-import com.ibay.tea.entity.TbUserCoupons;
+import com.ibay.tea.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -40,6 +38,9 @@ public class ApiActivityController {
     @Resource
     private ApiUserService apiUserService;
 
+    @Resource
+    private ActivityCache activityCache;
+
     //查询活动，如果当前时间没有活动在进行中查询最近的活动开始时间，点击查看活动奖品
     // 如果在开奖时间内且还有奖品提示用户参与抽奖，若奖品已经发放完毕且用户没有获奖提示用户明天继续参与
     // 若用户已经在当天参与抽奖并获得优惠券提示用户立即使用
@@ -53,6 +54,7 @@ public class ApiActivityController {
         try {
             String oppenId = params.get("oppenId");
             String storeId = params.get("storeId");
+            LOGGER.info("params oppenId : {},storeId : {}",oppenId,storeId);
             if (StringUtils.isEmpty(oppenId) || StringUtils.isEmpty(storeId)){
                 return ResultInfo.newEmptyParamsResultInfo();
             }
@@ -62,6 +64,7 @@ public class ApiActivityController {
                 return ResultInfo.newEmptyResultInfo();
             }
             if (activityInfo.getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
+                LOGGER.info("getActivityInfo return ACTIVITY_TYPE_FULL ");
                 activityInfo.setShowImageUrl(activityInfo.getStartingPoster());
                 result.put("type",5);
                 result.put("info",activityInfo);
@@ -70,6 +73,7 @@ public class ApiActivityController {
             }
             int activityStatus = apiActivityService.checkActivityStatus(activityInfo);
             if (activityStatus == ApiConstant.ACTIVITY_STATUS_NOT_START){
+                LOGGER.info("getActivityInfo activity no start");
                 activityInfo.setStatus(activityStatus);
                 apiActivityService.setExtractTime(activityInfo);
                 activityInfo.setShowImageUrl(activityInfo.getNoStartPoster());
@@ -86,6 +90,7 @@ public class ApiActivityController {
                 condition.put("receiveDate", DateUtil.getDateYyyyMMdd());
                 TbUserCoupons tbUserCoupons = apiCouponsService.findCouponsByCondition(condition);
                 if (tbUserCoupons == null){
+                    LOGGER.info("getActivityInfo activity starting");
                     result.put("type",2);
                     activityInfo.setStatus(activityStatus);
                     activityInfo.setShowImageUrl(activityInfo.getStartingPoster());
@@ -95,6 +100,7 @@ public class ApiActivityController {
                     return resultInfo;
                 }
                 if (tbUserCoupons.getStatus() == ApiConstant.USER_COUPONS_STATUS_NO_USE){
+                    LOGGER.info("getActivityInfo activity user have coupons");
                     result.put("type",3);
                     result.put("info",tbUserCoupons);
                     resultInfo.setData(result);
@@ -132,6 +138,7 @@ public class ApiActivityController {
         }
         String oppenId = params.get("oppenId");
         String storeId = params.get("storeId");
+        LOGGER.info("extractPrize params oppenId : {} ,storeId : {}",oppenId,storeId);
         if (StringUtils.isEmpty(oppenId) || StringUtils.isEmpty(storeId)){
             return ResultInfo.newEmptyParamsResultInfo();
         }
@@ -140,6 +147,20 @@ public class ApiActivityController {
             TbApiUser tbApiUser = apiUserService.findApiUserByOppenId(oppenId);
             if (tbApiUser == null){
                 return ResultInfo.newNoLoginResultInfo();
+            }
+
+
+            TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(Integer.valueOf(storeId));
+            if (todayActivityBean == null || todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
+                return null;
+            }
+            String currentDate = DateUtil.getDateYyyyMMdd();
+            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayUserCoupons(oppenId,currentDate);
+            if (userCoupons != null){
+                TbUserCoupons tbUserCoupons = new TbUserCoupons();
+                tbUserCoupons.setCouponsPoster(todayActivityBean.getTbActivity().getWinPoster());
+                resultInfo.setData(tbUserCoupons);
+                return resultInfo;
             }
             //判断通过执行抽奖过程
             TbActivityCouponsRecord record = apiActivityService.extractPrize(oppenId,Integer.valueOf(storeId));
@@ -171,7 +192,9 @@ public class ApiActivityController {
         try {
         	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             int activityId = params.get("activityId");
+            LOGGER.info("getJackpotInfo params activityId : {}",activityId);
             List<TbActivityCouponsRecord> recordList = apiActivityService.getJackpotInfo(activityId);
+            LOGGER.info("getJackpotInfo activity coupons type count : {}",recordList.size());
             List<TbActivityCouponsRecord> newList = new ArrayList<>();
             for (TbActivityCouponsRecord record : recordList) {
                 TbActivityCouponsRecord copy = record.copy();

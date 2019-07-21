@@ -184,7 +184,7 @@ public class ApiOrderController {
             LOGGER.info("calculateCartOrderPrice CartOrderParamVo : {}",paramVo);
         	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             CalculateReturnVo calculateReturnVo = apiOrderService.calculateCartOrderPrice(paramVo,false);
-            LOGGER.info(" cart calculate price calculateReturnVo : {}",calculateReturnVo);
+            LOGGER.info(" call cart calculate price calculateReturnVo : {}",calculateReturnVo);
             resultInfo.setData(calculateReturnVo);
             return resultInfo;
         }catch (Exception e){
@@ -221,6 +221,7 @@ public class ApiOrderController {
             if (flag){
                 //处理成功
                 lastXml = WxUtil.returnXML("SUCCESS");
+                LOGGER.info("wechat pay call back update success *******");
             }else{
                 //处理失败
                 lastXml =  WxUtil.returnXML("FAIL");
@@ -229,7 +230,7 @@ public class ApiOrderController {
             return lastXml;
         } catch (Exception e) {
             lastXml =  WxUtil.returnXML("FAIL");
-            LOGGER.info("wechat pay callback return info : {}" + lastXml);
+            LOGGER.info("wechat pay callback return info : {} happen exception" + lastXml,e);
             return lastXml;
         }
     }

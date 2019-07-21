@@ -53,6 +53,10 @@
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} limit 0,10
   </select>
 
+  <select id="findCurrentDayUserCoupons" resultType="com.ibay.tea.entity.TbUserCoupons">
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and receive_date = #{currentDate} limit 0,1
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_user_coupons  where id = #{id,jdbcType=INTEGER}
   </delete>

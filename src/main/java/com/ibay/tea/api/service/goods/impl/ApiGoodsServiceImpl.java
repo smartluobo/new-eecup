@@ -93,7 +93,7 @@ public class ApiGoodsServiceImpl implements ApiGoodsService {
         for (TbItem tbItem : goodsList) {
             for (TbStoreGoods tbStoreGoods : storeGoodsList) {
                 if (tbItem.getId().intValue() == tbStoreGoods.getGoodsId()){
-                    tbItem.setNum(tbStoreGoods.getGoodsInventory());
+                    tbItem.setNum(tbStoreGoods.getGoodsInventory() > 0 ? tbStoreGoods.getGoodsInventory() : 0);
                 }
             }
         }

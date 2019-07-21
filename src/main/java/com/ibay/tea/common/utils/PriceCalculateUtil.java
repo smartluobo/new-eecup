@@ -29,6 +29,7 @@ public class PriceCalculateUtil {
     }
 
     public static int intOrderTbPrice(BigDecimal payment) {
+
         return payment.multiply(new BigDecimal(100)).intValue();
     }
 
