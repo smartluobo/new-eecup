@@ -19,6 +19,8 @@ public class TbApiUser {
 
     private Date updateTime;
 
+    private String referrerOppenId;
+
     public String getUserHeadImage() {
         return userHeadImage;
     }
@@ -91,5 +93,13 @@ public class TbApiUser {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getReferrerOppenId() {
+        return referrerOppenId;
+    }
+
+    public void setReferrerOppenId(String referrerOppenId) {
+        this.referrerOppenId = referrerOppenId;
     }
 }

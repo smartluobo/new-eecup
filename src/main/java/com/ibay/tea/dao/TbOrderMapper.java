@@ -1,6 +1,7 @@
 package com.ibay.tea.dao;
 
 import com.ibay.tea.entity.TbOrder;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +32,8 @@ public interface TbOrderMapper {
     List<TbOrder> findExpireOrder();
 
     int updateOrderTimeOutClose(String orderId);
+
+    void cancelOrder(@Param("oppenId") String oppenId, @Param("orderId") String orderId);
+
+    Integer findHistoryOrderCount(@Param("oppenId") String oppenId);
 }

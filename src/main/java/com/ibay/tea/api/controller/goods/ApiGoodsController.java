@@ -43,6 +43,9 @@ public class ApiGoodsController {
         if (categoryId == null || categoryId == 0){
             return  ResultInfo.newEmptyParamsResultInfo();
         }
+        if (storeId == null){
+            storeId = 2L;
+        }
         TbStore store = storeCache.findStoreById(storeId.intValue());
         //店铺扩展价格
         int extraPrice = store.getExtraPrice();

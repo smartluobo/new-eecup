@@ -29,4 +29,6 @@ public interface ApiOrderService {
     List<TbOrderItem> findOrderItemByOrderId(String orderId);
 
     List<TbOrder> findOrderByOppenId(String oppenId);
+
+    void cancelOrder(String oppenId, String orderId);
 }

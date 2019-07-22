@@ -17,8 +17,11 @@
     id, nick_name, wechat_num, oppen_id, wechat_phone_num, user_bind_phone_num, create_time, 
     update_time, user_head_image
   </sql>
+    <update id="updateApiUserInfo" parameterType="map">
+      UPDATE tb_api_user SET nick_name = #{nickName},user_head_image = #{userHeadImage} where oppen_id = #{oppenId}
+    </update>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select  <include refid="Base_Column_List" /> from tb_api_user where id = #{id,jdbcType=INTEGER}
   </select>
 

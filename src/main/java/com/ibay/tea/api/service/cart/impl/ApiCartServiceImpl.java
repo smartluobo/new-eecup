@@ -98,7 +98,7 @@ public class ApiCartServiceImpl implements ApiCartService {
             }
             goodsInfo.setCartPrice(goodsInfo.getPrice());
             goodsInfo.setCartItemCount(tbCart.getItemCount());
-            goodsInfo.setCartTotalPrice(PriceCalculateUtil.multy(goodsInfo.getPrice(),goodsInfo.getCartItemCount()));
+            goodsInfo.setCartTotalPrice(PriceCalculateUtil.multiply(goodsInfo.getPrice(),goodsInfo.getCartItemCount()));
             goodsInfo.setSkuDetailDesc(tbCart.getSkuDetailDesc());
         }
         return goodsInfo;

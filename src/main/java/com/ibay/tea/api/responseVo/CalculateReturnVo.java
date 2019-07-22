@@ -14,7 +14,7 @@ public class CalculateReturnVo {
     private double orderReduceAmount;
     //优惠策略名称
     private String couponsName;
-    //0-无优惠 1 满五赠一系列 2 满减系列 3 优惠券
+    //0-无优惠 1 满五赠一系列 2 满减系列 3 优惠券 4新用户
     private int couponsType;
 
     private List<TbItem> goodsList;

@@ -2,6 +2,7 @@ package com.ibay.tea.dao;
 
 import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.TbApiUserAddress;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +17,5 @@ public interface TbApiUserMapper {
 
     TbApiUser findApiUserByOppenId(String oppenId);
 
+    void updateApiUserInfo(@Param("oppenId") String oppenId, @Param("nickName")String nickName, @Param("userHeadImage")String userHeadImage);
 }

@@ -235,5 +235,23 @@ public class ApiOrderController {
         }
     }
 
+    @RequestMapping("/cancelOrder")
+    public ResultInfo cancelOrder(@RequestBody Map<String,String> params){
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        String oppenId = params.get("oppenId");
+        String orderId = params.get("orderId");
+        LOGGER.info("current user oppenId : {} cancle order orderId : {}",oppenId,orderId);
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            apiOrderService.cancelOrder(oppenId,orderId);
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("calculateGoodsOrderPrice GoodsOrderParamVo : {}",params,e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+    }
+
 
 }

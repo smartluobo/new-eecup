@@ -3,18 +3,13 @@ package com.ibay.tea.api.controller.cart;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.cart.ApiCartService;
 import com.ibay.tea.api.service.goods.ApiGoodsService;
-import com.ibay.tea.cache.ActivityCache;
-import com.ibay.tea.cache.StoreCache;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
 import com.ibay.tea.entity.TbCart;
 import com.ibay.tea.entity.TbItem;
-import com.ibay.tea.entity.TbStore;
-import com.ibay.tea.entity.TodayActivityBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,7 +52,7 @@ public class ApiCartController {
             for (TbItem tbItem : cartGoodsList) {
                 if (tbItem.getShowActivityPrice() == 1){
                     tbItem.setCartPrice(tbItem.getActivityPrice());
-                    tbItem.setCartTotalPrice(PriceCalculateUtil.multy(tbItem.getCartPrice(),tbItem.getCartItemCount()));
+                    tbItem.setCartTotalPrice(PriceCalculateUtil.multiply(tbItem.getCartPrice(),tbItem.getCartItemCount()));
                 }
             }
             apiGoodsService.checkGoodsInventory(cartGoodsList,Integer.valueOf(storeId));

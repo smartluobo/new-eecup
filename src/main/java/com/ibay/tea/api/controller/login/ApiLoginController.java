@@ -36,6 +36,8 @@ public class ApiLoginController {
                 return ResultInfo.newEmptyResultInfo();
             }
             code = codeParam.get("code");
+            String referrerOppenId = codeParam.get("referrerOppenId");
+
             LOGGER.info("code:{}",code);
             if (StringUtils.isEmpty(code)){
                 return ResultInfo.newEmptyResultInfo();

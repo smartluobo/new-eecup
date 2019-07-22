@@ -5,7 +5,6 @@ import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.cache.GoodsCache;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
-import com.ibay.tea.dao.GoodsMapper;
 import com.ibay.tea.dao.TbItemMapper;
 import com.ibay.tea.dao.TbStoreGoodsMapper;
 import com.ibay.tea.entity.*;
@@ -139,7 +138,7 @@ public class ApiGoodsServiceImpl implements ApiGoodsService {
         goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
         TbActivityCouponsRecord tbActivityCouponsRecord = todayActivityBean.getTbActivityCouponsRecordList().get(0);
         TbCoupons tbCoupons = activityCache.getTbCouponsById(tbActivityCouponsRecord.getCouponsId());
-        double activityPrice = PriceCalculateUtil.multy(goodsInfo.getPrice(),tbCoupons.getCouponsRatio());
+        double activityPrice = PriceCalculateUtil.multiply(goodsInfo.getPrice(),tbCoupons.getCouponsRatio());
         goodsInfo.setActivityPrice(activityPrice);
     }
 

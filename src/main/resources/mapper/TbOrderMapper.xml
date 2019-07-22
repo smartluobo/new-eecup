@@ -95,9 +95,17 @@
     SELECT <include refid="Base_Column_List" /> from tb_order where `status` = 0 and <![CDATA[ create_time < NOW()-30*60 ]]>
   </select>
 
+  <select id="findHistoryOrderCount" resultType="java.lang.Integer" parameterType="string">
+    SELECT count(1) FROM tb_order WHERE oppen_id = #{oppenId} and `status` in (1,2,3)
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from tb_order where order_id = #{orderId,jdbcType=VARCHAR}
   </delete>
+
+  <update id="cancelOrder" parameterType="map">
+    UPDATE tb_order SET `status` = 5 WHERE order_id = #{orderId} and oppen_id = #{oppenId} and `status` = 0
+  </update>
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbOrder">
     insert into tb_order (order_id, payment, payment_type, 

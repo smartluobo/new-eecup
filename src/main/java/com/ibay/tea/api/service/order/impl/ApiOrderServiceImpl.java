@@ -3,7 +3,6 @@ package com.ibay.tea.api.service.order.impl;
 import com.ibay.tea.api.config.WechatInfoProperties;
 import com.ibay.tea.api.paramVo.CartOrderParamVo;
 import com.ibay.tea.api.paramVo.GoodsOrderParamVo;
-import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.responseVo.CalculateReturnVo;
 import com.ibay.tea.api.service.address.ApiAddressService;
 import com.ibay.tea.api.service.cart.ApiCartService;
@@ -16,7 +15,6 @@ import com.ibay.tea.cache.StoreCache;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.PrintService;
 import com.ibay.tea.common.utils.DateUtil;
-import com.ibay.tea.common.utils.Md5Util;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
 import com.ibay.tea.common.utils.SerialGenerator;
 import com.ibay.tea.dao.*;
@@ -26,10 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -416,7 +412,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                     List<TbActivityCouponsRecord> activityCouponsRecordsByActivityId = activityCache.getActivityCouponsRecordsByActivityId(tbActivity.getId());
                     TbActivityCouponsRecord couponsRecord = activityCouponsRecordsByActivityId.get(0);
                     TbCoupons tbCouponsById = activityCache.getTbCouponsById(couponsRecord.getCouponsId());
-                    double payment = PriceCalculateUtil.multy(orderTotalPrice, tbCouponsById.getCouponsRatio());
+                    double payment = PriceCalculateUtil.multiply(orderTotalPrice, tbCouponsById.getCouponsRatio());
                     LOGGER.info("full activity payment : {}",payment);
 
                     calculateReturnVo.setOrderReduceAmount(PriceCalculateUtil.subtract(orderTotalPrice,payment));
@@ -446,13 +442,13 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                 for (int i = 0; i< newGoodsList.size() && giveCount > 0; i++){
                     TbItem tbItem = newGoodsList.get(i);
                     if (tbItem.getCartItemCount() >= giveCount){
-                        groupGiveAmount += PriceCalculateUtil.multy(tbItem.getCartPrice(),String.valueOf(giveCount));
+                        groupGiveAmount += PriceCalculateUtil.multiply(tbItem.getCartPrice(),String.valueOf(giveCount));
                         break;
                     }else if (giveCount > tbItem.getCartItemCount()){
-                        groupGiveAmount  += PriceCalculateUtil.multy(tbItem.getCartPrice(), String.valueOf(tbItem.getCartItemCount()));
+                        groupGiveAmount  += PriceCalculateUtil.multiply(tbItem.getCartPrice(), String.valueOf(tbItem.getCartItemCount()));
                         giveCount -= tbItem.getCartItemCount();
                     }else {
-                        groupGiveAmount  += PriceCalculateUtil.multy(tbItem.getCartPrice(), String.valueOf(giveCount));
+                        groupGiveAmount  += PriceCalculateUtil.multiply(tbItem.getCartPrice(), String.valueOf(giveCount));
                         giveCount = 0;
                     }
                 }
@@ -480,6 +476,19 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                     couponsName = tbCouponsById.getCouponsName();
                 }
             }
+            Integer historyOrderCount = tbOrderMapper.findHistoryOrderCount(oppenId);
+            double newUserReduceAmount = 0.0;
+            if (historyOrderCount == null || historyOrderCount == 0){
+                //new user create order
+                List<TbItem> newGoodsList = new ArrayList<>();
+                newGoodsList.addAll(goodsList);
+                newGoodsList.removeIf(tbItem -> tbItem.getIsIngredients() == 1);
+                Collections.sort(newGoodsList);
+                if (newGoodsList.size() > 0 ){
+                    double cartPrice = newGoodsList.get(0).getCartPrice();
+                    newUserReduceAmount = PriceCalculateUtil.multiply(cartPrice,"0.5");
+                }
+            }
 
             //判断哪种策略对消费者最优惠
             if (cartOrderParamVo.getSelfGet() == ApiConstant.ORDER_TAKE_WAY_SEND){
@@ -490,13 +499,18 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                 calculateReturnVo.setUserCouponsId(tbUserCoupons.getId());
                 calculateReturnVo.setUserCouponsName(tbUserCoupons.getCouponsName());
             }
+            if (calculateReturnVo.getOrderReduceAmount() < newUserReduceAmount){
+                calculateReturnVo.setCouponsName("新用户首杯半价");
+                calculateReturnVo.setCouponsType(4);
+                calculateReturnVo.setOrderReduceAmount(newUserReduceAmount);
+                calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.subtract(calculateReturnVo.getOrderTotalAmount(),newUserReduceAmount));
+            }
             if (isCreateOrder){
                 calculateReturnVo.setGoodsList(goodsList);
             }
             LOGGER.info("current order totalGoodsCount : {},realGoodsCount:{}",totalGoodsCount,realGoodsCount);
             return calculateReturnVo;
         }
-
         return null;
     }
 
@@ -545,7 +559,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         goods.setCartItemCount(goodsOrderParamVo.getGoodsCount());
         goods.setCartSkuDetailIds(goodsOrderParamVo.getSkuDetailIds());
         goods.setSkuDetailDesc(goodsOrderParamVo.getSkuDetailDesc());
-        double orderTotalPrice = PriceCalculateUtil.multy(goodsPrice,goodsOrderParamVo.getGoodsCount());
+        double orderTotalPrice = PriceCalculateUtil.multiply(goodsPrice,goodsOrderParamVo.getGoodsCount());
         double couponsReduceAmount = 0.0;
         String couponsName = null;
         double groupGiveAmount = 0.0;
@@ -558,7 +572,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             //走满五赠一的流程，数量6 赠送一杯付款五杯价钱 数量12 赠送两杯 付款十杯价钱
             int giveCount = goodsCount / 6;
             groupGiveName = "满"+(giveCount*5)+"杯送"+giveCount+"杯";
-            groupGiveAmount += PriceCalculateUtil.multy(goodsPrice,String.valueOf(giveCount));
+            groupGiveAmount += PriceCalculateUtil.multiply(goodsPrice,String.valueOf(giveCount));
         }
         if (orderTotalPrice >= 100){
             List<TbCoupons> tbCouponsList = tbCouponsMapper.findFullReduceCoupons();
@@ -642,5 +656,18 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         return orderByOppenId;
     }
 
-
+    @Override
+    public void cancelOrder(String oppenId, String orderId) {
+        TbOrder tbOrder = tbOrderMapper.selectByPrimaryKey(orderId);
+        if (tbOrder == null ){
+            return;
+        }
+        if (tbOrder.getStatus() != 0){
+            return;
+        }
+        tbOrderMapper.cancelOrder(oppenId,orderId);
+        if (tbOrder.getUserCouponsId() != 0){
+            tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),0);
+        }
+    }
 }

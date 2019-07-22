@@ -46,6 +46,11 @@ public class ApiUserServiceImpl implements ApiUserService{
         tbApiUserMapper.insert(tbApiUser);
     }
 
+    @Override
+    public void updateApiUserInfo(String oppenId, String nickName, String userHeadImage) {
+        tbApiUserMapper.updateApiUserInfo(oppenId,nickName,userHeadImage);
+    }
+
     private Map<String,String> getApiUserInfoByOppenId(String oppenId) {
         try {
             String token = wechatTokenGuavaCache.get(ApiConstant.WECHAT_ACCESS_TOKEN_GUAVA_KEY);
