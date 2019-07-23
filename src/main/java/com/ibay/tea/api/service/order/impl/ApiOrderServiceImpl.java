@@ -198,7 +198,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
     private double getCouponsReduceAmount( double maxPriceValue, TbCoupons tbCoupons) {
         double couponsReduceAmount = 0.0;
 
-        if (tbCoupons.getCouponsType() == ApiConstant.USER_COUPONS_TYPE_RATIO){
+        if (tbCoupons.getCouponsType() == ApiConstant.USER_COUPONS_TYPE_RATIO || tbCoupons.getCouponsType() == ApiConstant.USER_COUPONS_TYPE_GENERAL){
             //打折优惠券,选择商品中单价最大的进行打折
             couponsReduceAmount = PriceCalculateUtil.ratioCouponsPriceCalculate(tbCoupons, maxPriceValue);
         }
