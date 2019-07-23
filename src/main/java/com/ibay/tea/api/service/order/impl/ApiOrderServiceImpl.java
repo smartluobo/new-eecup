@@ -125,15 +125,20 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             tbOrderItem.setSkuDetailDesc(tbItem.getSkuDetailDesc());
             tbOrderItems.add(tbOrderItem);
         }
+
         TbOrder tbOrder = buildTbOrder(oppenId, selfGet, userAddress);
         tbOrder.setPosterUrl(goodsList.get(0).getImage());
         tbOrder.setStoreId(store.getId());
         tbOrder.setStoreName(store.getStoreName());
         tbOrder.setGoodsName(goodsList.get(0).getTitle());
         tbOrder.setGoodsTotalCount(totalGoodsCount);
+        tbOrder.setBuyerMessage(cartOrderParamVo.getBuyerMessage());
         if (calculateReturnVo.getCouponsType() == 3){
             tbOrder.setUserCouponsId(calculateReturnVo.getUserCouponsId());
             tbOrder.setUserCouponsName(calculateReturnVo.getUserCouponsName());
+        }
+        if (calculateReturnVo.getCouponsType() == 4){
+            tbOrder.setIsFirstOrder(1);
         }
         //订单实际金额
         tbOrder.setOrderPayment(calculateReturnVo.getOrderTotalAmount());

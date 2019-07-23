@@ -32,7 +32,7 @@ public class ApiUserServiceImpl implements ApiUserService{
     }
 
     @Override
-    public void saveApiUser(String oppenId) {
+    public void saveApiUser(String oppenId,String referrerOppenId) {
         TbApiUser apiUserByOppenId = tbApiUserMapper.findApiUserByOppenId(oppenId);
         if (apiUserByOppenId != null){
             return;
@@ -43,6 +43,7 @@ public class ApiUserServiceImpl implements ApiUserService{
         tbApiUser.setOppenId(oppenId);
         tbApiUser.setCreateTime(new Date());
         tbApiUser.setUpdateTime(new Date());
+        tbApiUser.setReferrerOppenId(referrerOppenId);
         tbApiUserMapper.insert(tbApiUser);
     }
 

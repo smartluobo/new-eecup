@@ -7,7 +7,7 @@ public interface ApiUserService {
 
     TbApiUser findApiUserByOppenId(String oppenId);
 
-    void saveApiUser(String oppenId);
+    void saveApiUser(String oppenId,String referrerOppenId);
 
     void updateApiUserInfo(String oppenId, String nickName, String userHeadImage);
 }

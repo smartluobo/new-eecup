@@ -38,7 +38,7 @@ public class ApiLoginController {
             code = codeParam.get("code");
             String referrerOppenId = codeParam.get("referrerOppenId");
 
-            LOGGER.info("code:{}",code);
+            LOGGER.info("code:{},referrerOppenId : {}",code,referrerOppenId);
             if (StringUtils.isEmpty(code)){
                 return ResultInfo.newEmptyResultInfo();
             }
@@ -46,7 +46,7 @@ public class ApiLoginController {
             String oppenId = apiLoginService.login(code);
             LOGGER.info("oppenId : {}",oppenId);
             if (StringUtils.isNotEmpty(oppenId)){
-                apiUserService.saveApiUser(oppenId);
+                apiUserService.saveApiUser(oppenId,referrerOppenId);
 
             }
             resultInfo.setData(oppenId);

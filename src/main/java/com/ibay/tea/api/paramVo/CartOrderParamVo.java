@@ -9,6 +9,8 @@ public class CartOrderParamVo {
    private int selfGet;
    private int storeId;
    private String orderId;
+   private String buyerMessage;
+
 
     public String getOppenId() {
         return oppenId;
@@ -64,6 +66,14 @@ public class CartOrderParamVo {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getBuyerMessage() {
+        return buyerMessage;
+    }
+
+    public void setBuyerMessage(String buyerMessage) {
+        this.buyerMessage = buyerMessage;
     }
 
     @Override

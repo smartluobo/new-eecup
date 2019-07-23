@@ -89,6 +89,9 @@ public class TbOrder {
 
     private int userAddressId;
 
+
+    private int isFirstOrder;
+
     public String getOrderId() {
         return orderId;
     }
@@ -388,5 +391,13 @@ public class TbOrder {
 
     public void setUserAddressId(int userAddressId) {
         this.userAddressId = userAddressId;
+    }
+
+    public int getIsFirstOrder() {
+        return isFirstOrder;
+    }
+
+    public void setIsFirstOrder(int isFirstOrder) {
+        this.isFirstOrder = isFirstOrder;
     }
 }

@@ -11,9 +11,10 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="coupons_poster" jdbcType="VARCHAR" property="couponsPoster" />
     <result column="expire_date" jdbcType="TIMESTAMP" property="expireDate" />
+    <result column="is_referrer" jdbcType="INTEGER" property="isReferrer" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date
+    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer
   </sql>
 
   <update id="updateStatusById" parameterType="int">
@@ -57,14 +58,18 @@
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and receive_date = #{currentDate} limit 0,1
   </select>
 
+  <select id="findReferrerCoupons" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0 and is_referrer = 1
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_user_coupons  where id = #{id,jdbcType=INTEGER}
   </delete>
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbUserCoupons" keyProperty="id" useGeneratedKeys="true">
-    insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date)
+    insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer)
     values (#{oppenId,jdbcType=VARCHAR}, #{couponsId,jdbcType=INTEGER},
       #{couponsName,jdbcType=VARCHAR}, #{receiveDate,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER},#{couponsPoster},#{expireDate})
+      #{status,jdbcType=INTEGER},#{couponsPoster},#{expireDate},#{isReferrer})
   </insert>
 </mapper>

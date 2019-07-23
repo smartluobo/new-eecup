@@ -10,10 +10,7 @@ import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.PrintService;
 import com.ibay.tea.common.utils.*;
 import com.ibay.tea.dao.*;
-import com.ibay.tea.entity.TbOrder;
-import com.ibay.tea.entity.TbOrderItem;
-import com.ibay.tea.entity.TbStore;
-import com.ibay.tea.entity.TbUserPayRecord;
+import com.ibay.tea.entity.*;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -62,6 +59,9 @@ public class ApiPayServiceImpl implements ApiPayService {
 
     @Resource
     private TbUserCouponsMapper tbUserCouponsMapper;
+
+    @Resource
+    private TbApiUserMapper tbApiUserMapper;
 
     @Override
     public Map<String, Object> createPayOrderToWechat(TbOrder tbOrder) throws Exception{
@@ -158,6 +158,18 @@ public class ApiPayServiceImpl implements ApiPayService {
                 //异步调用订单打印
                 TbStore store = storeCache.findStoreById(tbOrder.getStoreId());
                 printService.printOrder(tbOrder, store, ApiConstant.PRINT_TYPE_ORDER_ALL);
+                //tuijianren chuli
+                if (tbOrder.getIsFirstOrder() == 1){
+                    TbApiUser apiUser = tbApiUserMapper.findApiUserByOppenId(tbOrder.getOppenId());
+                    String referrerOppenId = apiUser.getReferrerOppenId();
+                    TbUserCoupons referrerCoupons = tbUserCouponsMapper.findReferrerCoupons(referrerOppenId);
+                    if (referrerCoupons == null){
+
+                    }else{
+                        //todo
+                    }
+
+                }
                 LOGGER.info("pay call back print order success orderId : {}",tbOrder.getOrderId());
             } else {
                 //支付失败更新

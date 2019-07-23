@@ -38,6 +38,8 @@ public class TbUserCoupons {
 
     private int activityId;
 
+    private int isReferrer;
+
     public Integer getId() {
         return id;
     }
@@ -169,5 +171,13 @@ public class TbUserCoupons {
 
     public void setActivityId(int activityId) {
         this.activityId = activityId;
+    }
+
+    public int getIsReferrer() {
+        return isReferrer;
+    }
+
+    public void setIsReferrer(int isReferrer) {
+        this.isReferrer = isReferrer;
     }
 }

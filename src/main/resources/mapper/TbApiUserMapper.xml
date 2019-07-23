@@ -11,6 +11,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="user_head_image" jdbcType="VARCHAR" property="userHeadImage" />
+    <result column="referrer_oppen_id" jdbcType="VARCHAR" property="referrerOppenId" />
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -36,11 +37,11 @@
   <insert id="insert" parameterType="com.ibay.tea.entity.TbApiUser">
     insert into tb_api_user (nick_name, wechat_num,
       oppen_id, wechat_phone_num, user_bind_phone_num,
-      create_time, update_time, user_head_image
+      create_time, update_time, user_head_image,referrer_oppen_id
       )
     values (#{nickName,jdbcType=VARCHAR}, #{wechatNum,jdbcType=VARCHAR},
       #{oppenId,jdbcType=VARCHAR}, #{wechatPhoneNum,jdbcType=VARCHAR}, #{userBindPhoneNum,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{userHeadImage,jdbcType=VARCHAR}
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{userHeadImage,jdbcType=VARCHAR},#{referrerOppenId,jdbcType=VARCHAR}
       )
   </insert>
 
