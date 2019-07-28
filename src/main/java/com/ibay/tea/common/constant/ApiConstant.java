@@ -9,6 +9,10 @@ public class ApiConstant {
     //全场折扣体现在商品价格上的活动类型
     public static final int ACTIVITY_TYPE_FULL = 3;
 
+    public static final int ACTIVITY_TYPE_1_1 = 4;
+
+    public static final int ACTIVITY_TYPE_TWO_HALF = 5;
+
     //活动未开始
     public static final int ACTIVITY_STATUS_NOT_START = 0;
     //活动进行中

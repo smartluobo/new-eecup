@@ -25,6 +25,8 @@ public class CalculateReturnVo {
 
     private String userCouponsName;
 
+    private String phoneNum;
+
     public double getOrderTotalAmount() {
         return orderTotalAmount;
     }
@@ -101,6 +103,14 @@ public class CalculateReturnVo {
         this.userCouponsName = userCouponsName;
     }
 
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+    }
+
     @Override
     public String toString() {
         return "CalculateReturnVo{" +
@@ -113,6 +123,7 @@ public class CalculateReturnVo {
                 ", goodsInfo=" + goodsInfo +
                 ", userCouponsId=" + userCouponsId +
                 ", userCouponsName='" + userCouponsName + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
                 '}';
     }
 }

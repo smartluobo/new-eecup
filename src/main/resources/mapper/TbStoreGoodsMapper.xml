@@ -83,4 +83,8 @@
     UPDATE tb_store_goods SET goods_inventory = goods_inventory - #{num} where goods_id = #{goodsId} and store_id = #{storeId}
   </update>
 
+  <update id="clearStoreGoods" parameterType="int">
+    UPDATE tb_store_goods SET goods_inventory = 0 where store_id = #{storeId}
+  </update>
+
 </mapper>

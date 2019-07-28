@@ -1,6 +1,7 @@
 package com.ibay.tea.cms.service.sku;
 
 import com.ibay.tea.entity.TbSkuDetail;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,5 +13,7 @@ public interface CmsSkuDetailService {
     void deleteSkuDetail(int id);
 
     void updateSkuDetail(TbSkuDetail tbSkuDetail);
+
+    List<TbSkuDetail> findSkuDetailByTypeId(int typeId);
 
 }

@@ -9,7 +9,9 @@ import com.ibay.tea.api.service.pay.ApiPayService;
 import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.common.utils.WechatXmlParser;
 import com.ibay.tea.common.utils.WxUtil;
+import com.ibay.tea.dao.TbApiUserMapper;
 import com.ibay.tea.dao.TbStoreMapper;
+import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.TbOrder;
 import com.ibay.tea.entity.TbOrderItem;
 import com.ibay.tea.entity.TbStore;
@@ -41,6 +43,9 @@ public class ApiOrderController {
 
     @Resource
     private ApiPayService apiPayService;
+
+    @Resource
+    private TbApiUserMapper tbApiUserMapper;
 
     @RequestMapping("createOrderByCart")
     public ResultInfo createOrderByCart(@RequestBody CartOrderParamVo cartOrderParamVo){
@@ -184,10 +189,17 @@ public class ApiOrderController {
             LOGGER.info("calculateCartOrderPrice CartOrderParamVo : {}",paramVo);
         	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             CalculateReturnVo calculateReturnVo = apiOrderService.calculateCartOrderPrice(paramVo,false);
+            if (calculateReturnVo != null){
+                TbApiUser apiUserByOppenId = tbApiUserMapper.findApiUserByOppenId(paramVo.getOppenId());
+                if (apiUserByOppenId != null){
+                    calculateReturnVo.setPhoneNum(apiUserByOppenId.getUserBindPhoneNum());
+                }
+            }
             LOGGER.info(" call cart calculate price calculateReturnVo : {}",calculateReturnVo);
             resultInfo.setData(calculateReturnVo);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("calculateCartOrderPrice happen exception",e);
         	return ResultInfo.newExceptionResultInfo();
         }
 

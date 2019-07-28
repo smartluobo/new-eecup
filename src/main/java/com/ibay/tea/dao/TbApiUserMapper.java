@@ -18,4 +18,6 @@ public interface TbApiUserMapper {
     TbApiUser findApiUserByOppenId(String oppenId);
 
     void updateApiUserInfo(@Param("oppenId") String oppenId, @Param("nickName")String nickName, @Param("userHeadImage")String userHeadImage);
+
+    void updateApiUserPhone(@Param("oppenId") String oppenId, @Param("phoneNum") String phoneNum);
 }

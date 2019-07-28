@@ -86,4 +86,9 @@ public class CmsInventoryServiceImpl implements CmsInventoryService {
 
 
     }
+
+    @Override
+    public void clearStoreGoods(int storeId) {
+        tbStoreGoodsMapper.clearStoreGoods(storeId);
+    }
 }

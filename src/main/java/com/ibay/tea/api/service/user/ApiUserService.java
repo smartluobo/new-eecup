@@ -10,4 +10,6 @@ public interface ApiUserService {
     void saveApiUser(String oppenId,String referrerOppenId);
 
     void updateApiUserInfo(String oppenId, String nickName, String userHeadImage);
+
+    void bindPhoneNum(String oppenId, String phoneNum, String verificationCode);
 }

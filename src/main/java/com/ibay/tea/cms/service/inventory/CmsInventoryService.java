@@ -16,4 +16,6 @@ public interface CmsInventoryService {
 
     void initStoreGoods(int storeId);
 
+    void clearStoreGoods(int storeId);
+
 }

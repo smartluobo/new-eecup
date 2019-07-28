@@ -68,4 +68,11 @@ public class DateUtil {
     public static String formatExpireDate(Date expireDate) {
         return expireDateFormatSdf.format(expireDate);
     }
+
+    public static Date addDate(int field,int value) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(field,value);
+       return calendar.getTime();
+    }
 }

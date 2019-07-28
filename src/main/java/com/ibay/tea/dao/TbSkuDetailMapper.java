@@ -1,6 +1,7 @@
 package com.ibay.tea.dao;
 
 import com.ibay.tea.entity.TbSkuDetail;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface TbSkuDetailMapper {
     void addSkuDetail(TbSkuDetail tbSkuDetail);
 
     void saveUpdateSkuDetail(TbSkuDetail tbSkuDetail);
+
+    List<TbSkuDetail> findSkuDetailByTypeId(@Param("typeId") int typeId);
 }

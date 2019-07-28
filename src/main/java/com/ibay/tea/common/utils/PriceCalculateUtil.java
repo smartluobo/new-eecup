@@ -1,15 +1,21 @@
 package com.ibay.tea.common.utils;
 
 import com.ibay.tea.entity.TbCoupons;
+import com.ibay.tea.entity.TbUserCoupons;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
 public class PriceCalculateUtil {
 
-    public static double ratioCouponsPriceCalculate(TbCoupons tbCoupons, double orderTotalPrice) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PriceCalculateUtil.class);
 
-        BigDecimal realAmount = new BigDecimal(tbCoupons.getCouponsRatio()).multiply(new BigDecimal(String.valueOf(orderTotalPrice)));
+    public static double ratioCouponsPriceCalculate(TbUserCoupons userCoupons, double orderTotalPrice) {
+
+        BigDecimal realAmount = new BigDecimal(userCoupons.getCouponsRatio()).multiply(new BigDecimal(String.valueOf(orderTotalPrice)));
         BigDecimal reduceAmount = new BigDecimal(String.valueOf(orderTotalPrice)).subtract(realAmount);
+        LOGGER.info("ratioCouponsPriceCalculate coupons ratio : {} ,orderTotalPrice : {}",userCoupons.getCouponsRatio(),orderTotalPrice);
         return reduceAmount.doubleValue();
     }
 
@@ -30,5 +36,9 @@ public class PriceCalculateUtil {
 
     public static double subtract(double totalAmount,double reduceAmount){
        return  new BigDecimal(String.valueOf(totalAmount)).subtract(new BigDecimal(String.valueOf(reduceAmount))).doubleValue();
+    }
+
+    public static double add(double specialReduceAmount, double cartPrice) {
+        return new BigDecimal(String.valueOf(specialReduceAmount)).add(new BigDecimal(String.valueOf(cartPrice))).doubleValue();
     }
 }

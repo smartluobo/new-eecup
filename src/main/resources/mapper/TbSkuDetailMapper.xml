@@ -7,9 +7,11 @@
     <result column="sku_detail_name" jdbcType="VARCHAR" property="skuDetailName" />
     <result column="sku_detail_price" jdbcType="INTEGER" property="skuDetailPrice" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="cms_view" jdbcType="VARCHAR" property="cmsView" />
+
   </resultMap>
   <sql id="Base_Column_List">
-    id, sku_type_id, sku_detail_name, sku_detail_price, create_time
+    id, sku_type_id, sku_detail_name, sku_detail_price, create_time,cms_view
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -17,25 +19,29 @@
   </select>
 
   <select id="findAll" resultMap="BaseResultMap">
-      SELECT * from tb_sku_detail
+    select <include refid="Base_Column_List" /> from tb_sku_detail
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <select id="findSkuDetailByTypeId" resultMap="BaseResultMap" parameterType="int">
+      select <include refid="Base_Column_List" /> from tb_sku_detail where sku_type_id = #{typeId}
+  </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_sku_detail where id = #{id,jdbcType=INTEGER}
   </delete>
 
   <insert id="addSkuDetail" parameterType="com.ibay.tea.entity.TbSkuDetail">
     insert into tb_sku_detail (sku_type_id, sku_detail_name,
-      sku_detail_price, create_time)
+      sku_detail_price, create_time,cms_view)
     values (#{skuTypeId,jdbcType=INTEGER}, #{skuDetailName,jdbcType=VARCHAR},
-      #{skuDetailPrice,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+      #{skuDetailPrice,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},#{cmsView,jdbcType=VARCHAR})
   </insert>
 
   <insert id="saveUpdateSkuDetail" parameterType="com.ibay.tea.entity.TbSkuDetail">
     insert into tb_sku_detail (id,sku_type_id, sku_detail_name,
-    sku_detail_price, create_time)
+    sku_detail_price, create_time,cms_view)
     values (#{id},#{skuTypeId,jdbcType=INTEGER}, #{skuDetailName,jdbcType=VARCHAR},
-    #{skuDetailPrice,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+    #{skuDetailPrice,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},#{cmsView,jdbcType=VARCHAR})
   </insert>
 
 </mapper>

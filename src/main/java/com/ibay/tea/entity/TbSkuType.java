@@ -12,6 +12,8 @@ public class TbSkuType {
 
     private List<TbSkuDetail> skuDetails;
 
+    private String remark;
+
     public Integer getId() {
         return id;
     }
@@ -42,5 +44,13 @@ public class TbSkuType {
 
     public void setSkuDetails(List<TbSkuDetail> skuDetails) {
         this.skuDetails = skuDetails;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

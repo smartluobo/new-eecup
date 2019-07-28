@@ -107,7 +107,11 @@
     UPDATE tb_order SET `status` = 5 WHERE order_id = #{orderId} and oppen_id = #{oppenId} and `status` = 0
   </update>
 
-  <insert id="insert" parameterType="com.ibay.tea.entity.TbOrder">
+  <update id="updateShareOrder" parameterType="map">
+    UPDATE tb_order SET is_first_order = 0 WHERE oppen_id = #{oppenId} and orderId <![CDATA[ <> ]]> #{orderId}
+  </update>
+
+    <insert id="insert" parameterType="com.ibay.tea.entity.TbOrder">
     insert into tb_order (order_id, payment, payment_type, 
       post_fee, status, create_time, 
       update_time, payment_time, consign_time, 

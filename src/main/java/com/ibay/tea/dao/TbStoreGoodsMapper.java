@@ -29,4 +29,6 @@ public interface TbStoreGoodsMapper {
 
     Integer findGoodsInventory(@Param("goodsId") Long goodsId, @Param("storeId") int storeId);
 
+    void clearStoreGoods(int storeId);
+
 }

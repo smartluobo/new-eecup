@@ -1,10 +1,12 @@
 package com.ibay.tea.cms.controller.sku;
 
 import com.ibay.tea.api.response.ResultInfo;
+import com.ibay.tea.cms.service.sku.CmsSkuDetailService;
 import com.ibay.tea.cms.service.sku.CmsSkuTypeService;
 import com.ibay.tea.entity.TbSkuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -20,14 +22,24 @@ public class CmsSkuTypeController {
     @Resource
     private CmsSkuTypeService cmsSkuTypeService;
 
+    @Resource
+    private CmsSkuDetailService cmsSkuDetailService;
+
     @RequestMapping("/list")
     public ResultInfo list(){
         try {
         	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             List<TbSkuType> skuTypeList = cmsSkuTypeService.findAll();
+            if (CollectionUtils.isEmpty(skuTypeList)){
+                return resultInfo;
+            }
+            for (TbSkuType tbSkuType : skuTypeList) {
+                tbSkuType.setSkuDetails(cmsSkuDetailService.findSkuDetailByTypeId(tbSkuType.getId()));
+            }
             resultInfo.setData(skuTypeList);
         	return resultInfo;
         }catch (Exception e){
+            LOGGER.error("sku type list happen exception ",e);
         	return ResultInfo.newExceptionResultInfo();
         }
 

@@ -39,4 +39,9 @@ public class CmsSkuDetailServiceImpl implements CmsSkuDetailService {
         tbSkuDetailMapper.deleteByPrimaryKey(tbSkuDetail.getId());
         tbSkuDetailMapper.saveUpdateSkuDetail(tbSkuDetail);
     }
+
+    @Override
+    public List<TbSkuDetail> findSkuDetailByTypeId(int typeId) {
+        return tbSkuDetailMapper.findSkuDetailByTypeId(typeId);
+    }
 }

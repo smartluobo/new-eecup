@@ -164,12 +164,28 @@ public class ApiPayServiceImpl implements ApiPayService {
                     String referrerOppenId = apiUser.getReferrerOppenId();
                     TbUserCoupons referrerCoupons = tbUserCouponsMapper.findReferrerCoupons(referrerOppenId);
                     if (referrerCoupons == null){
-
+                        buildCouponsAndInsert(referrerOppenId);
                     }else{
                         //todo
+                        if (referrerCoupons.getCouponsType() == ApiConstant.USER_COUPONS_TYPE_FREE){
+                            buildCouponsAndInsert(referrerOppenId);
+                        }else {
+                            String couponsRatio = referrerCoupons.getCouponsRatio();
+                            String[] split = couponsRatio.split(".");
+                            int ratio = Integer.valueOf(split[1]);
+                            if (ratio > 1){
+                                int upgrade = ratio - 1;
+                                String ratioStr = "0."+upgrade;
+                                tbUserCouponsMapper.updateRatio(referrerCoupons.getId(),ratioStr);
+                            }else {
+                                tbUserCouponsMapper.updateUpgradeCouponsType(referrerCoupons.getId(),ApiConstant.USER_COUPONS_TYPE_FREE);
+                            }
+                        }
                     }
-
+                    orderMapper.updateShareOrder(tbOrder.getOrderId(), tbOrder.getOppenId());
                 }
+                //
+
                 LOGGER.info("pay call back print order success orderId : {}",tbOrder.getOrderId());
             } else {
                 //支付失败更新
@@ -180,6 +196,19 @@ public class ApiPayServiceImpl implements ApiPayService {
             return true;
         }
         return false;
+    }
+
+    private void buildCouponsAndInsert(String referrerOppenId) {
+        TbUserCoupons tbUserCoupons = new TbUserCoupons();
+        tbUserCoupons.setOppenId(referrerOppenId);
+        tbUserCoupons.setCouponsName("分享优惠券");
+        tbUserCoupons.setCreateTime(new Date());
+        tbUserCoupons.setReceiveDate(Integer.valueOf(DateUtil.getDateYyyyMMdd()));
+        tbUserCoupons.setStatus(0);
+        tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
+        tbUserCoupons.setCouponsRatio("0.8");
+        tbUserCoupons.setExpireDate(DateUtil.addDate(Calendar.YEAR,1));
+        tbUserCouponsMapper.insert(tbUserCoupons);
     }
 
     public String getXmlString(HttpServletRequest request) {

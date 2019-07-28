@@ -18,6 +18,8 @@ public class TbSkuDetail {
     //该明细是否被选中 0-表示未选中，1-表示选中
     private int isSelected;
 
+    private String cmsView;
+
     public Integer getId() {
         return id;
     }
@@ -64,6 +66,18 @@ public class TbSkuDetail {
 
     public void setIsSelected(int isSelected) {
         this.isSelected = isSelected;
+    }
+
+    public void setSkuDetailPrice(int skuDetailPrice) {
+        this.skuDetailPrice = skuDetailPrice;
+    }
+
+    public String getCmsView() {
+        return cmsView;
+    }
+
+    public void setCmsView(String cmsView) {
+        this.cmsView = cmsView;
     }
 
     public TbSkuDetail copy(){

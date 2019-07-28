@@ -36,4 +36,6 @@ public interface TbOrderMapper {
     void cancelOrder(@Param("oppenId") String oppenId, @Param("orderId") String orderId);
 
     Integer findHistoryOrderCount(@Param("oppenId") String oppenId);
+
+    void updateShareOrder(@Param("orderId") String orderId, @Param("oppenId") String oppenId);
 }

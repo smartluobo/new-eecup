@@ -5,9 +5,10 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="sku_type_name" jdbcType="VARCHAR" property="skuTypeName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, sku_type_name, create_time
+    id, sku_type_name, create_time,remark
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -23,9 +24,9 @@
   </delete>
 
   <insert id="addSkuType" parameterType="com.ibay.tea.entity.TbSkuType">
-    insert into tb_sku_type (sku_type_name, create_time
+    insert into tb_sku_type (sku_type_name, create_time,remark
       )
-    values (#{skuTypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+    values (#{skuTypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{remark,jdbcType=VARCHAR}
       )
   </insert>
 

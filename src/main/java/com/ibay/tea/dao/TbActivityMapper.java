@@ -25,4 +25,6 @@ public interface TbActivityMapper {
 
     void saveUpdateActivity(TbActivity tbActivity);
 
+    TbActivity findSpecialActivity(String dateYyyyMMdd);
+
 }

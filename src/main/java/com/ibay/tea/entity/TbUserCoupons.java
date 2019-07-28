@@ -40,6 +40,8 @@ public class TbUserCoupons {
 
     private int isReferrer;
 
+    private String couponsRatio;
+
     public Integer getId() {
         return id;
     }
@@ -179,5 +181,37 @@ public class TbUserCoupons {
 
     public void setIsReferrer(int isReferrer) {
         this.isReferrer = isReferrer;
+    }
+
+    public String getCouponsRatio() {
+        return couponsRatio;
+    }
+
+    public void setCouponsRatio(String couponsRatio) {
+        this.couponsRatio = couponsRatio;
+    }
+
+    @Override
+    public String toString() {
+        return "TbUserCoupons{" +
+                "id=" + id +
+                ", oppenId='" + oppenId + '\'' +
+                ", couponsId=" + couponsId +
+                ", couponsName='" + couponsName + '\'' +
+                ", receiveDate=" + receiveDate +
+                ", createTime=" + createTime +
+                ", status=" + status +
+                ", couponsPoster='" + couponsPoster + '\'' +
+                ", expireDate=" + expireDate +
+                ", expireDateStr='" + expireDateStr + '\'' +
+                ", bigNum=" + bigNum +
+                ", smallNum=" + smallNum +
+                ", couponsType=" + couponsType +
+                ", useRules='" + useRules + '\'' +
+                ", useScope='" + useScope + '\'' +
+                ", activityId=" + activityId +
+                ", isReferrer=" + isReferrer +
+                ", couponsRatio='" + couponsRatio + '\'' +
+                '}';
     }
 }

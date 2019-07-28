@@ -41,4 +41,25 @@ public class ApiUserController {
             return ResultInfo.newExceptionResultInfo();
         }
     }
+
+    @RequestMapping("/bindPhoneNum")
+    public ResultInfo bindPhoneNum(@RequestBody Map<String,String> params){
+
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        String oppenId = params.get("oppenId");
+        String phoneNum = params.get("phoneNum");
+        String verificationCode = params.get("verificationCode");
+        LOGGER.info("bindPhoneNum current user oppenId : {}, phoneNum: {},userHeadImage : {}",oppenId,phoneNum,verificationCode);
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            apiUserService.bindPhoneNum(oppenId,phoneNum,verificationCode);
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("calculateGoodsOrderPrice GoodsOrderParamVo : {}",params,e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+    }
+
 }

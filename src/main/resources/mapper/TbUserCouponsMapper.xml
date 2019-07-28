@@ -12,13 +12,23 @@
     <result column="coupons_poster" jdbcType="VARCHAR" property="couponsPoster" />
     <result column="expire_date" jdbcType="TIMESTAMP" property="expireDate" />
     <result column="is_referrer" jdbcType="INTEGER" property="isReferrer" />
+    <result column="coupons_ratio" jdbcType="VARCHAR" property="couponsRatio" />
+    <result column="coupons_type" jdbcType="INTEGER" property="couponsType" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer
+    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,coupons_ratio,coupons_type
   </sql>
 
   <update id="updateStatusById" parameterType="int">
       UPDATE tb_user_coupons SET `status` = #{status} where id=#{id}
+  </update>
+
+  <update id="updateRatio" parameterType="map">
+    UPDATE tb_user_coupons SET coupons_ratio = #{ratioStr} where id = #{id}
+  </update>
+
+  <update id="updateUpgradeCouponsType" parameterType="map">
+    UPDATE tb_user_coupons SET coupons_type = #{couponsType} where id = #{id}
   </update>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -67,9 +77,12 @@
   </delete>
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbUserCoupons" keyProperty="id" useGeneratedKeys="true">
-    insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer)
+    insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,
+                                 coupons_ratio,coupons_type)
     values (#{oppenId,jdbcType=VARCHAR}, #{couponsId,jdbcType=INTEGER},
       #{couponsName,jdbcType=VARCHAR}, #{receiveDate,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER},#{couponsPoster},#{expireDate},#{isReferrer})
+      #{status,jdbcType=INTEGER},#{couponsPoster},#{expireDate},#{isReferrer},
+                                         #{couponsRatio,jdbcType=VARCHAR}, #{couponsType,jdbcType=INTEGER}
+    )
   </insert>
 </mapper>

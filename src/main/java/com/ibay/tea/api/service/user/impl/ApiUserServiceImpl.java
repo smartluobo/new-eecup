@@ -4,6 +4,7 @@ import com.google.common.cache.LoadingCache;
 import com.ibay.tea.api.config.WechatInfoProperties;
 import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.common.constant.ApiConstant;
+import com.ibay.tea.common.service.SendSmsService;
 import com.ibay.tea.dao.TbApiUserMapper;
 import com.ibay.tea.dao.UserMapper;
 import com.ibay.tea.entity.TbApiUser;
@@ -25,6 +26,9 @@ public class ApiUserServiceImpl implements ApiUserService{
 
     @Resource
     private WechatInfoProperties wechatInfoProperties;
+
+    @Resource
+    private SendSmsService sendSmsService;
 
     @Override
     public TbApiUser findApiUserByOppenId(String oppenId) {
@@ -50,6 +54,14 @@ public class ApiUserServiceImpl implements ApiUserService{
     @Override
     public void updateApiUserInfo(String oppenId, String nickName, String userHeadImage) {
         tbApiUserMapper.updateApiUserInfo(oppenId,nickName,userHeadImage);
+    }
+
+    @Override
+    public void bindPhoneNum(String oppenId, String phoneNum, String verificationCode) {
+        boolean flag = sendSmsService.checkVerificationCode(phoneNum, verificationCode);
+        if (flag){
+            tbApiUserMapper.updateApiUserPhone(oppenId,phoneNum);
+        }
     }
 
     private Map<String,String> getApiUserInfoByOppenId(String oppenId) {

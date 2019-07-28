@@ -32,4 +32,9 @@ public interface TbUserCouponsMapper {
     TbUserCoupons findCurrentDayUserCoupons(@Param("oppenId") String oppenId, @Param("currentDate") String currentDate);
 
     TbUserCoupons findReferrerCoupons(@Param("oppenId") String oppenId);
+
+    void updateRatio(@Param("id") Integer id, @Param("ratioStr") String ratioStr);
+
+    void updateUpgradeCouponsType(@Param("id") Integer id, @Param("couponsType") int couponsType);
+
 }

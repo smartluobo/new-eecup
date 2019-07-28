@@ -96,8 +96,22 @@ public class CmsInventoryController {
             LOGGER.error("happen exception ",e);
         	return ResultInfo.newExceptionResultInfo();
         }
+    }
 
+    @RequestMapping("/clear/{storeId}")
+    public ResultInfo clearStoreGoods(@PathVariable("storeId") int storeId){
 
+        if (storeId == 0){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
 
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            cmsInventoryService.clearStoreGoods(storeId);
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("happen exception ",e);
+            return ResultInfo.newExceptionResultInfo();
+        }
     }
 }
