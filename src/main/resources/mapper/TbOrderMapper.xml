@@ -36,13 +36,14 @@
     <result column="user_coupons_id" jdbcType="INTEGER" property="userCouponsId" />
     <result column="user_coupons_name" jdbcType="VARCHAR" property="userCouponsName" />
     <result column="user_address_id" jdbcType="INTEGER" property="userAddressId" />
+    <result column="is_first_order" jdbcType="INTEGER" property="isFirstOrder" />
 
   </resultMap>
   <sql id="Base_Column_List">
     order_id, payment, payment_type, post_fee, `status`, create_time, update_time, payment_time,
     consign_time, end_time, close_time, shipping_name, shipping_code, user_id, buyer_message, 
     buyer_nick, buyer_comment, oppen_id, self_get, address, phone_num, poster_url,goods_total_count,order_payment,
-    coupons_reduce_amount,make_complete_send_status,close_send_status,store_id,store_name,goods_name,take_code,user_coupons_id,user_coupons_name,user_address_id
+    coupons_reduce_amount,make_complete_send_status,close_send_status,store_id,store_name,goods_name,take_code,user_coupons_id,user_coupons_name,user_address_id,is_first_order
   </sql>
   <update id="updateCompleteMessageSendStatus" parameterType="com.ibay.tea.entity.TbOrder">
     UPDATE tb_order SET make_complete_send_status = #{makeCompleteSendStatus} where order_id=#{orderId}
@@ -96,7 +97,7 @@
   </select>
 
   <select id="findHistoryOrderCount" resultType="java.lang.Integer" parameterType="string">
-    SELECT count(1) FROM tb_order WHERE oppen_id = #{oppenId} and `status` in (1,2,3)
+    SELECT count(1) FROM tb_order WHERE oppen_id = #{oppenId} and `status` in (0,1,2,3)
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -108,7 +109,7 @@
   </update>
 
   <update id="updateShareOrder" parameterType="map">
-    UPDATE tb_order SET is_first_order = 0 WHERE oppen_id = #{oppenId} and orderId <![CDATA[ <> ]]> #{orderId}
+    UPDATE tb_order SET is_first_order = 0 WHERE oppen_id = #{oppenId} and  <![CDATA[ order_id <> #{orderId}]]>
   </update>
 
     <insert id="insert" parameterType="com.ibay.tea.entity.TbOrder">
@@ -120,7 +121,7 @@
       buyer_nick, buyer_comment, oppen_id, 
       self_get, address, phone_num, 
       poster_url,goods_total_count,order_payment,
-      coupons_reduce_amount,store_id,store_name,goods_name,take_code,user_coupons_id,user_coupons_name,user_address_id)
+      coupons_reduce_amount,store_id,store_name,goods_name,take_code,user_coupons_id,user_coupons_name,user_address_id,is_first_order)
     values (#{orderId,jdbcType=VARCHAR}, #{payment,jdbcType=DECIMAL}, #{paymentType,jdbcType=INTEGER}, 
       #{postFee,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP}, #{consignTime,jdbcType=TIMESTAMP}, 
@@ -129,7 +130,7 @@
       #{buyerNick,jdbcType=VARCHAR}, #{buyerComment,jdbcType=BIT}, #{oppenId,jdbcType=VARCHAR}, 
       #{selfGet,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR}, 
       #{posterUrl,jdbcType=VARCHAR},#{goodsTotalCount,jdbcType=INTEGER}, #{orderPayment,jdbcType=DECIMAL},
-      #{couponsReduceAmount,jdbcType=DECIMAL},#{storeId},#{storeName},#{goodsName},#{takeCode},#{userCouponsId},#{userCouponsName},#{userAddressId})
+      #{couponsReduceAmount,jdbcType=DECIMAL},#{storeId},#{storeName},#{goodsName},#{takeCode},#{userCouponsId},#{userCouponsName},#{userAddressId},#{isFirstOrder})
   </insert>
 
 </mapper>

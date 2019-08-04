@@ -172,6 +172,7 @@ public class ApiOrderController {
             resultInfo.setData(orderList);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("findOrderByOppenId happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

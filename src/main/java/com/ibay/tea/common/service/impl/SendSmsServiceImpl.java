@@ -60,11 +60,12 @@ public class SendSmsServiceImpl implements SendSmsService {
             //请求成功
                 return true;
             }else {
+                String message = sendSmsResponse.getMessage();
+                LOGGER.info("remote call sms send fail return result : {}",message);
                 return false;
             }
-        }catch (ClientException e){
-            return false;
-        }catch (Exception e){
+        }catch (Exception e) {
+            LOGGER.error("remote call sms send happen exception",e);
             return false;
         }
     }

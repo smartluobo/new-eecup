@@ -1,18 +1,5 @@
 package com.ibay.tea.local;
 
-import com.ibay.tea.common.constant.ApiConstant;
-import com.ibay.tea.common.utils.PriceCalculateUtil;
-import com.ibay.tea.entity.TbApiUserAddress;
-import com.ibay.tea.entity.TbOrder;
-import com.ibay.tea.entity.TbOrderItem;
-import org.apache.commons.lang3.StringUtils;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
 public class LocalTest {
 
 
@@ -20,8 +7,17 @@ public class LocalTest {
 
     public static void main(String[] args) {
 
-        int i = PriceCalculateUtil.intOrderTbPrice(new BigDecimal(String.valueOf(22.40)));
-        System.out.println(i);
+        String st = "0.8";
+        String[] split = st.split("\\.");
+        for (int i = 0; i < split.length; i++) {
+            System.out.println(split[i]);
+        }
+        int ratio = Integer.valueOf(split[1]);
+        System.out.println(ratio);
+
+
+//        int i = PriceCalculateUtil.intOrderTbPrice(new BigDecimal(String.valueOf(22.40)));
+//        System.out.println(i);
 
 //        List<Integer> list = new ArrayList<>();
 //        for (int i = 0; i < 10 ; i++) {

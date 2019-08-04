@@ -191,6 +191,8 @@ public class TbUserCoupons {
         this.couponsRatio = couponsRatio;
     }
 
+
+
     @Override
     public String toString() {
         return "TbUserCoupons{" +

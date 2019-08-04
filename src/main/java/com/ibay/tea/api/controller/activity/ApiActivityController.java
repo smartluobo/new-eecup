@@ -7,6 +7,8 @@ import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.DateUtil;
+import com.ibay.tea.dao.TbActivityMapper;
+import com.ibay.tea.dao.TbApiUserMapper;
 import com.ibay.tea.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,12 @@ public class ApiActivityController {
     @Resource
     private ActivityCache activityCache;
 
+    @Resource
+    private TbActivityMapper tbActivityMapper;
+
+    @Resource
+    private TbApiUserMapper tbApiUserMapper;
+
     //查询活动，如果当前时间没有活动在进行中查询最近的活动开始时间，点击查看活动奖品
     // 如果在开奖时间内且还有奖品提示用户参与抽奖，若奖品已经发放完毕且用户没有获奖提示用户明天继续参与
     // 若用户已经在当天参与抽奖并获得优惠券提示用户立即使用
@@ -62,6 +70,15 @@ public class ApiActivityController {
             TbActivity activityInfo = apiActivityService.getTodayActivity(Integer.valueOf(storeId));
             if (activityInfo == null ){
                 return ResultInfo.newEmptyResultInfo();
+            }
+            TbActivity specialActivity = tbActivityMapper.findSpecialActivity(DateUtil.getDateYyyyMMdd());
+            if (specialActivity != null){
+                LOGGER.info("getActivityInfo return specialActivity ");
+                specialActivity.setShowImageUrl(specialActivity.getStartingPoster());
+                result.put("type",5);
+                result.put("info",specialActivity);
+                resultInfo.setData(result);
+                return resultInfo;
             }
             if (activityInfo.getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
                 LOGGER.info("getActivityInfo return ACTIVITY_TYPE_FULL ");
@@ -112,7 +129,8 @@ public class ApiActivityController {
             }
             if (activityStatus == ApiConstant.ACTIVITY_STATUS_END){
                 //活动已经结束，如果有优惠券返回优惠券 没有提示用户明天继续参与抽奖
-                TbUserCoupons tbUserCoupons = apiCouponsService.findOneCouponsByOppenId(oppenId);
+                String currentDate = DateUtil.getDateYyyyMMdd();
+                TbUserCoupons tbUserCoupons = apiCouponsService.findOneCouponsByOppenId(oppenId,currentDate);
                 if (tbUserCoupons != null){
                     result.put("type",3);
                     result.put("info",tbUserCoupons);
@@ -148,8 +166,6 @@ public class ApiActivityController {
             if (tbApiUser == null){
                 return ResultInfo.newNoLoginResultInfo();
             }
-
-
             TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(Integer.valueOf(storeId));
             if (todayActivityBean == null || todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
                 return null;
@@ -208,9 +224,38 @@ public class ApiActivityController {
             resultInfo.setData(newList);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("getJackpotInfo happen exception ",e);
         	return ResultInfo.newExceptionResultInfo();
         }
 
     }
 
+    @RequestMapping("/test")
+    public ResultInfo test(){
+        List<TbApiUser> users = tbApiUserMapper.findAll();
+        for (TbApiUser user : users) {
+            String oppenId = user.getOppenId();
+            String storeId = "2";
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            try {
+                TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(Integer.valueOf(storeId));
+                if (todayActivityBean == null || todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
+                    return null;
+                }
+                //判断通过执行抽奖过程
+                TbActivityCouponsRecord record = apiActivityService.extractPrize(oppenId,Integer.valueOf(storeId));
+                //将用户的优惠券存入数据库
+                TbUserCoupons tbUserCoupons = apiActivityService.buildUserCoupons(oppenId,record);
+                //设置优惠券过期时间
+                Date expireDate = DateUtil.getExpireDate(tbUserCoupons.getReceiveDate(),ApiConstant.USER_COUPONS_EXPIRE_LIMIT);
+                tbUserCoupons.setExpireDate(expireDate);
+                apiActivityService.saveUserCouponsToDb(tbUserCoupons);
+                resultInfo.setData(tbUserCoupons);
+            }catch (Exception e){
+                LOGGER.error("extractPrize happen exception : {} ",oppenId,e);
+                return ResultInfo.newExceptionResultInfo();
+            }
+        }
+        return ResultInfo.newSuccessResultInfo();
+    }
 }

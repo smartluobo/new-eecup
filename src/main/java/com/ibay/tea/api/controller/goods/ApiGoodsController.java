@@ -61,6 +61,7 @@ public class ApiGoodsController {
             resultInfo.setData(goodsListByCategoryId);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("getGoodsListByCategoryId happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -92,6 +93,7 @@ public class ApiGoodsController {
             resultInfo.setData(goods);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("getGoodsDetailById happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

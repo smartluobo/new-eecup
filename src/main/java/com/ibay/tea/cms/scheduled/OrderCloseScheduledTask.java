@@ -22,6 +22,8 @@ import java.util.Map;
 public class OrderCloseScheduledTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderCloseScheduledTask.class);
+
+    private static final long timeout = 30*60*1000;
     @Resource
     private TbOrderMapper tbOrderMapper;
 
@@ -40,19 +42,24 @@ public class OrderCloseScheduledTask {
         }
         for (TbOrder tbOrder : orderList) {
             //更新订单为超时关闭
-            int count = tbOrderMapper.updateOrderTimeOutClose(tbOrder.getOrderId());
-            LOGGER.info("update count : {}",count);
-            if (count == 1){
-                //如果有优惠券释放优惠券锁定
-                if (tbOrder.getUserCouponsId() != 0){
-                    tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),0);
+            long time = tbOrder.getCreateTime().getTime();
+            long current = System.currentTimeMillis();
+            if ((time+timeout) <= current){
+                int count = tbOrderMapper.updateOrderTimeOutClose(tbOrder.getOrderId());
+                LOGGER.info("update count : {}",count);
+                if (count == 1){
+                    //如果有优惠券释放优惠券锁定
+                    if (tbOrder.getUserCouponsId() != 0){
+                        tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),0);
+                    }
+                    Map<String,Object> updateMap = new HashMap<>();
+                    updateMap.put("payStatus",3);
+                    updateMap.put("updateTime",new Date());
+                    updateMap.put("orderId",tbOrder.getOrderId());
+                    //更新支付记录为支付失败
+                    tbUserPayRecordMapper.updatePayCloseStatus(updateMap);
                 }
-                Map<String,Object> updateMap = new HashMap<>();
-                updateMap.put("payStatus",3);
-                updateMap.put("updateTime",new Date());
-                updateMap.put("orderId",tbOrder.getOrderId());
-                //更新支付记录为支付失败
-                tbUserPayRecordMapper.updatePayCloseStatus(updateMap);
+                LOGGER.info("close current order orderId : {}",tbOrder.getOrderId());
             }
         }
         LOGGER.info("current order close task close order count : {}",orderList.size());

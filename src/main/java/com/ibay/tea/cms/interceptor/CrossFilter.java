@@ -24,12 +24,10 @@ public class CrossFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        LOGGER.error("filter ------------------------------");
         HttpServletRequest req = (HttpServletRequest)request;
         HttpServletResponse resp = (HttpServletResponse)response;
 
         String origin = req.getHeader("Origin");
-        LOGGER.info("origin : {}",origin);
         if (origin == null ){
             resp.setHeader("Access-Control-Allow-Origin", "http://47.106.172.126:8668");
         }

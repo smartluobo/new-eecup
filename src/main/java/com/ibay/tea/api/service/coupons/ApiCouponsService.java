@@ -8,7 +8,7 @@ import java.util.Map;
 public interface ApiCouponsService {
     TbUserCoupons findCouponsByCondition(Map<String, Object> condition);
 
-    TbUserCoupons findOneCouponsByOppenId(String oppenId);
+    TbUserCoupons findOneCouponsByOppenId(String oppenId,String currentDate);
 
     List<TbUserCoupons> findUserValidCoupons(String oppenId);
 

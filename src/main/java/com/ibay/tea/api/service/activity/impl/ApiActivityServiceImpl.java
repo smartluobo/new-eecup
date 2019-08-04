@@ -103,6 +103,8 @@ public class ApiActivityServiceImpl implements ApiActivityService {
         tbUserCoupons.setStatus(0);
         tbUserCoupons.setCouponsType(tbCoupons.getCouponsType());
         tbUserCoupons.setCouponsRatio(tbCoupons.getCouponsRatio());
+        tbUserCoupons.setUseRules(tbCoupons.getUseRules());
+        tbUserCoupons.setUseScope(tbCoupons.getUseScope());
         return tbUserCoupons;
     }
 
@@ -128,7 +130,7 @@ public class ApiActivityServiceImpl implements ApiActivityService {
             return ApiConstant.ACTIVITY_STATUS_STARTING;
         }
 
-        return ApiConstant.ACTIVITY_STATUS_NOT_START;
+        return ApiConstant.ACTIVITY_STATUS_END;
     }
 
     @Override

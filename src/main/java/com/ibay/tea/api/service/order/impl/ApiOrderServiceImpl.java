@@ -136,6 +136,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         tbOrder.setGoodsName(goodsList.get(0).getTitle());
         tbOrder.setGoodsTotalCount(totalGoodsCount);
         tbOrder.setBuyerMessage(cartOrderParamVo.getBuyerMessage());
+        tbOrder.setUserCouponsName(calculateReturnVo.getCouponsName());
         if (calculateReturnVo.getCouponsType() == 3){
             tbOrder.setUserCouponsId(calculateReturnVo.getUserCouponsId());
             tbOrder.setUserCouponsName(calculateReturnVo.getUserCouponsName());
@@ -159,28 +160,21 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         }
         LOGGER.error("create order success.......");
         //如果减少金额等于订单金额 更新优惠券为已经使用 订单状态为已支付
-        TbUserPayRecord tbUserPayRecord = buildPayRecordAndUpdateCoupons(oppenId, userCouponsId, orderId, tbOrder);
+        TbUserPayRecord tbUserPayRecord = buildPayRecordAndUpdateCoupons(oppenId, userCouponsId, orderId, tbOrder,calculateReturnVo.getCouponsType());
 
         //保存订单
-        tbOrder.setUserAddressId(addressId);
-        if (userAddress != null){
-            tbOrder.setPhoneNum(userAddress.getPhoneNum());
-        }
-
         TbApiUser apiUserByOppenId = tbApiUserMapper.findApiUserByOppenId(oppenId);
-        if (apiUserByOppenId != null){
-            tbOrder.setBuyerNick(apiUserByOppenId.getNickName());
-        }else {
-            return null;
+        tbOrder.setUserAddressId(addressId);
+        tbOrder.setBuyerNick(apiUserByOppenId.getNickName());
+        if (userAddress == null){
+            tbOrder.setPhoneNum(apiUserByOppenId.getUserBindPhoneNum());
         }
-
+        LOGGER.info("current order info : {}",tbOrder);
         tbOrderMapper.insert(tbOrder);
         LOGGER.info("order insert db success");
 
         if ("oHqQ75F9LGcWIblYeuGpHgla5G8k".equals(oppenId) ||
-                "oHqQ75BT_yefBUhcpnDNPLlWXgIE".equals(oppenId) ||
-                "oHqQ75Nq2unkZYnshI5s-QBBGKrg".equals(oppenId)
-                ){
+                "oHqQ75BT_yefBUhcpnDNPLlWXgIE".equals(oppenId) ){
             LOGGER.info("current oppenId : {} create order no pay",oppenId);
             Map<String, Object> payMap = new HashMap<>();
             //调用打印机
@@ -285,7 +279,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         tbOrderItemMapper.insert(tbOrderItem);
 
         //如果减少金额等于订单金额 更新优惠券为已经使用 订单状态为已支付
-        TbUserPayRecord tbUserPayRecord = buildPayRecordAndUpdateCoupons(oppenId, userCouponsId, orderId, tbOrder);
+        TbUserPayRecord tbUserPayRecord = buildPayRecordAndUpdateCoupons(oppenId, userCouponsId, orderId, tbOrder,calculateReturnVo.getCouponsType());
         tbUserPayRecordMapper.insert(tbUserPayRecord);
         //保存订单
         tbOrder.setStoreId(store.getId());
@@ -308,7 +302,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
 
 
 
-    private TbUserPayRecord buildPayRecordAndUpdateCoupons(String oppenId, int userCouponsId, String orderId, TbOrder tbOrder) {
+    private TbUserPayRecord buildPayRecordAndUpdateCoupons(String oppenId, int userCouponsId, String orderId, TbOrder tbOrder,int couponsType) {
         if (tbOrder.getPayment() == 0){
             tbUserCouponsMapper.updateStatusById(userCouponsId, ApiConstant.USER_COUPONS_STATUS_USED);
             tbOrder.setStatus(ApiConstant.ORDER_STATUS_PAYED);
@@ -324,7 +318,12 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             tbUserPayRecord.setPayment(tbOrder.getPayment());
             return tbUserPayRecord;
         }else {
-            tbUserCouponsMapper.updateStatusById(userCouponsId,ApiConstant.USER_COUPONS_STATUS_LOCK);
+            if (couponsType == 3){
+                TbUserCoupons tbUserCoupons = tbUserCouponsMapper.selectByPrimaryKey(userCouponsId);
+                if (tbUserCoupons.getIsReferrer() == 1){
+                    tbUserCouponsMapper.updateStatusById(userCouponsId,ApiConstant.USER_COUPONS_STATUS_LOCK);
+                }
+            }
             tbOrder.setStatus(ApiConstant.ORDER_STATUS_NO_PAY);
             //生成付款记录
             TbUserPayRecord tbUserPayRecord = new TbUserPayRecord();
@@ -428,7 +427,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                 List<TbItem> newGoodsList = removeSpecialGoods(goodsList);
                 Collections.sort(newGoodsList);
                 if (newGoodsList.size() > 0 ){
-                    double cartPrice = newGoodsList.get(0).getCartPrice();
+                    double cartPrice = newGoodsList.get(newGoodsList.size()-1).getCartPrice();
                     newUserReduceAmount = PriceCalculateUtil.multiply(cartPrice,"0.5");
                 }
 
@@ -466,7 +465,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                         if (goodsCount > 1){
                             int giveCount = goodsCount / 2;
                             for (int i = 0; i < giveCount; i++) {
-                                specialReduceAmount = PriceCalculateUtil.add(specialReduceAmount,newGoodsList.get(goodsCount-i-1).getCartPrice());
+                                specialReduceAmount = PriceCalculateUtil.add(specialReduceAmount,goodsUnitList.get(i).getCartPrice());
                             }
                         }
                     }
@@ -479,7 +478,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                         if (goodsCount > 1){
                             int giveCount = goodsCount / 2;
                             for (int i = 0; i < giveCount; i++) {
-                                double price = PriceCalculateUtil.multiply(newGoodsList.get(goodsCount - i - 1).getCartPrice(), "0.5");
+                                double price = PriceCalculateUtil.multiply(goodsUnitList.get(i).getCartPrice(), "0.5");
                                 specialReduceAmount = PriceCalculateUtil.add(specialReduceAmount,price);
                             }
                         }
@@ -539,7 +538,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             if (isCreateOrder){
                 calculateReturnVo.setGoodsList(goodsList);
             }
-            if (specialReduceAmount > calculateReturnVo.getOrderReduceAmount()){
+            if (specialReduceAmount >= calculateReturnVo.getOrderReduceAmount() && specialReduceAmount > 0){
                 calculateReturnVo.setCouponsType(5);
                 calculateReturnVo.setOrderReduceAmount(specialReduceAmount);
                 calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.subtract(calculateReturnVo.getOrderTotalAmount(),specialReduceAmount));

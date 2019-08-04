@@ -19,7 +19,7 @@ public interface TbUserCouponsMapper {
 
     TbUserCoupons findCouponsByCondition(Map<String, Object> condition);
 
-    TbUserCoupons findOneCouponsByOppenId(String oppenId);
+    TbUserCoupons findOneCouponsByOppenId(@Param("oppenId") String oppenId,@Param("currentDate") String currentDate);
 
     void updateStatusById(@Param("id") int id, @Param("status") int status);
 

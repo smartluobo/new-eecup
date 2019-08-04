@@ -400,4 +400,48 @@ public class TbOrder {
     public void setIsFirstOrder(int isFirstOrder) {
         this.isFirstOrder = isFirstOrder;
     }
+
+    @Override
+    public String toString() {
+        return "TbOrder{" +
+                "orderId='" + orderId + '\'' +
+                ", payment=" + payment +
+                ", paymentType=" + paymentType +
+                ", postFee=" + postFee +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", paymentTime=" + paymentTime +
+                ", consignTime=" + consignTime +
+                ", endTime=" + endTime +
+                ", closeTime=" + closeTime +
+                ", shippingName='" + shippingName + '\'' +
+                ", shippingCode='" + shippingCode + '\'' +
+                ", userId=" + userId +
+                ", buyerMessage='" + buyerMessage + '\'' +
+                ", buyerNick='" + buyerNick + '\'' +
+                ", buyerComment=" + buyerComment +
+                ", oppenId='" + oppenId + '\'' +
+                ", selfGet=" + selfGet +
+                ", address='" + address + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                ", posterUrl='" + posterUrl + '\'' +
+                ", orderItems=" + orderItems +
+                ", createDateStr='" + createDateStr + '\'' +
+                ", takeCode='" + takeCode + '\'' +
+                ", goodsTotalCount=" + goodsTotalCount +
+                ", orderPayment=" + orderPayment +
+                ", couponsReduceAmount=" + couponsReduceAmount +
+                ", makeCompleteSendStatus=" + makeCompleteSendStatus +
+                ", closeSendStatus=" + closeSendStatus +
+                ", storeId=" + storeId +
+                ", storeName='" + storeName + '\'' +
+                ", goodsName='" + goodsName + '\'' +
+                ", userCouponsId=" + userCouponsId +
+                ", userCouponsName='" + userCouponsName + '\'' +
+                ", currentIndex=" + currentIndex +
+                ", userAddressId=" + userAddressId +
+                ", isFirstOrder=" + isFirstOrder +
+                '}';
+    }
 }

@@ -66,6 +66,7 @@ public class ApiAddressController {
             resultInfo.setData(userAddressByOppenId);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("findUserAddressByOppenId happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

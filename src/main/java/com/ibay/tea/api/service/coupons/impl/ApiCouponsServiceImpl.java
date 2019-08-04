@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,8 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
     }
 
     @Override
-    public TbUserCoupons findOneCouponsByOppenId(String oppenId) {
-        return tbUserCouponsMapper.findOneCouponsByOppenId(oppenId);
+    public TbUserCoupons findOneCouponsByOppenId(String oppenId,String currentDate) {
+        return tbUserCouponsMapper.findOneCouponsByOppenId(oppenId,currentDate);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
         List<TbUserCoupons> userCouponsList = tbUserCouponsMapper.findUserValidCoupons(oppenId);
 
         if (CollectionUtils.isEmpty(userCouponsList)){
-            return null;
+            return new ArrayList<>();
         }
         coverUserCoupon(userCouponsList);
         return userCouponsList;
@@ -51,12 +52,10 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
 
     private void coverUserCoupon(List<TbUserCoupons> userCouponsList) {
         for (TbUserCoupons tbUserCoupons : userCouponsList) {
-            TbCoupons tbCouponsById = activityCache.getTbCouponsById((long) tbUserCoupons.getCouponsId());
-            tbUserCoupons.setUseRules(tbCouponsById.getUseRules());
-            tbUserCoupons.setUseScope(tbCouponsById.getUseScope());
-            if (ApiConstant.USER_COUPONS_TYPE_RATIO == tbCouponsById.getCouponsType() || ApiConstant.USER_COUPONS_TYPE_GENERAL == tbCouponsById.getCouponsType()){
+
+            if (ApiConstant.USER_COUPONS_TYPE_RATIO == tbUserCoupons.getCouponsType() || ApiConstant.USER_COUPONS_TYPE_GENERAL == tbUserCoupons.getCouponsType()){
                 tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
-                String couponsRatio = tbCouponsById.getCouponsRatio();
+                String couponsRatio = tbUserCoupons.getCouponsRatio();
                 LOGGER.info("current ratio :{}",couponsRatio);
                 int index = couponsRatio.indexOf(".");
                 String bigNumStr = couponsRatio.substring(index+1, index + 2);
@@ -67,7 +66,7 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
                 LOGGER.info("bigNumStr : {} ,smallNumStr : {}",bigNumStr,smallNumStr);
                 tbUserCoupons.setBigNum(Integer.valueOf(bigNumStr));
                 tbUserCoupons.setSmallNum(Integer.valueOf(smallNumStr));
-            }else if (ApiConstant.USER_COUPONS_TYPE_FREE == tbCouponsById.getCouponsType()){
+            }else if (ApiConstant.USER_COUPONS_TYPE_FREE == tbUserCoupons.getCouponsType()){
                 tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_FREE);
             }
         }

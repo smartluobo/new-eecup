@@ -55,6 +55,7 @@ public class ApiStoreController {
          resultInfo.setData(store);
          return resultInfo;
      }catch (Exception e){
+         LOGGER.error("selectStore happen exception ",e);
      	return ResultInfo.newExceptionResultInfo();
      }
 

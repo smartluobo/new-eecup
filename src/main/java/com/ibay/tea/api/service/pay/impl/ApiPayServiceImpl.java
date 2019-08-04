@@ -116,86 +116,99 @@ public class ApiPayServiceImpl implements ApiPayService {
 
     @Override
     public boolean payCallbackHandle(HttpServletRequest request) throws Exception{
-        String xmlString = getXmlString(request);
-        LOGGER.info("wechat callback result String" + xmlString);
-        // 先解析返回的数据
-        Map<String, String> resultMap = WxUtil.xmlToMap(xmlString);
-        LOGGER.info("wechat callback params : {}" ,resultMap);
-        String returnCode = resultMap.get("return_code");
-        LOGGER.info("wechat pay callback return_code : {}",returnCode);
-        // 通信成功
-        if ("SUCCESS".equals(returnCode)) {
-            String transactionId = resultMap.get("transaction_id");
-            String orderId = resultMap.get("out_trade_no");
-            Map<String,Object> updateMap = new HashMap<>();
-            updateMap.put("transactionId",transactionId);
-            updateMap.put("orderId",orderId);
-            updateMap.put("updateTime",new Date());
-            if (resultMap.get("result_code").equals("SUCCESS")) {
-                LOGGER.info("current order orderId : {orderId} pay success",orderId);
-                //支付成功更新
-                //1更新订单状态
-                updateMap.put("orderStatus",1);
-                orderMapper.updatePayStatus(updateMap);
-                //2扣减库存
-                TbOrder tbOrder = orderMapper.selectByPrimaryKey(orderId);
-                if (tbOrder == null){
-                    return true;
-                }
-                List<TbOrderItem> orderItemList = orderItemMapper.findOrderItemByOrderId(orderId);
-                if (!CollectionUtils.isEmpty(orderItemList)){
-                    for (TbOrderItem orderItem : orderItemList) {
-                        storeGoodsMapper.updateInventory(orderItem.getItemId(),tbOrder.getStoreId(),orderItem.getNum());
+
+        LOGGER.info("enter wechat pay callback......");
+        String orderId = null;
+        try {
+            String xmlString = getXmlString(request);
+            LOGGER.info("wechat callback result String" + xmlString);
+            // 先解析返回的数据
+            Map<String, String> resultMap = WxUtil.xmlToMap(xmlString);
+            LOGGER.info("wechat callback params : {}" ,resultMap);
+            String returnCode = resultMap.get("return_code");
+            LOGGER.info("wechat pay callback return_code : {}",returnCode);
+            // 通信成功
+            if ("SUCCESS".equals(returnCode)) {
+                String transactionId = resultMap.get("transaction_id");
+                orderId = resultMap.get("out_trade_no");
+                Map<String,Object> updateMap = new HashMap<>();
+                updateMap.put("transactionId",transactionId);
+                updateMap.put("orderId",orderId);
+                updateMap.put("updateTime",new Date());
+                if (resultMap.get("result_code").equals("SUCCESS")) {
+                    LOGGER.info("current order orderId : {orderId} pay success",orderId);
+                    //支付成功更新
+                    //1更新订单状态
+                    updateMap.put("orderStatus",1);
+                    orderMapper.updatePayStatus(updateMap);
+                    //2扣减库存
+                    TbOrder tbOrder = orderMapper.selectByPrimaryKey(orderId);
+                    if (tbOrder == null){
+                        return true;
                     }
-                }
-                //3更新支付记录状态
-                updateMap.put("payStatus",1);
-                tbUserPayRecordMapper.updatePayStatus(updateMap);
-                //如果订单使用优惠券 将优惠券的修改为已经使用
-                if (tbOrder.getUserCouponsId() != 0){
-                    tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),ApiConstant.USER_COUPONS_STATUS_USED);
-                }
-                //异步调用订单打印
-                TbStore store = storeCache.findStoreById(tbOrder.getStoreId());
-                printService.printOrder(tbOrder, store, ApiConstant.PRINT_TYPE_ORDER_ALL);
-                //tuijianren chuli
-                if (tbOrder.getIsFirstOrder() == 1){
-                    TbApiUser apiUser = tbApiUserMapper.findApiUserByOppenId(tbOrder.getOppenId());
-                    String referrerOppenId = apiUser.getReferrerOppenId();
-                    TbUserCoupons referrerCoupons = tbUserCouponsMapper.findReferrerCoupons(referrerOppenId);
-                    if (referrerCoupons == null){
-                        buildCouponsAndInsert(referrerOppenId);
-                    }else{
-                        //todo
-                        if (referrerCoupons.getCouponsType() == ApiConstant.USER_COUPONS_TYPE_FREE){
-                            buildCouponsAndInsert(referrerOppenId);
-                        }else {
-                            String couponsRatio = referrerCoupons.getCouponsRatio();
-                            String[] split = couponsRatio.split(".");
-                            int ratio = Integer.valueOf(split[1]);
-                            if (ratio > 1){
-                                int upgrade = ratio - 1;
-                                String ratioStr = "0."+upgrade;
-                                tbUserCouponsMapper.updateRatio(referrerCoupons.getId(),ratioStr);
-                            }else {
-                                tbUserCouponsMapper.updateUpgradeCouponsType(referrerCoupons.getId(),ApiConstant.USER_COUPONS_TYPE_FREE);
-                            }
+                    List<TbOrderItem> orderItemList = orderItemMapper.findOrderItemByOrderId(orderId);
+                    if (!CollectionUtils.isEmpty(orderItemList)){
+                        for (TbOrderItem orderItem : orderItemList) {
+                            storeGoodsMapper.updateInventory(orderItem.getItemId(),tbOrder.getStoreId(),orderItem.getNum());
                         }
                     }
-                    orderMapper.updateShareOrder(tbOrder.getOrderId(), tbOrder.getOppenId());
+                    //3更新支付记录状态
+                    updateMap.put("payStatus",1);
+                    tbUserPayRecordMapper.updatePayStatus(updateMap);
+                    //如果订单使用优惠券 将优惠券的修改为已经使用
+                    if (tbOrder.getUserCouponsId() != 0){
+                        TbUserCoupons tbUserCoupons = tbUserCouponsMapper.selectByPrimaryKey(tbOrder.getUserCouponsId());
+                        if (tbUserCoupons.getIsReferrer() == 1){
+                            tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),ApiConstant.USER_COUPONS_STATUS_USED);
+                        }
+                    }
+                    //tuijianren chuli
+                    if (tbOrder.getIsFirstOrder() == 1){
+                        LOGGER.info("first order pay success recommend handle");
+                        TbApiUser apiUser = tbApiUserMapper.findApiUserByOppenId(tbOrder.getOppenId());
+                        String referrerOppenId = apiUser.getReferrerOppenId();
+                        if (StringUtils.isNotBlank(referrerOppenId)){
+                            LOGGER.info("current user is shared handle give coupons");
+                            TbUserCoupons referrerCoupons = tbUserCouponsMapper.findReferrerCoupons(referrerOppenId);
+                            if (referrerCoupons == null){
+                                LOGGER.info("recommend user no recommend type coupons");
+                                buildCouponsAndInsert(referrerOppenId);
+                            }else{
+                                //todo
+                                LOGGER.info("recommend coupons info : {}",referrerCoupons);
+                                String couponsRatio = referrerCoupons.getCouponsRatio();
+                                LOGGER.info("recommend coupons ratio : {}",couponsRatio);
+                                String[] split = couponsRatio.split("\\.");
+                                int ratio = Integer.valueOf(split[1]);
+                                LOGGER.info("current user recommend coupons ratio : {}",ratio);
+                                if (ratio > 2){
+                                    int upgrade = ratio - 2;
+                                    String ratioStr = "0."+upgrade;
+                                    tbUserCouponsMapper.updateRatio(referrerCoupons.getId(),ratioStr);
+                                }else {
+                                    tbUserCouponsMapper.updateUpgradeCouponsType(referrerCoupons.getId(),ApiConstant.USER_COUPONS_TYPE_FREE);
+                                }
+                            }
+                            orderMapper.updateShareOrder(tbOrder.getOrderId(), tbOrder.getOppenId());
+                        }
+                    }
+                    //异步调用订单打印
+                    TbStore store = storeCache.findStoreById(tbOrder.getStoreId());
+                    printService.printOrder(tbOrder, store, ApiConstant.PRINT_TYPE_ORDER_ALL);
+                    LOGGER.info("pay call back print order success orderId : {}",tbOrder.getOrderId());
+                } else {
+                    //支付失败更新
+                    //更新支付记录状态，库存和订单状态不用修改
+                    updateMap.put("payStatus",2);
+                    tbUserPayRecordMapper.updatePayStatus(updateMap);
                 }
-                //
-
-                LOGGER.info("pay call back print order success orderId : {}",tbOrder.getOrderId());
-            } else {
-                //支付失败更新
-                //更新支付记录状态，库存和订单状态不用修改
-                updateMap.put("payStatus",2);
-                tbUserPayRecordMapper.updatePayStatus(updateMap);
+                return true;
             }
-            return true;
+            return false;
+        }catch (Exception e){
+            LOGGER.error("wechat pay success callback happen exception orderId : {}",orderId,e);
+            return false;
         }
-        return false;
     }
 
     private void buildCouponsAndInsert(String referrerOppenId) {
@@ -208,6 +221,9 @@ public class ApiPayServiceImpl implements ApiPayService {
         tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
         tbUserCoupons.setCouponsRatio("0.8");
         tbUserCoupons.setExpireDate(DateUtil.addDate(Calendar.YEAR,1));
+        tbUserCoupons.setIsReferrer(1);
+        tbUserCoupons.setUseScope("任意商品");
+        tbUserCoupons.setUseRules("全场任意商品可使用，全场折扣下不能使用优惠券");
         tbUserCouponsMapper.insert(tbUserCoupons);
     }
 

@@ -102,4 +102,20 @@ public class TbApiUser {
     public void setReferrerOppenId(String referrerOppenId) {
         this.referrerOppenId = referrerOppenId;
     }
+
+    @Override
+    public String toString() {
+        return "TbApiUser{" +
+                "id=" + id +
+                ", nickName='" + nickName + '\'' +
+                ", wechatNum='" + wechatNum + '\'' +
+                ", oppenId='" + oppenId + '\'' +
+                ", wechatPhoneNum='" + wechatPhoneNum + '\'' +
+                ", userBindPhoneNum='" + userBindPhoneNum + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", referrerOppenId='" + referrerOppenId + '\'' +
+                ", userHeadImage='" + userHeadImage + '\'' +
+                '}';
+    }
 }

@@ -14,9 +14,11 @@
     <result column="is_referrer" jdbcType="INTEGER" property="isReferrer" />
     <result column="coupons_ratio" jdbcType="VARCHAR" property="couponsRatio" />
     <result column="coupons_type" jdbcType="INTEGER" property="couponsType" />
+    <result column="use_rules" jdbcType="VARCHAR" property="useRules" />
+    <result column="use_scope" jdbcType="VARCHAR" property="useScope" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,coupons_ratio,coupons_type
+    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,coupons_ratio,coupons_type,use_rules,use_scope
   </sql>
 
   <update id="updateStatusById" parameterType="int">
@@ -44,13 +46,13 @@
       <if test="receiveDate != null">
         AND receive_date = #{receiveDate}
       </if>
-      and `status` = 0
+      and `status` = 0 and is_referrer = 0
     </where>
     limit 0,1
   </select>
 
-  <select id="findOneCouponsByOppenId" parameterType="string" resultMap="BaseResultMap">
-      SELECT * from tb_user_coupons WHERE oppen_id = #{oppenId} AND `status` = 0
+  <select id="findOneCouponsByOppenId" parameterType="map" resultMap="BaseResultMap">
+      SELECT * from tb_user_coupons WHERE oppen_id = #{oppenId} AND receive_date = #{currentDate} AND `status` = 0
   </select>
 
   <select id="selectValidUserCoupons" resultMap="BaseResultMap" parameterType="com.ibay.tea.entity.TbUserCoupons">
@@ -59,6 +61,7 @@
 
   <select id="findUserValidCoupons" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0
+      <![CDATA[ and DATE_FORMAT(now(), '%Y%m%d') <= DATE_FORMAT(expire_date, '%Y%m%d') ]]>
   </select>
   <select id="getUserCouponsByOppenId" resultMap="BaseResultMap" parameterType="string">
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} limit 0,10
@@ -69,7 +72,8 @@
   </select>
 
   <select id="findReferrerCoupons" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0 and is_referrer = 1
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0
+    and is_referrer = 1 and <![CDATA[ coupons_type <> 4]]> order by coupons_ratio limit 0,1
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -78,11 +82,11 @@
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbUserCoupons" keyProperty="id" useGeneratedKeys="true">
     insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,
-                                 coupons_ratio,coupons_type)
+                                 coupons_ratio,coupons_type,use_rules,use_scope)
     values (#{oppenId,jdbcType=VARCHAR}, #{couponsId,jdbcType=INTEGER},
       #{couponsName,jdbcType=VARCHAR}, #{receiveDate,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER},#{couponsPoster},#{expireDate},#{isReferrer},
-                                         #{couponsRatio,jdbcType=VARCHAR}, #{couponsType,jdbcType=INTEGER}
+                                         #{couponsRatio,jdbcType=VARCHAR}, #{couponsType,jdbcType=INTEGER},#{useRules},#{useScope}
     )
   </insert>
 </mapper>
