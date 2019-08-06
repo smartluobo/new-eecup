@@ -309,7 +309,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             tbUserCouponsMapper.updateStatusById(userCouponsId,ApiConstant.USER_COUPONS_STATUS_USED);
             //生成付款记录
             TbUserPayRecord tbUserPayRecord = new TbUserPayRecord();
-            String payId = SerialGenerator.getOrderSerial();
+            String payId = SerialGenerator.getPayRecordSerial();
             tbUserPayRecord.setId(payId);
             tbUserPayRecord.setCreateTime(new Date());
             tbUserPayRecord.setOppenId(oppenId);
@@ -327,7 +327,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             tbOrder.setStatus(ApiConstant.ORDER_STATUS_NO_PAY);
             //生成付款记录
             TbUserPayRecord tbUserPayRecord = new TbUserPayRecord();
-            String payId = SerialGenerator.getOrderSerial();
+            String payId = SerialGenerator.getPayRecordSerial();
             tbUserPayRecord.setId(payId);
             tbUserPayRecord.setCreateTime(new Date());
             tbUserPayRecord.setOppenId(oppenId);

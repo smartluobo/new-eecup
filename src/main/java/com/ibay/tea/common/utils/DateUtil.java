@@ -10,6 +10,7 @@ public class DateUtil {
     private static final SimpleDateFormat yyyyMMddSdf = new SimpleDateFormat("yyyyMMdd");
 
     private static final SimpleDateFormat yyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmmss");
+    private static final SimpleDateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
 
     private static final  SimpleDateFormat viewDateFormatSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -37,6 +38,10 @@ public class DateUtil {
 
     public static String getDateYyyyMMddHHmmss(){
         return yyyyMMddHHmmss.format(new Date());
+    }
+
+    public static String getDateYyyyMMddHHmm(){
+        return yyyyMMddHHmm.format(new Date());
     }
 
     public static String getDateYyyyMMddHHmmss(Date date){

@@ -1,18 +1,28 @@
 package com.ibay.tea.common.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SerialGenerator {
 
-    private static AtomicInteger orderIndex = new AtomicInteger(50);
+    private static AtomicInteger payIndex = new AtomicInteger(50);
+    private static AtomicInteger orderIndex = new AtomicInteger(80);
 
     private static Random random = new Random();
 
     public static String getOrderSerial(){
         int orderSerial = orderIndex.getAndIncrement();
+        String takeCode = StringUtils.leftPad(String.valueOf(orderSerial),4,"0");
+        String dateYyyyMMddHHmm = DateUtil.getDateYyyyMMddHHmm();
+        return dateYyyyMMddHHmm + takeCode;
+    }
+
+    public static String getPayRecordSerial(){
+        int paySerial = payIndex.getAndIncrement();
         String dateYyyyMMddHHmmss = DateUtil.getDateYyyyMMddHHmmss();
-        return dateYyyyMMddHHmmss + orderSerial;
+        return dateYyyyMMddHHmmss + paySerial;
     }
 
     public static String getVerificationCode() {
