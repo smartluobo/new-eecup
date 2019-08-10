@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface TbApiUserMapper {
@@ -23,4 +24,7 @@ public interface TbApiUserMapper {
 
     List<TbApiUser> findAll();
 
+    long countUserByCondition(Map<String, Object> condition);
+
+    List<TbApiUser> findUserListByPage(Map<String, Object> condition);
 }

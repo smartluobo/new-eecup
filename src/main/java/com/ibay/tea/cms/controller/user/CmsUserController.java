@@ -1,15 +1,21 @@
 package com.ibay.tea.cms.controller.user;
 
 import com.ibay.tea.api.response.ResultInfo;
+import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.cms.service.user.CmsUserService;
+import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.TbCmsUser;
 import com.ibay.tea.entity.User;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -20,6 +26,9 @@ public class CmsUserController {
 
     @Resource
     private CmsUserService cmsUserService;
+
+    @Resource
+    private ApiUserService apiUserService;
 
     @RequestMapping("/detail")
     public ResultInfo findUserById(@PathVariable("id") int id){
@@ -93,6 +102,35 @@ public class CmsUserController {
         }catch (Exception e){
         	return ResultInfo.newExceptionResultInfo();
         }
+    }
 
+    @PostMapping("/apiUser/list")
+    @ResponseBody
+    public ResultInfo listByPage(@RequestBody Map<String,String> params){
+        try {
+            if (CollectionUtils.isEmpty(params)){
+                return ResultInfo.newEmptyParamsResultInfo();
+            }
+
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            int pageNum = Integer.valueOf(params.get("pageNum"));
+            int pageSize = Integer.valueOf(params.get("pageSize"));
+            String userPhone = params.get("userPhone");
+            Map<String,Object> condition = new HashMap<>();
+            if (!StringUtils.isEmpty(userPhone) && !"null".equals(userPhone)){
+                condition.put("userPhone",userPhone);
+            }
+            int startIndex = (pageNum-1) * pageSize;
+            condition.put("startIndex",startIndex);
+            condition.put("pageSize",pageSize);
+            long total = apiUserService.countUserByCondition(condition);
+            List<TbApiUser> apiUserList = apiUserService.findUserListByPage(condition);
+            resultInfo.setTotal(total);
+            resultInfo.setData(apiUserList);
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("cms goods list happen exception",e);
+            return ResultInfo.newExceptionResultInfo();
+        }
     }
 }

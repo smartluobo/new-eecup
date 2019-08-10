@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -96,6 +97,16 @@ public class ApiUserServiceImpl implements ApiUserService{
         if (flag){
             tbApiUserMapper.updateApiUserPhone(oppenId,phoneNum);
         }
+    }
+
+    @Override
+    public long countUserByCondition(Map<String, Object> condition) {
+        return tbApiUserMapper.countUserByCondition(condition);
+    }
+
+    @Override
+    public List<TbApiUser> findUserListByPage(Map<String, Object> condition) {
+        return tbApiUserMapper.findUserListByPage(condition);
     }
 
     private Map<String,String> getApiUserInfoByOppenId(String oppenId) {
