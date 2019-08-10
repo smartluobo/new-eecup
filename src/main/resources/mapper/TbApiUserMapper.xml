@@ -12,6 +12,8 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="user_head_image" jdbcType="VARCHAR" property="userHeadImage" />
     <result column="referrer_oppen_id" jdbcType="VARCHAR" property="referrerOppenId" />
+    <result column="company_id" jdbcType="INTEGER" property="companyId" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -25,6 +27,10 @@
 
   <update id="updateApiUserPhone" parameterType="map">
     UPDATE tb_api_user SET user_bind_phone_num = #{phoneNum} where oppen_id = #{oppenId}
+  </update>
+
+  <update id="bindCompany" parameterType="com.ibay.tea.entity.TbApiUser">
+    UPDATE tb_api_user SET company_id = #{companyId},company_name = #{companyName} where id = #{id}
   </update>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">

@@ -20,4 +20,6 @@ public interface ApiUserService {
     long countUserByCondition(Map<String, Object> condition);
 
     List<TbApiUser> findUserListByPage(Map<String, Object> condition);
+
+    boolean bindCompany(Map<String, Integer> params);
 }

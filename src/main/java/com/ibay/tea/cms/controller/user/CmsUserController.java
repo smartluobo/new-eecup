@@ -106,7 +106,7 @@ public class CmsUserController {
 
     @PostMapping("/apiUser/list")
     @ResponseBody
-    public ResultInfo listByPage(@RequestBody Map<String,String> params){
+    public ResultInfo apiUserListByPage(@RequestBody Map<String,String> params){
         try {
             if (CollectionUtils.isEmpty(params)){
                 return ResultInfo.newEmptyParamsResultInfo();
@@ -133,4 +133,26 @@ public class CmsUserController {
             return ResultInfo.newExceptionResultInfo();
         }
     }
+
+    @RequestMapping("/apiUser/bindCompany")
+    public ResultInfo bindCompany(@RequestBody Map<String,Integer> params){
+
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            boolean flag = apiUserService.bindCompany(params);
+            if (flag){
+                return resultInfo;
+            }else {
+                return ResultInfo.newFailResultInfo();
+            }
+        }catch (Exception e){
+            return ResultInfo.newExceptionResultInfo();
+        }
+    }
+
+
 }

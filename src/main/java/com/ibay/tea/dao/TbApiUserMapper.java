@@ -27,4 +27,7 @@ public interface TbApiUserMapper {
     long countUserByCondition(Map<String, Object> condition);
 
     List<TbApiUser> findUserListByPage(Map<String, Object> condition);
+
+    void bindCompany(TbApiUser tbApiUser);
+
 }

@@ -21,6 +21,10 @@ public class TbApiUser {
 
     private String referrerOppenId;
 
+    private int companyId;
+
+    private String companyName;
+
     public String getUserHeadImage() {
         return userHeadImage;
     }
@@ -101,6 +105,22 @@ public class TbApiUser {
 
     public void setReferrerOppenId(String referrerOppenId) {
         this.referrerOppenId = referrerOppenId;
+    }
+
+    public int getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(int companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     @Override

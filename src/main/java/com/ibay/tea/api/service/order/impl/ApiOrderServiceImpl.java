@@ -83,6 +83,9 @@ public class ApiOrderServiceImpl implements ApiOrderService {
 
     @Resource
     private TbActivityMapper tbActivityMapper;
+    
+    @Resource
+    private TbFavorableCompanyMapper tbFavorableCompanyMapper;
 
     @Override
     public Map<String, Object> createOrderByCart(CartOrderParamVo cartOrderParamVo) throws Exception{
@@ -399,6 +402,8 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             double groupGiveAmount = 0.0;
 
             double specialReduceAmount = 0.0;
+            
+            double goodsTotalPrice = 0.0;
 
             String[] cartItemIdArr = cartItemIds.split(",");
             List<TbCart> cartItemByIds = tbCartMapper.findCartItemByIds(Arrays.asList(cartItemIdArr));
@@ -524,7 +529,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                 couponsName = tbUserCoupons.getCouponsName();
             }
 
-
+            goodsTotalPrice = orderTotalPrice;
             //判断哪种策略对消费者最优惠
             if (cartOrderParamVo.getSelfGet() == ApiConstant.ORDER_TAKE_WAY_SEND){
                 orderTotalPrice += sendPrice;
@@ -547,6 +552,23 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                     calculateReturnVo.setCouponsName("买一赠一");
                 }else {
                     calculateReturnVo.setCouponsName("第二杯半价");
+                }
+            }
+            //判断用户是否是vip公司用户
+            TbApiUser apiUserByOppenId = tbApiUserMapper.findApiUserByOppenId(oppenId);
+            if (apiUserByOppenId.getCompanyId() != 0){
+                TbFavorableCompany tbFavorableCompany = tbFavorableCompanyMapper.selectByPrimaryKey(apiUserByOppenId.getCompanyId());
+                if (tbFavorableCompany != null){
+                    //vip公司用户优惠计算
+                    double companyFavorablePrice = PriceCalculateUtil.multiply(goodsTotalPrice, tbFavorableCompany.getCompanyRatio());
+                    double companyReduceAmount = PriceCalculateUtil.subtract(goodsTotalPrice,companyFavorablePrice);
+                    if (companyReduceAmount > calculateReturnVo.getOrderReduceAmount()){
+                        //公司优惠更加选择公司优惠
+                        calculateReturnVo.setOrderTotalAmount(orderTotalPrice);
+                        calculateReturnVo.setOrderReduceAmount(companyReduceAmount);
+                        calculateReturnVo.setUserCouponsName("企业员工福利");
+                        calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.subtract(totalGoodsCount,companyReduceAmount));
+                    }
                 }
             }
             LOGGER.info("current order totalGoodsCount : {},realGoodsCount:{}",totalGoodsCount,realGoodsCount);

@@ -7,9 +7,11 @@ import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.SendSmsService;
 import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.dao.TbApiUserMapper;
+import com.ibay.tea.dao.TbFavorableCompanyMapper;
 import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.dao.UserMapper;
 import com.ibay.tea.entity.TbApiUser;
+import com.ibay.tea.entity.TbFavorableCompany;
 import com.ibay.tea.entity.TbUserCoupons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,9 @@ public class ApiUserServiceImpl implements ApiUserService{
 
     @Resource
     private TbUserCouponsMapper tbUserCouponsMapper;
+
+    @Resource
+    private TbFavorableCompanyMapper tbFavorableCompanyMapper;
 
     @Override
     public TbApiUser findApiUserByOppenId(String oppenId) {
@@ -107,6 +112,24 @@ public class ApiUserServiceImpl implements ApiUserService{
     @Override
     public List<TbApiUser> findUserListByPage(Map<String, Object> condition) {
         return tbApiUserMapper.findUserListByPage(condition);
+    }
+
+    @Override
+    public boolean bindCompany(Map<String, Integer> params) {
+        Integer userId = params.get("userId");
+        Integer companyId = params.get("companyId");
+        TbApiUser tbApiUser = tbApiUserMapper.selectByPrimaryKey(userId);
+        if (tbApiUser == null){
+            return false;
+        }
+        TbFavorableCompany tbFavorableCompany = tbFavorableCompanyMapper.selectByPrimaryKey(companyId);
+        if (tbFavorableCompany == null){
+            return false;
+        }
+        tbApiUser.setCompanyId(companyId);
+        tbApiUser.setCompanyName(tbFavorableCompany.getCompanyName());
+        tbApiUserMapper.bindCompany(tbApiUser);
+        return false;
     }
 
     private Map<String,String> getApiUserInfoByOppenId(String oppenId) {
