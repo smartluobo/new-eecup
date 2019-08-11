@@ -6,6 +6,8 @@ import com.ibay.tea.dao.TbActivityCouponsRecordMapper;
 import com.ibay.tea.dao.TbActivityMapper;
 import com.ibay.tea.dao.TbCouponsMapper;
 import com.ibay.tea.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -15,6 +17,8 @@ import java.util.*;
 
 @Service
 public class ActivityCache implements InitializingBean{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActivityCache.class);
 
     @Resource
     private TbActivityMapper tbActivityMapper;
@@ -71,6 +75,17 @@ public class ActivityCache implements InitializingBean{
         }
 
         initGeneralCoupons();
+        if (!CollectionUtils.isEmpty(todayActivityList)){
+            for (TbActivity tbActivity : todayActivityList) {
+                LOGGER.info("today activity info :{}",tbActivity);
+                List<TbActivityCouponsRecord> records = getActivityCouponsRecordsByActivityId(tbActivity.getId());
+                if (!CollectionUtils.isEmpty(records)){
+                    for (TbActivityCouponsRecord record : records) {
+                        LOGGER.info("activityId : {},recordInfo : {}",tbActivity.getId(),record);
+                    }
+                }
+            }
+        }
     }
 
     private void initGeneralCoupons() {

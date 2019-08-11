@@ -118,27 +118,26 @@ public class ApiUserServiceImpl implements ApiUserService{
     public boolean bindCompany(Map<String, Integer> params) {
         Integer userId = params.get("userId");
         Integer companyId = params.get("companyId");
+        LOGGER.info("api user bindCompany userId : {},companyId : {}",userId,companyId);
         TbApiUser tbApiUser = tbApiUserMapper.selectByPrimaryKey(userId);
+        LOGGER.info("tbApiUser info : {}",tbApiUser);
         if (tbApiUser == null){
             return false;
         }
         TbFavorableCompany tbFavorableCompany = tbFavorableCompanyMapper.selectByPrimaryKey(companyId);
+        LOGGER.info("tbFavorableCompany : {}",tbFavorableCompany);
         if (tbFavorableCompany == null){
             return false;
         }
         tbApiUser.setCompanyId(companyId);
         tbApiUser.setCompanyName(tbFavorableCompany.getCompanyName());
         tbApiUserMapper.bindCompany(tbApiUser);
-        return false;
+        return true;
     }
 
-    private Map<String,String> getApiUserInfoByOppenId(String oppenId) {
-        try {
-            String token = wechatTokenGuavaCache.get(ApiConstant.WECHAT_ACCESS_TOKEN_GUAVA_KEY);
-
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+    @Override
+    public TbApiUser getUserInfo(String oppenId) {
+        return tbApiUserMapper.findApiUserByOppenId(oppenId);
     }
+
 }

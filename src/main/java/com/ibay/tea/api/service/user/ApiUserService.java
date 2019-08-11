@@ -22,4 +22,6 @@ public interface ApiUserService {
     List<TbApiUser> findUserListByPage(Map<String, Object> condition);
 
     boolean bindCompany(Map<String, Integer> params);
+
+    TbApiUser getUserInfo(String oppenId);
 }

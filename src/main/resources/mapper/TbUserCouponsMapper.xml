@@ -46,7 +46,7 @@
       <if test="receiveDate != null">
         AND receive_date = #{receiveDate}
       </if>
-      and `status` = 0 and is_referrer = 0
+      and is_referrer = 0
     </where>
     limit 0,1
   </select>

@@ -150,6 +150,7 @@ public class CmsUserController {
                 return ResultInfo.newFailResultInfo();
             }
         }catch (Exception e){
+            LOGGER.error("apiUser bindCompany happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

@@ -2,6 +2,7 @@ package com.ibay.tea.api.controller.user;
 
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.user.ApiUserService;
+import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,25 @@ public class ApiUserController {
             return resultInfo;
         }catch (Exception e){
             LOGGER.error("calculateGoodsOrderPrice GoodsOrderParamVo : {}",params,e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+    }
+
+    @RequestMapping("/getUserInfo")
+    public ResultInfo getUserInfo(@RequestBody Map<String,String> params){
+
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        String oppenId = params.get("oppenId");
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            TbApiUser apiUser = apiUserService.getUserInfo(oppenId);
+            resultInfo.setData(apiUser);
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("getUserInfo params : {}",params,e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

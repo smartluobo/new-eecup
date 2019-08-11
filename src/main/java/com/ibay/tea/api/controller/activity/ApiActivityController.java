@@ -67,10 +67,7 @@ public class ApiActivityController {
                 return ResultInfo.newEmptyParamsResultInfo();
             }
             Map<String,Object> result = new HashMap<>();
-            TbActivity activityInfo = apiActivityService.getTodayActivity(Integer.valueOf(storeId));
-            if (activityInfo == null ){
-                return ResultInfo.newEmptyResultInfo();
-            }
+
             TbActivity specialActivity = tbActivityMapper.findSpecialActivity(DateUtil.getDateYyyyMMdd());
             if (specialActivity != null){
                 LOGGER.info("getActivityInfo return specialActivity ");
@@ -79,6 +76,11 @@ public class ApiActivityController {
                 result.put("info",specialActivity);
                 resultInfo.setData(result);
                 return resultInfo;
+            }
+
+            TbActivity activityInfo = apiActivityService.getTodayActivity(Integer.valueOf(storeId));
+            if (activityInfo == null ){
+                return ResultInfo.newEmptyResultInfo();
             }
             if (activityInfo.getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
                 LOGGER.info("getActivityInfo return ACTIVITY_TYPE_FULL ");

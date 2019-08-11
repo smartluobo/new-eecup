@@ -322,10 +322,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             return tbUserPayRecord;
         }else {
             if (couponsType == 3){
-                TbUserCoupons tbUserCoupons = tbUserCouponsMapper.selectByPrimaryKey(userCouponsId);
-                if (tbUserCoupons.getIsReferrer() == 1){
-                    tbUserCouponsMapper.updateStatusById(userCouponsId,ApiConstant.USER_COUPONS_STATUS_LOCK);
-                }
+                tbUserCouponsMapper.updateStatusById(userCouponsId,ApiConstant.USER_COUPONS_STATUS_LOCK);
             }
             tbOrder.setStatus(ApiConstant.ORDER_STATUS_NO_PAY);
             //生成付款记录
@@ -562,12 +559,15 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                     //vip公司用户优惠计算
                     double companyFavorablePrice = PriceCalculateUtil.multiply(goodsTotalPrice, tbFavorableCompany.getCompanyRatio());
                     double companyReduceAmount = PriceCalculateUtil.subtract(goodsTotalPrice,companyFavorablePrice);
+                    LOGGER.info("goodsTotalPrice : {},tbFavorableCompany : {}",goodsTotalPrice,companyFavorablePrice);
                     if (companyReduceAmount > calculateReturnVo.getOrderReduceAmount()){
                         //公司优惠更加选择公司优惠
                         calculateReturnVo.setOrderTotalAmount(orderTotalPrice);
                         calculateReturnVo.setOrderReduceAmount(companyReduceAmount);
-                        calculateReturnVo.setUserCouponsName("企业员工福利");
-                        calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.subtract(totalGoodsCount,companyReduceAmount));
+                        calculateReturnVo.setUserCouponsName("优质企业员工福利");
+                        calculateReturnVo.setCouponsName("优质企业员工福利");
+                        calculateReturnVo.setCouponsType(6);
+                        calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.subtract(orderTotalPrice,companyReduceAmount));
                     }
                 }
             }

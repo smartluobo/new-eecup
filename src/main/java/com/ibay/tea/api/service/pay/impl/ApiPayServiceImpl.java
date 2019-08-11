@@ -157,10 +157,7 @@ public class ApiPayServiceImpl implements ApiPayService {
                     tbUserPayRecordMapper.updatePayStatus(updateMap);
                     //如果订单使用优惠券 将优惠券的修改为已经使用
                     if (tbOrder.getUserCouponsId() != 0){
-                        TbUserCoupons tbUserCoupons = tbUserCouponsMapper.selectByPrimaryKey(tbOrder.getUserCouponsId());
-                        if (tbUserCoupons.getIsReferrer() == 1){
-                            tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),ApiConstant.USER_COUPONS_STATUS_USED);
-                        }
+                        tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),ApiConstant.USER_COUPONS_STATUS_USED);
                     }
                     //tuijianren chuli
                     if (tbOrder.getIsFirstOrder() == 1){

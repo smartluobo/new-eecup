@@ -17,7 +17,7 @@
     select  <include refid="Base_Column_List" /> from tb_favorable_company where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="findAll" resultType="com.ibay.tea.entity.TbFavorableCompany">
+  <select id="findAll" resultMap="BaseResultMap">
     select  <include refid="Base_Column_List" /> from tb_favorable_company
   </select>
 

@@ -18,7 +18,7 @@
 
   <sql id="Base_Column_List">
     id, nick_name, wechat_num, oppen_id, wechat_phone_num, user_bind_phone_num, create_time, 
-    update_time, user_head_image
+    update_time, user_head_image,referrer_oppen_id,company_id,company_name
   </sql>
 
   <update id="updateApiUserInfo" parameterType="map">
@@ -59,6 +59,7 @@
             user_bind_phone_num = #{userPhone}
           </if>
       </where>
+    order by create_time desc
     LIMIT #{startIndex} , #{pageSize}
   </select>
 
