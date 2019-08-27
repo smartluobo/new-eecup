@@ -83,6 +83,31 @@ public class ApiActivityController {
                 return ResultInfo.newEmptyResultInfo();
             }
             if (activityInfo.getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
+
+                TbActivity regularActivity = tbActivityMapper.findRegularActivity(DateUtil.getDateYyyyMMdd(), Integer.valueOf(storeId));
+                if (regularActivity != null){
+                    Map<String,Object> condition = new HashMap<>();
+                    condition.put("oppenId",oppenId);
+                    condition.put("receiveDate", DateUtil.getDateYyyyMMdd());
+                    TbUserCoupons tbUserCoupons = apiCouponsService.findCouponsByCondition(condition);
+                    if (tbUserCoupons == null){
+                        int activityStatus = apiActivityService.checkActivityStatus(regularActivity);
+                        if (activityStatus == ApiConstant.ACTIVITY_STATUS_NOT_START){
+                            result.put("type",5);
+                            regularActivity.setShowImageUrl(regularActivity.getNoStartPoster());
+                            result.put("info",regularActivity);
+                            resultInfo.setData(result);
+                            return resultInfo;
+                        }
+                        if (activityStatus == ApiConstant.ACTIVITY_STATUS_STARTING){
+                            result.put("type",6);
+                            regularActivity.setShowImageUrl(regularActivity.getStartingPoster());
+                            result.put("info",regularActivity);
+                            resultInfo.setData(result);
+                            return resultInfo;
+                        }
+                    }
+                }
                 LOGGER.info("getActivityInfo return ACTIVITY_TYPE_FULL ");
                 activityInfo.setShowImageUrl(activityInfo.getStartingPoster());
                 result.put("type",5);
@@ -232,32 +257,54 @@ public class ApiActivityController {
 
     }
 
-    @RequestMapping("/test")
-    public ResultInfo test(){
-        List<TbApiUser> users = tbApiUserMapper.findAll();
-        for (TbApiUser user : users) {
-            String oppenId = user.getOppenId();
-            String storeId = "2";
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-            try {
-                TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(Integer.valueOf(storeId));
-                if (todayActivityBean == null || todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
-                    return null;
-                }
-                //判断通过执行抽奖过程
-                TbActivityCouponsRecord record = apiActivityService.extractPrize(oppenId,Integer.valueOf(storeId));
+
+    @RequestMapping("/extractExperience")
+    public ResultInfo extractExperience(@RequestBody Map<String,String> params){
+        //判断oppenId是否有效
+        if (CollectionUtils.isEmpty(params)){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        String oppenId = params.get("oppenId");
+        String storeId = params.get("storeId");
+        LOGGER.info("extractExperience params oppenId : {} ,storeId : {}",oppenId,storeId);
+        if (StringUtils.isEmpty(oppenId) || StringUtils.isEmpty(storeId)){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        try {
+            TbApiUser tbApiUser = apiUserService.findApiUserByOppenId(oppenId);
+            if (tbApiUser == null){
+                return ResultInfo.newNoLoginResultInfo();
+            }
+            TbActivity regularActivity = tbActivityMapper.findRegularActivity(DateUtil.getDateYyyyMMdd(), Integer.valueOf(storeId));
+            if (regularActivity == null){
+                return null;
+            }
+            String currentDate = DateUtil.getDateYyyyMMdd();
+            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayUserCoupons(oppenId,currentDate);
+            if (userCoupons != null){
+                TbUserCoupons tbUserCoupons = new TbUserCoupons();
+                //tbUserCoupons.setCouponsPoster(todayActivityBean.getTbActivity().getWinPoster());
+                resultInfo.setData(tbUserCoupons);
+                return resultInfo;
+            }
+            //判断通过执行抽奖过程
+            TbActivityCouponsRecord record = apiActivityService.extractPrize(oppenId,Integer.valueOf(storeId));
+            if (record != null){
                 //将用户的优惠券存入数据库
                 TbUserCoupons tbUserCoupons = apiActivityService.buildUserCoupons(oppenId,record);
                 //设置优惠券过期时间
                 Date expireDate = DateUtil.getExpireDate(tbUserCoupons.getReceiveDate(),ApiConstant.USER_COUPONS_EXPIRE_LIMIT);
                 tbUserCoupons.setExpireDate(expireDate);
+
                 apiActivityService.saveUserCouponsToDb(tbUserCoupons);
                 resultInfo.setData(tbUserCoupons);
-            }catch (Exception e){
-                LOGGER.error("extractPrize happen exception : {} ",oppenId,e);
-                return ResultInfo.newExceptionResultInfo();
+                return resultInfo;
             }
+            return ResultInfo.newEmptyResultInfo();
+        }catch (Exception e){
+            LOGGER.error("extractPrize happen exception : {} ",oppenId,e);
+            return ResultInfo.newExceptionResultInfo();
         }
-        return ResultInfo.newSuccessResultInfo();
     }
 }

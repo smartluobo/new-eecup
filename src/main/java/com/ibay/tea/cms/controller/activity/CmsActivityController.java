@@ -124,6 +124,7 @@ public class CmsActivityController {
         try {
             ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             TbActivity tbActivity = tbActivityMapper.selectByPrimaryKey(tbActivityCouponsRecord.getActivityId());
+            //if (tbActivity.getActivityType() == )
             TbCoupons tbCoupons = tbCouponsMapper.selectByPrimaryKey(tbActivityCouponsRecord.getCouponsId());
             tbActivityCouponsRecord.setActivityName(tbActivity.getActivityName());
             tbActivityCouponsRecord.setCouponsName(tbCoupons.getCouponsName());

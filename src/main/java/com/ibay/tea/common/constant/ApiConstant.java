@@ -56,6 +56,7 @@ public class ApiConstant {
     //已关闭
     public static final int ORDER_STATUS_CLOSED = 3;
 
+    //token cache key
     public static final String WECHAT_ACCESS_TOKEN_GUAVA_KEY = "wechat:access:token:guava:key";//access_token guava缓存key
 
     public static final int ORDER_MAKE_COMPLETE_MESSAGE_SEND = 1;
@@ -65,7 +66,9 @@ public class ApiConstant {
     public static final int USER_COUPONS_EXPIRE_LIMIT = 7;
 
     public static final int PRINT_TYPE_ORDER = 1;
+
     public static final int PRINT_TYPE_ORDER_ITEM = 2;
+
     public static final int PRINT_TYPE_ORDER_ALL = 3;
 
 
