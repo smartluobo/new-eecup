@@ -35,7 +35,17 @@ public class SerialGenerator {
 
     public static void main(String[] args) {
         for (int i = 0; i < 50; i++) {
-            getVerificationCode();
+            getUniqueCode();
         }
+    }
+
+    public static String getUniqueCode() {
+        int i = random.nextInt(10);
+        int j = random.nextInt(10);
+        int k = random.nextInt(10);
+        int l = random.nextInt(10);
+        String code =  ""+i+j+k+l;
+        System.out.println(code);
+        return code;
     }
 }

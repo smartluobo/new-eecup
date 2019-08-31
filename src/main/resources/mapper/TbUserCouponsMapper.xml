@@ -16,9 +16,14 @@
     <result column="coupons_type" jdbcType="INTEGER" property="couponsType" />
     <result column="use_rules" jdbcType="VARCHAR" property="useRules" />
     <result column="use_scope" jdbcType="VARCHAR" property="useScope" />
+    <result column="coupons_source" jdbcType="INTEGER" property="couponsSource" />
+    <result column="coupons_code" jdbcType="VARCHAR" property="couponsCode" />
+    <result column="source_name" jdbcType="VARCHAR" property="sourceName" />
+    <result column="activity_id" jdbcType="INTEGER" property="activityId" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,coupons_ratio,coupons_type,use_rules,use_scope
+    id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,
+    is_referrer,coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id
   </sql>
 
   <update id="updateStatusById" parameterType="int">
@@ -46,6 +51,9 @@
       <if test="receiveDate != null">
         AND receive_date = #{receiveDate}
       </if>
+      <if test="source != null">
+        coupons_source = #{couponsSource}
+      </if>
       and is_referrer = 0
     </where>
     limit 0,1
@@ -67,14 +75,24 @@
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} limit 0,10
   </select>
 
-  <select id="findCurrentDayUserCoupons" resultType="com.ibay.tea.entity.TbUserCoupons">
-    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and receive_date = #{currentDate} limit 0,1
+  <select id="findCurrentDayUserCoupons" resultMap="BaseResultMap" parameterType="map">
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId}
+      and receive_date = #{currentDate} and activity_id = #{activityId} limit 0,1
+  </select>
+
+  <select id="findCurrentDayExperienceCoupons" resultMap="BaseResultMap" parameterType="map">
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId}
+      and receive_date = #{currentDate} and activity_id = #{activityId}  limit 0,1
   </select>
 
   <select id="findReferrerCoupons" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0
     and is_referrer = 1 and <![CDATA[ coupons_type <> 4]]> order by coupons_ratio limit 0,1
   </select>
+  <select id="findExperienceCoupons" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and receive_date = #{receiveDate} and coupons_type = 6 limit 0,1
+  </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_user_coupons  where id = #{id,jdbcType=INTEGER}
@@ -82,11 +100,24 @@
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbUserCoupons" keyProperty="id" useGeneratedKeys="true">
     insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,
-                                 coupons_ratio,coupons_type,use_rules,use_scope)
+                                 coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id)
     values (#{oppenId,jdbcType=VARCHAR}, #{couponsId,jdbcType=INTEGER},
       #{couponsName,jdbcType=VARCHAR}, #{receiveDate,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER},#{couponsPoster},#{expireDate},#{isReferrer},
-                                         #{couponsRatio,jdbcType=VARCHAR}, #{couponsType,jdbcType=INTEGER},#{useRules},#{useScope}
+      #{couponsRatio,jdbcType=VARCHAR}, #{couponsType,jdbcType=INTEGER},#{useRules},#{useScope},#{couponsSource},#{couponsCode},#{sourceName},#{activityId}
     )
+  </insert>
+
+  <insert id="insertBatch" parameterType="list">
+      insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,
+                                   coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id)
+      values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.oppenId,jdbcType=VARCHAR}, #{item.couponsId,jdbcType=INTEGER},
+          #{item.couponsName,jdbcType=VARCHAR}, #{item.receiveDate,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP},
+          #{item.status,jdbcType=INTEGER},#{item.couponsPoster},#{item.expireDate},#{item.isReferrer},
+          #{item.couponsRatio,jdbcType=VARCHAR}, #{item.couponsType,jdbcType=INTEGER},#{item.useRules},#{item.useScope},#{item.couponsSource},#{item.couponsCode},#{item.sourceName},#{item.activityId}
+      )
+    </foreach>
   </insert>
 </mapper>

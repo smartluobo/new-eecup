@@ -45,9 +45,7 @@ public class ActivityCache implements InitializingBean{
 
     private List<TbActivityCouponsRecord> tbActivityCouponsRecordsCache;
 
-
-
-
+    private Map<String,List<TbExperienceCouponsPool>> experienceCouponsPoolCacheMap = new HashMap<>();
 
     private void initActivityCache(){
         List<TbStore> storeList = storeCache.getStoreList();
@@ -186,5 +184,13 @@ public class ActivityCache implements InitializingBean{
             }
         }
         return null;
+    }
+
+    public Map<String, List<TbExperienceCouponsPool>> getExperienceCouponsPoolCacheMap() {
+        return experienceCouponsPoolCacheMap;
+    }
+
+    public void setExperienceCouponsPoolCacheMap(Map<String, List<TbExperienceCouponsPool>> experienceCouponsPoolCacheMap) {
+        this.experienceCouponsPoolCacheMap = experienceCouponsPoolCacheMap;
     }
 }

@@ -1,5 +1,6 @@
 package com.ibay.tea.entity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ibay.tea.common.utils.DateUtil;
 
 import java.util.Date;
@@ -41,6 +42,14 @@ public class TbUserCoupons {
     private int isReferrer;
 
     private String couponsRatio;
+
+    //优惠券来源 0 常规活动抢券 1 分享专属 2 体验券
+    private int couponsSource;
+
+    private String couponsCode;
+
+    //来源名称 幸运抽奖  分享专属  新人大礼包 系统派发
+    private String sourceName;
 
     public Integer getId() {
         return id;
@@ -191,7 +200,34 @@ public class TbUserCoupons {
         this.couponsRatio = couponsRatio;
     }
 
+    public int getCouponsSource() {
+        return couponsSource;
+    }
 
+    public void setCouponsSource(int couponsSource) {
+        this.couponsSource = couponsSource;
+    }
+
+    public String getCouponsCode() {
+        return couponsCode;
+    }
+
+    public void setCouponsCode(String couponsCode) {
+        this.couponsCode = couponsCode;
+    }
+
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
+    }
+
+    public TbUserCoupons copy() {
+        String thisStr = JSONObject.toJSONString(this);
+        return JSONObject.parseObject(thisStr, TbUserCoupons.class);
+    }
 
     @Override
     public String toString() {

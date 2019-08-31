@@ -33,6 +33,10 @@
     UPDATE tb_api_user SET company_id = #{companyId},company_name = #{companyName} where id = #{id}
   </update>
 
+  <update id="updateGiftReceiveStatus" parameterType="string">
+    UPDATE tb_api_user SET gift_receive_status = 1 where oppen_id = #{oppenId}
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select  <include refid="Base_Column_List" /> from tb_api_user where id = #{id,jdbcType=INTEGER}
   </select>

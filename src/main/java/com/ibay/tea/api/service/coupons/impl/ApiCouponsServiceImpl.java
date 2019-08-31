@@ -83,8 +83,13 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
     }
 
     @Override
-    public TbUserCoupons findCurrentDayUserCoupons(String oppenId, String currentDate) {
+    public TbUserCoupons findCurrentDayUserCoupons(String oppenId, String currentDate,String activityId) {
 
-        return tbUserCouponsMapper.findCurrentDayUserCoupons(oppenId,currentDate);
+        return tbUserCouponsMapper.findCurrentDayUserCoupons(oppenId,currentDate,activityId);
+    }
+
+    @Override
+    public TbUserCoupons findCurrentDayExperienceCoupons(String oppenId, String currentDate,String activityId) {
+        return tbUserCouponsMapper.findCurrentDayExperienceCoupons(oppenId,currentDate,activityId);
     }
 }

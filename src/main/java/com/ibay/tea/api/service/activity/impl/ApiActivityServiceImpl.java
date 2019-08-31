@@ -6,6 +6,7 @@ import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.dao.TbActivityCouponsRecordMapper;
 import com.ibay.tea.dao.TbActivityMapper;
+import com.ibay.tea.dao.TbExperienceCouponsPoolMapper;
 import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.entity.*;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +26,8 @@ public class ApiActivityServiceImpl implements ApiActivityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiActivityServiceImpl.class);
 
     private static final String LOCK_STRING = "LOCK_STRING";
+
+    private static final String INIT_EXPERIENCE_COUPONS_LOCK = "init_experience_Coupons_lock";
 
     @Resource
     private TbActivityMapper tbActivityMapper;
@@ -36,6 +40,9 @@ public class ApiActivityServiceImpl implements ApiActivityService {
 
     @Resource
     private TbActivityCouponsRecordMapper tbActivityCouponsRecordMapper;
+
+    @Resource
+    private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
     @Override
     public TbActivity getTodayActivity(int storeId) {
@@ -164,5 +171,33 @@ public class ApiActivityServiceImpl implements ApiActivityService {
             }
         }
         return couponsRecords;
+    }
+
+    @Override
+    public TbExperienceCouponsPool extractExperience(String activityId) {
+        List<TbExperienceCouponsPool> tbExperienceCouponsPools = activityCache.getExperienceCouponsPoolCacheMap().get(activityId);
+        if (tbExperienceCouponsPools == null){
+            synchronized (INIT_EXPERIENCE_COUPONS_LOCK){
+                tbExperienceCouponsPools = activityCache.getExperienceCouponsPoolCacheMap().get(activityId);
+                if (tbExperienceCouponsPools == null){
+                    List<TbExperienceCouponsPool> poolsList = tbExperienceCouponsPoolMapper.findCouponsByActivityId(activityId);
+                    if (poolsList == null){
+                        poolsList = new ArrayList<>();
+                    }
+                    activityCache.getExperienceCouponsPoolCacheMap().put(activityId,poolsList);
+                }
+            }
+        }
+        tbExperienceCouponsPools = activityCache.getExperienceCouponsPoolCacheMap().get(activityId);
+
+        if (CollectionUtils.isEmpty(tbExperienceCouponsPools)){
+            return null;
+        }
+        synchronized (tbExperienceCouponsPools){
+            if (tbExperienceCouponsPools.size() > 0){
+                return tbExperienceCouponsPools.remove(0);
+            }
+        }
+        return null;
     }
 }

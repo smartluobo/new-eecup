@@ -2,6 +2,7 @@ package com.ibay.tea.api.service.activity;
 
 import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbActivityCouponsRecord;
+import com.ibay.tea.entity.TbExperienceCouponsPool;
 import com.ibay.tea.entity.TbUserCoupons;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface ApiActivityService {
     void setExtractTime(TbActivity activityInfo);
 
     List<TbActivityCouponsRecord> getJackpotInfo(int activityId);
+
+    TbExperienceCouponsPool extractExperience(String activityId);
 }

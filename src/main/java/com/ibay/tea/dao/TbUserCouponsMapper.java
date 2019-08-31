@@ -29,12 +29,18 @@ public interface TbUserCouponsMapper {
 
     List<TbUserCoupons> getUserCouponsByOppenId(String oppenId);
 
-    TbUserCoupons findCurrentDayUserCoupons(@Param("oppenId") String oppenId, @Param("currentDate") String currentDate);
+    TbUserCoupons findCurrentDayUserCoupons(@Param("oppenId") String oppenId, @Param("currentDate") String currentDate,@Param("activityId") String activityId);
+
+    TbUserCoupons findCurrentDayExperienceCoupons(@Param("oppenId") String oppenId, @Param("currentDate") String currentDate,@Param("activityId") String activityId);
 
     TbUserCoupons findReferrerCoupons(@Param("oppenId") String oppenId);
 
     void updateRatio(@Param("id") Integer id, @Param("ratioStr") String ratioStr);
 
     void updateUpgradeCouponsType(@Param("id") Integer id, @Param("couponsType") int couponsType);
+
+    TbUserCoupons findExperienceCoupons(Map<String, Object> condition);
+
+    void insertBatch(List<TbUserCoupons> userCouponsList);
 
 }

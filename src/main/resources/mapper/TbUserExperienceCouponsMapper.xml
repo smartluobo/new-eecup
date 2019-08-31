@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbUserExperienceCouponsMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbUserExperienceCoupons">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="oppen_id" jdbcType="VARCHAR" property="oppenId" />
+    <result column="experience_coupons_id" jdbcType="INTEGER" property="experienceCouponsId" />
+    <result column="experience_coupons_code" jdbcType="VARCHAR" property="experienceCouponsCode" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="background_url" jdbcType="VARCHAR" property="backgroundUrl" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, oppen_id, experience_coupons_id, experience_coupons_code, status, expire_time, 
+    create_time, background_url
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user_experience_coupons
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_user_experience_coupons
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbUserExperienceCoupons">
+    insert into tb_user_experience_coupons (id, oppen_id, experience_coupons_id, 
+      experience_coupons_code, status, expire_time, 
+      create_time, background_url)
+    values (#{id,jdbcType=INTEGER}, #{oppenId,jdbcType=VARCHAR}, #{experienceCouponsId,jdbcType=INTEGER}, 
+      #{experienceCouponsCode,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{expireTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{backgroundUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ibay.tea.entity.TbUserExperienceCoupons">
+    insert into tb_user_experience_coupons
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="oppenId != null">
+        oppen_id,
+      </if>
+      <if test="experienceCouponsId != null">
+        experience_coupons_id,
+      </if>
+      <if test="experienceCouponsCode != null">
+        experience_coupons_code,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="expireTime != null">
+        expire_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="backgroundUrl != null">
+        background_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="oppenId != null">
+        #{oppenId,jdbcType=VARCHAR},
+      </if>
+      <if test="experienceCouponsId != null">
+        #{experienceCouponsId,jdbcType=INTEGER},
+      </if>
+      <if test="experienceCouponsCode != null">
+        #{experienceCouponsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="expireTime != null">
+        #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="backgroundUrl != null">
+        #{backgroundUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ibay.tea.entity.TbUserExperienceCoupons">
+    update tb_user_experience_coupons
+    <set>
+      <if test="oppenId != null">
+        oppen_id = #{oppenId,jdbcType=VARCHAR},
+      </if>
+      <if test="experienceCouponsId != null">
+        experience_coupons_id = #{experienceCouponsId,jdbcType=INTEGER},
+      </if>
+      <if test="experienceCouponsCode != null">
+        experience_coupons_code = #{experienceCouponsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="expireTime != null">
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="backgroundUrl != null">
+        background_url = #{backgroundUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ibay.tea.entity.TbUserExperienceCoupons">
+    update tb_user_experience_coupons
+    set oppen_id = #{oppenId,jdbcType=VARCHAR},
+      experience_coupons_id = #{experienceCouponsId,jdbcType=INTEGER},
+      experience_coupons_code = #{experienceCouponsCode,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      background_url = #{backgroundUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

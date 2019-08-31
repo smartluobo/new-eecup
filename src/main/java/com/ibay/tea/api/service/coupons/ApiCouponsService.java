@@ -14,5 +14,7 @@ public interface ApiCouponsService {
 
     List<TbUserCoupons> getUserCouponsByOppenId(String oppenId);
 
-    TbUserCoupons findCurrentDayUserCoupons(String oppenId, String currentDate);
+    TbUserCoupons findCurrentDayUserCoupons(String oppenId, String currentDate,String activityId);
+
+    TbUserCoupons findCurrentDayExperienceCoupons(String oppenId, String currentDate,String activityId);
 }

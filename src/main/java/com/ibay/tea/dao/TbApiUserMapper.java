@@ -2,6 +2,7 @@ package com.ibay.tea.dao;
 
 import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.TbApiUserAddress;
+import com.ibay.tea.entity.TbUserCoupons;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -29,5 +30,8 @@ public interface TbApiUserMapper {
     List<TbApiUser> findUserListByPage(Map<String, Object> condition);
 
     void bindCompany(TbApiUser tbApiUser);
+
+    void updateGiftReceiveStatus(String oppenId);
+
 
 }

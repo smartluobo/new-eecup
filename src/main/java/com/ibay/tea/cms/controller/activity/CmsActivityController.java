@@ -2,17 +2,23 @@ package com.ibay.tea.cms.controller.activity;
 
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.activity.CmsActivityService;
+import com.ibay.tea.common.constant.ApiConstant;
+import com.ibay.tea.common.utils.SerialGenerator;
 import com.ibay.tea.dao.TbActivityCouponsRecordMapper;
 import com.ibay.tea.dao.TbActivityMapper;
 import com.ibay.tea.dao.TbCouponsMapper;
+import com.ibay.tea.dao.TbExperienceCouponsPoolMapper;
 import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbActivityCouponsRecord;
 import com.ibay.tea.entity.TbCoupons;
+import com.ibay.tea.entity.TbExperienceCouponsPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -33,6 +39,9 @@ public class CmsActivityController {
 
     @Resource
     private TbActivityMapper tbActivityMapper;
+
+    @Resource
+    private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
     @RequestMapping("/list")
     public ResultInfo list(){
@@ -123,20 +132,45 @@ public class CmsActivityController {
         }
         try {
             ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-            TbActivity tbActivity = tbActivityMapper.selectByPrimaryKey(tbActivityCouponsRecord.getActivityId());
-            //if (tbActivity.getActivityType() == )
-            TbCoupons tbCoupons = tbCouponsMapper.selectByPrimaryKey(tbActivityCouponsRecord.getCouponsId());
-            tbActivityCouponsRecord.setActivityName(tbActivity.getActivityName());
-            tbActivityCouponsRecord.setCouponsName(tbCoupons.getCouponsName());
-            tbActivityCouponsRecord.setCouponsPoster(tbCoupons.getCouponsPoster());
-            LOGGER.info("activity add coupons tbActivityCouponsRecord : {}",tbActivityCouponsRecord);
-            if(tbActivityCouponsRecord.getId() != 0){
-                tbActivityCouponsRecordMapper.updateRecord(tbActivityCouponsRecord);
-            }else {
-                tbActivityCouponsRecordMapper.insert(tbActivityCouponsRecord);
-            }
+            int activityId = tbActivityCouponsRecord.getActivityId();
+            int couponsId = tbActivityCouponsRecord.getCouponsId();
 
-            return resultInfo;
+            TbActivity tbActivity = tbActivityMapper.selectByPrimaryKey(activityId);
+            if (tbActivity.getActivityType() == ApiConstant.ACTIVITY_TYPE_STORE){
+                //门店活动添加优惠券需要每张券分配券码
+                TbCoupons tbCoupons = tbCouponsMapper.selectByPrimaryKey(couponsId);
+                if (tbCoupons == null){
+                    return resultInfo;
+                }
+                int couponsCount = tbActivityCouponsRecord.getCouponsCount();
+                if (couponsCount <=0){
+                    return resultInfo;
+                }
+                List<TbExperienceCouponsPool> pools = new ArrayList<>();
+                for (int i = 0; i < couponsCount; i++) {
+                    TbExperienceCouponsPool experienceCouponsPool = new TbExperienceCouponsPool();
+                    experienceCouponsPool.setActivityId(activityId);
+                    experienceCouponsPool.setCouponsId(couponsId);
+                    experienceCouponsPool.setBackgroundUrl(tbCoupons.getCouponsPoster());
+                    experienceCouponsPool.setCreateTime(new Date());
+                    experienceCouponsPool.setCouponsCode(SerialGenerator.getUniqueCode());
+                    pools.add(experienceCouponsPool);
+                }
+                tbExperienceCouponsPoolMapper.insertBatch(pools);
+                return resultInfo;
+            }else {
+                TbCoupons tbCoupons = tbCouponsMapper.selectByPrimaryKey(couponsId);
+                tbActivityCouponsRecord.setActivityName(tbActivity.getActivityName());
+                tbActivityCouponsRecord.setCouponsName(tbCoupons.getCouponsName());
+                tbActivityCouponsRecord.setCouponsPoster(tbCoupons.getCouponsPoster());
+                LOGGER.info("activity add coupons tbActivityCouponsRecord : {}",tbActivityCouponsRecord);
+                if(tbActivityCouponsRecord.getId() != 0){
+                    tbActivityCouponsRecordMapper.updateRecord(tbActivityCouponsRecord);
+                }else {
+                    tbActivityCouponsRecordMapper.insert(tbActivityCouponsRecord);
+                }
+                return resultInfo;
+            }
         }catch (Exception e){
             LOGGER.error("");
             return ResultInfo.newExceptionResultInfo();

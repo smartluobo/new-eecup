@@ -9,7 +9,10 @@ import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.dao.TbActivityMapper;
 import com.ibay.tea.dao.TbApiUserMapper;
+import com.ibay.tea.dao.TbExperienceCouponsPoolMapper;
+import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.entity.*;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -47,7 +50,10 @@ public class ApiActivityController {
     private TbActivityMapper tbActivityMapper;
 
     @Resource
-    private TbApiUserMapper tbApiUserMapper;
+    private TbUserCouponsMapper tbUserCouponsMapper;
+
+    @Resource
+    private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
     //查询活动，如果当前时间没有活动在进行中查询最近的活动开始时间，点击查看活动奖品
     // 如果在开奖时间内且还有奖品提示用户参与抽奖，若奖品已经发放完毕且用户没有获奖提示用户明天继续参与
@@ -62,12 +68,16 @@ public class ApiActivityController {
         try {
             String oppenId = params.get("oppenId");
             String storeId = params.get("storeId");
+            Map<String,Object> condition = new HashMap<>();
+            condition.put("currentDate",DateUtil.getDateYyyyMMdd());
+            condition.put("storeId",storeId);
             LOGGER.info("params oppenId : {},storeId : {}",oppenId,storeId);
             if (StringUtils.isEmpty(oppenId) || StringUtils.isEmpty(storeId)){
                 return ResultInfo.newEmptyParamsResultInfo();
             }
             Map<String,Object> result = new HashMap<>();
 
+            //查看是否有买一送一或第二杯半价活动
             TbActivity specialActivity = tbActivityMapper.findSpecialActivity(DateUtil.getDateYyyyMMdd());
             if (specialActivity != null){
                 LOGGER.info("getActivityInfo return specialActivity ");
@@ -78,36 +88,35 @@ public class ApiActivityController {
                 return resultInfo;
             }
 
+            //查询是否有体验活动
+            TbActivity experienceActivity = tbActivityMapper.findExperienceActivity(condition);
+            if (experienceActivity != null){
+                LOGGER.info("getActivityInfo return experienceActivity ");
+                int activityStatus = apiActivityService.checkActivityStatus(experienceActivity);
+                experienceActivity.setShowImageUrl(experienceActivity.getNoStartPoster());
+                result.put("type",5);
+                if (activityStatus == ApiConstant.ACTIVITY_STATUS_STARTING){
+                    //判断用户当日是否已经参与了抢券
+                    TbUserCoupons tbUserCoupons = tbUserCouponsMapper.findExperienceCoupons(condition);
+                    if (tbUserCoupons != null){
+                        result.put("type",4);
+                        resultInfo.setData(result);
+                    }
+                    experienceActivity.setShowImageUrl(experienceActivity.getStartingPoster());
+                    result.put("type",6);
+                }
+
+                result.put("info",experienceActivity);
+                resultInfo.setData(result);
+                return resultInfo;
+            }
+
+            //获取常规活动
             TbActivity activityInfo = apiActivityService.getTodayActivity(Integer.valueOf(storeId));
             if (activityInfo == null ){
                 return ResultInfo.newEmptyResultInfo();
             }
             if (activityInfo.getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
-
-                TbActivity regularActivity = tbActivityMapper.findRegularActivity(DateUtil.getDateYyyyMMdd(), Integer.valueOf(storeId));
-                if (regularActivity != null){
-                    Map<String,Object> condition = new HashMap<>();
-                    condition.put("oppenId",oppenId);
-                    condition.put("receiveDate", DateUtil.getDateYyyyMMdd());
-                    TbUserCoupons tbUserCoupons = apiCouponsService.findCouponsByCondition(condition);
-                    if (tbUserCoupons == null){
-                        int activityStatus = apiActivityService.checkActivityStatus(regularActivity);
-                        if (activityStatus == ApiConstant.ACTIVITY_STATUS_NOT_START){
-                            result.put("type",5);
-                            regularActivity.setShowImageUrl(regularActivity.getNoStartPoster());
-                            result.put("info",regularActivity);
-                            resultInfo.setData(result);
-                            return resultInfo;
-                        }
-                        if (activityStatus == ApiConstant.ACTIVITY_STATUS_STARTING){
-                            result.put("type",6);
-                            regularActivity.setShowImageUrl(regularActivity.getStartingPoster());
-                            result.put("info",regularActivity);
-                            resultInfo.setData(result);
-                            return resultInfo;
-                        }
-                    }
-                }
                 LOGGER.info("getActivityInfo return ACTIVITY_TYPE_FULL ");
                 activityInfo.setShowImageUrl(activityInfo.getStartingPoster());
                 result.put("type",5);
@@ -129,9 +138,9 @@ public class ApiActivityController {
             if (activityStatus == ApiConstant.ACTIVITY_STATUS_STARTING){
                 //活动正在进行中，查询用户是否有领取过奖品，如果有返回优惠券信息，如果优惠券用户已经使用提示用户明天继续参加抽奖
                 // 没有优惠券让用户参与抢优惠券
-                Map<String,Object> condition = new HashMap<>();
                 condition.put("oppenId",oppenId);
                 condition.put("receiveDate", DateUtil.getDateYyyyMMdd());
+                condition.put("couponsSource",0);
                 TbUserCoupons tbUserCoupons = apiCouponsService.findCouponsByCondition(condition);
                 if (tbUserCoupons == null){
                     LOGGER.info("getActivityInfo activity starting");
@@ -142,31 +151,14 @@ public class ApiActivityController {
                     result.put("info",activityInfo);
                     resultInfo.setData(result);
                     return resultInfo;
-                }
-                if (tbUserCoupons.getStatus() == ApiConstant.USER_COUPONS_STATUS_NO_USE){
-                    LOGGER.info("getActivityInfo activity user have coupons");
-                    result.put("type",3);
-                    result.put("info",tbUserCoupons);
-                    resultInfo.setData(result);
-                    return resultInfo;
                 }else {
                     result.put("type",4);
                     resultInfo.setData(result);
                 }
             }
             if (activityStatus == ApiConstant.ACTIVITY_STATUS_END){
-                //活动已经结束，如果有优惠券返回优惠券 没有提示用户明天继续参与抽奖
-                String currentDate = DateUtil.getDateYyyyMMdd();
-                TbUserCoupons tbUserCoupons = apiCouponsService.findOneCouponsByOppenId(oppenId,currentDate);
-                if (tbUserCoupons != null){
-                    result.put("type",3);
-                    result.put("info",tbUserCoupons);
-                    resultInfo.setData(result);
-                    return resultInfo;
-                }else {
-                    result.put("type",4);
-                    resultInfo.setData(result);
-                }
+                result.put("type",4);
+                resultInfo.setData(result);
             }
             return resultInfo;
         }catch (Exception e){
@@ -183,7 +175,8 @@ public class ApiActivityController {
         }
         String oppenId = params.get("oppenId");
         String storeId = params.get("storeId");
-        LOGGER.info("extractPrize params oppenId : {} ,storeId : {}",oppenId,storeId);
+        String activityId = params.get("activityId");
+        LOGGER.info("extractPrize params oppenId : {} ,storeId : {}, activityId : {}",oppenId,storeId,activityId);
         if (StringUtils.isEmpty(oppenId) || StringUtils.isEmpty(storeId)){
             return ResultInfo.newEmptyParamsResultInfo();
         }
@@ -198,7 +191,7 @@ public class ApiActivityController {
                 return null;
             }
             String currentDate = DateUtil.getDateYyyyMMdd();
-            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayUserCoupons(oppenId,currentDate);
+            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayUserCoupons(oppenId,currentDate,activityId);
             if (userCoupons != null){
                 TbUserCoupons tbUserCoupons = new TbUserCoupons();
                 tbUserCoupons.setCouponsPoster(todayActivityBean.getTbActivity().getWinPoster());
@@ -210,10 +203,12 @@ public class ApiActivityController {
             if (record != null){
                 //将用户的优惠券存入数据库
                 TbUserCoupons tbUserCoupons = apiActivityService.buildUserCoupons(oppenId,record);
+                tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_ACTIVITY);
+                tbUserCoupons.setSourceName("幸运抽奖");
+                tbUserCoupons.setActivityId(Integer.valueOf(activityId));
                 //设置优惠券过期时间
                 Date expireDate = DateUtil.getExpireDate(tbUserCoupons.getReceiveDate(),ApiConstant.USER_COUPONS_EXPIRE_LIMIT);
                 tbUserCoupons.setExpireDate(expireDate);
-
                 apiActivityService.saveUserCouponsToDb(tbUserCoupons);
                 resultInfo.setData(tbUserCoupons);
                 return resultInfo;
@@ -257,7 +252,6 @@ public class ApiActivityController {
 
     }
 
-
     @RequestMapping("/extractExperience")
     public ResultInfo extractExperience(@RequestBody Map<String,String> params){
         //判断oppenId是否有效
@@ -266,7 +260,8 @@ public class ApiActivityController {
         }
         String oppenId = params.get("oppenId");
         String storeId = params.get("storeId");
-        LOGGER.info("extractExperience params oppenId : {} ,storeId : {}",oppenId,storeId);
+        String activityId = params.get("activityId");
+        LOGGER.info("extractExperience params oppenId : {} ,storeId : {},activityId : {}",oppenId,storeId,activityId);
         if (StringUtils.isEmpty(oppenId) || StringUtils.isEmpty(storeId)){
             return ResultInfo.newEmptyParamsResultInfo();
         }
@@ -276,28 +271,38 @@ public class ApiActivityController {
             if (tbApiUser == null){
                 return ResultInfo.newNoLoginResultInfo();
             }
-            TbActivity regularActivity = tbActivityMapper.findRegularActivity(DateUtil.getDateYyyyMMdd(), Integer.valueOf(storeId));
-            if (regularActivity == null){
+            TbActivity experienceActivity = tbActivityMapper.selectByPrimaryKey(Integer.valueOf(activityId));
+            if (experienceActivity == null){
                 return null;
             }
             String currentDate = DateUtil.getDateYyyyMMdd();
-            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayUserCoupons(oppenId,currentDate);
+            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayExperienceCoupons(oppenId,currentDate,activityId);
             if (userCoupons != null){
-                TbUserCoupons tbUserCoupons = new TbUserCoupons();
-                //tbUserCoupons.setCouponsPoster(todayActivityBean.getTbActivity().getWinPoster());
-                resultInfo.setData(tbUserCoupons);
+               //你已参与了抽奖不能重复抽奖
                 return resultInfo;
             }
             //判断通过执行抽奖过程
-            TbActivityCouponsRecord record = apiActivityService.extractPrize(oppenId,Integer.valueOf(storeId));
-            if (record != null){
+             TbExperienceCouponsPool pool = apiActivityService.extractExperience(activityId);
+            if (pool != null){
                 //将用户的优惠券存入数据库
-                TbUserCoupons tbUserCoupons = apiActivityService.buildUserCoupons(oppenId,record);
-                //设置优惠券过期时间
-                Date expireDate = DateUtil.getExpireDate(tbUserCoupons.getReceiveDate(),ApiConstant.USER_COUPONS_EXPIRE_LIMIT);
-                tbUserCoupons.setExpireDate(expireDate);
+                TbUserCoupons tbUserCoupons = new TbUserCoupons();
+                tbUserCoupons.setActivityId(Integer.valueOf(activityId));
+                tbUserCoupons.setSourceName("幸运抽奖");
+                tbUserCoupons.setCouponsSource(0);
+                tbUserCoupons.setUseScope("任意商品");
+                tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_EXPERIENCE);
+                tbUserCoupons.setCouponsName("免费券");
+                tbUserCoupons.setCreateTime(new Date());
+                String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
+                tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),1));
+                tbUserCoupons.setOppenId(oppenId);
+                tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
+                tbUserCoupons.setStatus(0);
+                tbUserCoupons.setUseRules("到店使用，全场任意商品有效");
+                tbUserCoupons.setCouponsCode(pool.getCouponsCode());
 
                 apiActivityService.saveUserCouponsToDb(tbUserCoupons);
+                tbExperienceCouponsPoolMapper.updateReceiveStatus(pool.getId());
                 resultInfo.setData(tbUserCoupons);
                 return resultInfo;
             }

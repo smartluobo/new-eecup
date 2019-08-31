@@ -25,6 +25,9 @@ public class TbApiUser {
 
     private String companyName;
 
+    //是否领取过新人礼包 0 未领取  1 已领取
+    private int giftReceiveStatus;
+
     public String getUserHeadImage() {
         return userHeadImage;
     }
@@ -121,6 +124,14 @@ public class TbApiUser {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public int getGiftReceiveStatus() {
+        return giftReceiveStatus;
+    }
+
+    public void setGiftReceiveStatus(int giftReceiveStatus) {
+        this.giftReceiveStatus = giftReceiveStatus;
     }
 
     @Override

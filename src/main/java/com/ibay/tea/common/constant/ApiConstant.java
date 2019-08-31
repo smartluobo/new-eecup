@@ -13,6 +13,8 @@ public class ApiConstant {
 
     public static final int ACTIVITY_TYPE_TWO_HALF = 5;
 
+    public static final int ACTIVITY_TYPE_STORE = 6;
+
     //活动未开始
     public static final int ACTIVITY_STATUS_NOT_START = 0;
     //活动进行中
@@ -37,6 +39,10 @@ public class ApiConstant {
     public static final int USER_COUPONS_TYPE_FREE = 4;
     //通用券
     public static final int USER_COUPONS_TYPE_GENERAL = 5;
+    //体验券
+    public static final int USER_COUPONS_TYPE_EXPERIENCE = 6;
+    //体验券
+    public static final int USER_COUPONS_TYPE_CASH = 7;
 
     //订单提取方式 自取
     public static final int ORDER_TAKE_WAY_SELF_GET = 0;
@@ -70,6 +76,15 @@ public class ApiConstant {
     public static final int PRINT_TYPE_ORDER_ITEM = 2;
 
     public static final int PRINT_TYPE_ORDER_ALL = 3;
+
+    //用户优惠券获取渠道  幸运抽奖
+    public static final int COUPONS_SOURCE_ACTIVITY = 0;
+    //分享专属
+    public static final int COUPONS_SOURCE_SHARE = 1;
+    //新用户大礼包
+    public static final int COUPONS_SOURCE_NEW_USER = 2;
+    //系统派发
+    public static final int COUPONS_SOURCE_SYS = 3;
 
 
 

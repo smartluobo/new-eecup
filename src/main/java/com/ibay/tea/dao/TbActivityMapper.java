@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface TbActivityMapper {
@@ -26,5 +27,8 @@ public interface TbActivityMapper {
     void saveUpdateActivity(TbActivity tbActivity);
 
     TbActivity findSpecialActivity(String dateYyyyMMdd);
+
+    TbActivity findExperienceActivity(Map<String,Object> condition);
+
 
 }
