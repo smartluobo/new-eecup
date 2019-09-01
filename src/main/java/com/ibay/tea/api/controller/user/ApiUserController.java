@@ -131,7 +131,7 @@ public class ApiUserController {
                 tbUserCoupons.setOppenId(oppenId);
                 tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
                 tbUserCoupons.setStatus(0);
-                tbUserCoupons.setUseRules("任意商品可使用，全场折扣下不能使用优惠券");
+                tbUserCoupons.setUseRules("全场折扣下不能使用优惠券哦");
 
                 userCouponsList.add(tbUserCoupons);
                 TbUserCoupons copy1 = tbUserCoupons.copy();

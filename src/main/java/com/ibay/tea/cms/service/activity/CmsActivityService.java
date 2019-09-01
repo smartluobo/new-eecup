@@ -13,4 +13,6 @@ public interface CmsActivityService {
     void deleteActivity(int id);
 
     void updateActivity(TbActivity tbActivity);
+
+    List<TbActivity> findByStoreId(int storeId);
 }

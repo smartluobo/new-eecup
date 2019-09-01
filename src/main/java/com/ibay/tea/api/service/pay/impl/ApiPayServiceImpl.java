@@ -216,11 +216,11 @@ public class ApiPayServiceImpl implements ApiPayService {
         tbUserCoupons.setReceiveDate(Integer.valueOf(DateUtil.getDateYyyyMMdd()));
         tbUserCoupons.setStatus(0);
         tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
-        tbUserCoupons.setCouponsRatio("0.8");
+        tbUserCoupons.setCouponsRatio("0.6");
         tbUserCoupons.setExpireDate(DateUtil.addDate(Calendar.YEAR,1));
         tbUserCoupons.setIsReferrer(1);
         tbUserCoupons.setUseScope("任意商品");
-        tbUserCoupons.setUseRules("全场任意商品可使用，全场折扣下不能使用优惠券");
+        tbUserCoupons.setUseRules("全场折扣下不能使用优惠券哦");
         tbUserCouponsMapper.insert(tbUserCoupons);
     }
 

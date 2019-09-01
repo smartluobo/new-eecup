@@ -43,12 +43,12 @@ public class CmsActivityController {
     @Resource
     private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
-    @RequestMapping("/list")
-    public ResultInfo list(){
+    @RequestMapping("/list/{storeId}")
+    public ResultInfo list(@PathVariable("storeId") int storeId){
 
         try {
         	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-        	List<TbActivity> activityList =cmsActivityService.findAll();
+        	List<TbActivity> activityList =cmsActivityService.findByStoreId(storeId);
             resultInfo.setData(activityList);
         	return resultInfo;
         }catch (Exception e){

@@ -38,4 +38,12 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         tbActivityMapper.deleteByPrimaryKey(tbActivity.getId());
         tbActivityMapper.saveUpdateActivity(tbActivity);
     }
+
+    @Override
+    public List<TbActivity> findByStoreId(int storeId) {
+        if (storeId <= 0){
+            return findAll();
+        }
+        return tbActivityMapper.findByStoreId(storeId);
+    }
 }

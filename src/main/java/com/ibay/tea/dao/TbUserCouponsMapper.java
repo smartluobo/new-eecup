@@ -43,4 +43,9 @@ public interface TbUserCouponsMapper {
 
     void insertBatch(List<TbUserCoupons> userCouponsList);
 
+    List<TbCoupons> findUserExperienceCoupons(Map<String, Object> condition);
+
+    long countUserExperienceCoupons(Map<String, Object> condition);
+
+    void updateExperience(@Param("userCouponsId") int userCouponsId, @Param("useStatus") int useStatus);
 }

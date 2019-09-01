@@ -31,4 +31,5 @@ public interface TbActivityMapper {
     TbActivity findExperienceActivity(Map<String,Object> condition);
 
 
+    List<TbActivity> findByStoreId(int storeId);
 }

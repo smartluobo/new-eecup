@@ -3,6 +3,7 @@ package com.ibay.tea.cms.service.coupons;
 import com.ibay.tea.entity.TbCoupons;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CmsCouponsService {
     List<TbCoupons> findAll();
@@ -12,4 +13,10 @@ public interface CmsCouponsService {
     void deleteCoupons(int id);
 
     void updateCoupons(TbCoupons tbCoupons);
+
+    List<TbCoupons> findUserExperienceCoupons(Map<String, Object> condition);
+
+    long countUserExperienceCoupons(Map<String, Object> condition);
+
+    void updateExperience(int userCouponsId, int useStatus);
 }

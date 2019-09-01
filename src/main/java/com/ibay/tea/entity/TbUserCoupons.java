@@ -51,6 +51,8 @@ public class TbUserCoupons {
     //来源名称 幸运抽奖  分享专属  新人大礼包 系统派发
     private String sourceName;
 
+    private String createTimeStr;
+
     public Integer getId() {
         return id;
     }
@@ -97,6 +99,9 @@ public class TbUserCoupons {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+        if (createTime != null){
+            createTimeStr = DateUtil.viewDateFormat(createTime);
+        }
     }
 
     public Integer getStatus() {
@@ -222,6 +227,10 @@ public class TbUserCoupons {
 
     public void setSourceName(String sourceName) {
         this.sourceName = sourceName;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
     }
 
     public TbUserCoupons copy() {

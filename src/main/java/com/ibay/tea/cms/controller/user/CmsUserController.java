@@ -116,7 +116,12 @@ public class CmsUserController {
             int pageNum = Integer.valueOf(params.get("pageNum"));
             int pageSize = Integer.valueOf(params.get("pageSize"));
             String userPhone = params.get("userPhone");
+            String companyId = params.get("companyId");
+
             Map<String,Object> condition = new HashMap<>();
+            if (StringUtils.isNotEmpty(companyId)){
+                condition.put("companyId",companyId);
+            }
             if (!StringUtils.isEmpty(userPhone) && !"null".equals(userPhone)){
                 condition.put("userPhone",userPhone);
             }

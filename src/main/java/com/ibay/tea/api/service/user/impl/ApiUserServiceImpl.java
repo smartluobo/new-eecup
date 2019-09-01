@@ -85,7 +85,7 @@ public class ApiUserServiceImpl implements ApiUserService{
         tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(DateUtil.getDateYyyyMMdd()),7));
         tbUserCoupons.setIsReferrer(0);
         tbUserCoupons.setUseScope("任意商品");
-        tbUserCoupons.setUseRules("全场任意商品可使用，全场折扣下不能使用优惠券");
+        tbUserCoupons.setUseRules("全场折扣下不能使用优惠券哦");
         tbUserCoupons.setCouponsId(4);
         tbUserCoupons.setOppenId(oppenId);
         return tbUserCoupons;

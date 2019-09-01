@@ -38,6 +38,10 @@
     UPDATE tb_user_coupons SET coupons_type = #{couponsType} where id = #{id}
   </update>
 
+  <update id="updateExperience" parameterType="map">
+    UPDATE tb_user_coupons SET `status` =#{useStatus} where id = #{userCouponsId}
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select <include refid="Base_Column_List" /> from tb_user_coupons where id = #{id,jdbcType=INTEGER}
   </select>
@@ -91,6 +95,28 @@
   </select>
   <select id="findExperienceCoupons" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and receive_date = #{receiveDate} and coupons_type = 6 limit 0,1
+  </select>
+
+  <select id="findUserExperienceCoupons" resultMap="BaseResultMap" parameterType="map">
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons
+    <where>
+      coupons_type = 6
+      <if test="couponsCode != null">
+        and coupons_code = #{couponsCode}
+      </if>
+    </where>
+    order by create_time desc
+    LIMIT #{startIndex} , #{pageSize}
+  </select>
+
+  <select id="countUserExperienceCoupons" resultType="java.lang.Long" parameterType="map">
+    SELECT count(1) from tb_user_coupons
+    <where>
+      coupons_type = 6
+      <if test="couponsCode != null">
+        and coupons_code = #{couponsCode}
+      </if>
+    </where>
   </select>
 
 
