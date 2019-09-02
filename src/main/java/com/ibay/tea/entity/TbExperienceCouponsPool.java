@@ -15,6 +15,12 @@ public class TbExperienceCouponsPool {
 
     private int couponsId;
 
+    private int receiveStatus;
+
+    private int couponsType;
+
+    private String couponsName;
+
     public Integer getId() {
         return id;
     }
@@ -61,5 +67,29 @@ public class TbExperienceCouponsPool {
 
     public void setCouponsId(int couponsId) {
         this.couponsId = couponsId;
+    }
+
+    public int getReceiveStatus() {
+        return receiveStatus;
+    }
+
+    public void setReceiveStatus(int receiveStatus) {
+        this.receiveStatus = receiveStatus;
+    }
+
+    public int getCouponsType() {
+        return couponsType;
+    }
+
+    public void setCouponsType(int couponsType) {
+        this.couponsType = couponsType;
+    }
+
+    public String getCouponsName() {
+        return couponsName;
+    }
+
+    public void setCouponsName(String couponsName) {
+        this.couponsName = couponsName;
     }
 }

@@ -7,12 +7,14 @@
     <result column="coupons_code" jdbcType="VARCHAR" property="couponsCode" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="background_url" jdbcType="VARCHAR" property="backgroundUrl" />
-    <result column="coupons_id" jdbcType="INTEGER" property="couponsId" />
     <result column="receive_status" jdbcType="INTEGER" property="receiveStatus" />
+    <result column="coupons_id" jdbcType="INTEGER" property="couponsId" />
+    <result column="coupons_type" jdbcType="INTEGER" property="couponsType" />
+    <result column="coupons_name" jdbcType="VARCHAR" property="couponsName" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, activity_id, coupons_code, create_time, background_url,coupons_id,receive_status
+    id, activity_id, coupons_code, create_time, background_url,coupons_id,receive_status,coupons_type,coupons_name
   </sql>
 
   <update id="updateReceiveStatus" parameterType="integer">
@@ -33,18 +35,18 @@
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbExperienceCouponsPool">
     insert into tb_experience_coupons_pool (id, activity_id, coupons_code, 
-      create_time, background_url,coupons_id,receive_status)
+      create_time, background_url,coupons_id,receive_status,coupons_type,coupons_name)
     values (#{id,jdbcType=INTEGER}, #{activityId,jdbcType=INTEGER}, #{couponsCode,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{backgroundUrl,jdbcType=VARCHAR},#{couponsId},#{receiveStatus})
+      #{createTime,jdbcType=TIMESTAMP}, #{backgroundUrl,jdbcType=VARCHAR},#{couponsId},#{receiveStatus},#{couponsType},#{couponsName})
   </insert>
 
   <insert id="insertBatch" parameterType="list">
     insert into tb_experience_coupons_pool (activity_id, coupons_code,
-      create_time, background_url,coupons_id)
+      create_time, background_url,coupons_id,receive_status,coupons_type,coupons_name)
     values
     <foreach collection="list" item="item" index="index" separator=",">
       (#{item.activityId}, #{item.couponsCode},
-      #{item.createTime}, #{item.backgroundUrl},#{item.couponsId})
+      #{item.createTime}, #{item.backgroundUrl},#{item.couponsId},#{item.receiveStatus},#{item.couponsType},#{item.couponsName})
     </foreach>
   </insert>
 

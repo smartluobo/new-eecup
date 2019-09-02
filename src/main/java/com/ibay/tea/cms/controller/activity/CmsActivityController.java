@@ -150,10 +150,13 @@ public class CmsActivityController {
                 for (int i = 0; i < couponsCount; i++) {
                     TbExperienceCouponsPool experienceCouponsPool = new TbExperienceCouponsPool();
                     experienceCouponsPool.setActivityId(activityId);
-                    experienceCouponsPool.setCouponsId(couponsId);
-                    experienceCouponsPool.setBackgroundUrl(tbCoupons.getCouponsPoster());
-                    experienceCouponsPool.setCreateTime(new Date());
                     experienceCouponsPool.setCouponsCode(SerialGenerator.getUniqueCode());
+                    experienceCouponsPool.setCreateTime(new Date());
+                    experienceCouponsPool.setBackgroundUrl(tbCoupons.getCouponsPoster());
+                    experienceCouponsPool.setReceiveStatus(0);
+                    experienceCouponsPool.setCouponsId(couponsId);
+                    experienceCouponsPool.setCouponsType(tbCoupons.getCouponsType());
+                    experienceCouponsPool.setCouponsName(tbCoupons.getCouponsName());
                     pools.add(experienceCouponsPool);
                 }
                 tbExperienceCouponsPoolMapper.insertBatch(pools);

@@ -270,19 +270,29 @@ public class ApiActivityController {
              TbExperienceCouponsPool pool = apiActivityService.extractExperience(activityId);
             if (pool != null){
                 //将用户的优惠券存入数据库
+                String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
                 TbUserCoupons tbUserCoupons = new TbUserCoupons();
+                tbUserCoupons.setOppenId(oppenId);
+                tbUserCoupons.setCouponsId(pool.getCouponsId());
+                tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
+                tbUserCoupons.setCreateTime(new Date());
+                tbUserCoupons.setStatus(0);
+                tbUserCoupons.setCouponsPoster(pool.getBackgroundUrl());
+                tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),1));
+                tbUserCoupons.setIsReferrer(0);
+
                 tbUserCoupons.setActivityId(Integer.valueOf(activityId));
                 tbUserCoupons.setSourceName("幸运抽奖");
                 tbUserCoupons.setCouponsSource(0);
                 tbUserCoupons.setUseScope("任意商品");
                 tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_EXPERIENCE);
                 tbUserCoupons.setCouponsName("免费券");
-                tbUserCoupons.setCreateTime(new Date());
-                String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
-                tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),1));
+
+
+
                 tbUserCoupons.setOppenId(oppenId);
-                tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
-                tbUserCoupons.setStatus(0);
+
+
                 tbUserCoupons.setUseRules("到店使用，全场任意商品有效");
                 tbUserCoupons.setCouponsCode(pool.getCouponsCode());
 
