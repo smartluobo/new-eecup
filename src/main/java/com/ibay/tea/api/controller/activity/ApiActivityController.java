@@ -77,8 +77,8 @@ public class ApiActivityController {
             }
             Map<String,Object> result = new HashMap<>();
 
-            //查看是否有买一送一或第二杯半价活动
-            TbActivity specialActivity = tbActivityMapper.findSpecialActivity(DateUtil.getDateYyyyMMdd());
+            //查看当前店铺是否有买一送一或第二杯半价活动
+            TbActivity specialActivity = tbActivityMapper.findSpecialActivity(storeId,DateUtil.getDateYyyyMMdd());
             if (specialActivity != null){
                 LOGGER.info("getActivityInfo return specialActivity ");
                 specialActivity.setShowImageUrl(specialActivity.getStartingPoster());
@@ -96,12 +96,7 @@ public class ApiActivityController {
                 experienceActivity.setShowImageUrl(experienceActivity.getNoStartPoster());
                 result.put("type",5);
                 if (activityStatus == ApiConstant.ACTIVITY_STATUS_STARTING){
-                    //判断用户当日是否已经参与了抢券
-                    TbUserCoupons tbUserCoupons = tbUserCouponsMapper.findExperienceCoupons(condition);
-                    if (tbUserCoupons != null){
-                        result.put("type",4);
-                        resultInfo.setData(result);
-                    }
+                    //判断用户当日是否已经参与了抢券,参与了抢券依然弹活动海报，用户点击抢券提示用户已经参与过抢券或者当日体验券已经抢光
                     experienceActivity.setShowImageUrl(experienceActivity.getStartingPoster());
                     result.put("type",6);
                 }
@@ -128,7 +123,6 @@ public class ApiActivityController {
             if (activityStatus == ApiConstant.ACTIVITY_STATUS_NOT_START){
                 LOGGER.info("getActivityInfo activity no start");
                 activityInfo.setStatus(activityStatus);
-                apiActivityService.setExtractTime(activityInfo);
                 activityInfo.setShowImageUrl(activityInfo.getNoStartPoster());
                 result.put("type",1);
                 result.put("info",activityInfo);
@@ -137,24 +131,12 @@ public class ApiActivityController {
             }
             if (activityStatus == ApiConstant.ACTIVITY_STATUS_STARTING){
                 //活动正在进行中，查询用户是否有领取过奖品，如果有返回优惠券信息，如果优惠券用户已经使用提示用户明天继续参加抽奖
-                // 没有优惠券让用户参与抢优惠券
-                condition.put("oppenId",oppenId);
-                condition.put("receiveDate", DateUtil.getDateYyyyMMdd());
-                condition.put("couponsSource",0);
-                TbUserCoupons tbUserCoupons = apiCouponsService.findCouponsByCondition(condition);
-                if (tbUserCoupons == null){
-                    LOGGER.info("getActivityInfo activity starting");
-                    result.put("type",2);
-                    activityInfo.setStatus(activityStatus);
-                    activityInfo.setShowImageUrl(activityInfo.getStartingPoster());
-                    apiActivityService.setExtractTime(activityInfo);
-                    result.put("info",activityInfo);
-                    resultInfo.setData(result);
-                    return resultInfo;
-                }else {
-                    result.put("type",4);
-                    resultInfo.setData(result);
-                }
+                result.put("type",2);
+                activityInfo.setStatus(activityStatus);
+                activityInfo.setShowImageUrl(activityInfo.getStartingPoster());
+                result.put("info",activityInfo);
+                resultInfo.setData(result);
+                return resultInfo;
             }
             if (activityStatus == ApiConstant.ACTIVITY_STATUS_END){
                 result.put("type",4);
@@ -182,6 +164,14 @@ public class ApiActivityController {
         }
         ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
         try {
+            String currentDate = DateUtil.getDateYyyyMMdd();
+            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayUserCoupons(oppenId,currentDate,activityId);
+            if (userCoupons != null){
+                //提示用户已经参与过当日的抢券活动
+                return resultInfo;
+            }
+
+            //校验用户是否存在
             TbApiUser tbApiUser = apiUserService.findApiUserByOppenId(oppenId);
             if (tbApiUser == null){
                 return ResultInfo.newNoLoginResultInfo();
@@ -190,25 +180,20 @@ public class ApiActivityController {
             if (todayActivityBean == null || todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
                 return null;
             }
-            String currentDate = DateUtil.getDateYyyyMMdd();
-            TbUserCoupons userCoupons = apiCouponsService.findCurrentDayUserCoupons(oppenId,currentDate,activityId);
-            if (userCoupons != null){
-                TbUserCoupons tbUserCoupons = new TbUserCoupons();
-                tbUserCoupons.setCouponsPoster(todayActivityBean.getTbActivity().getWinPoster());
-                resultInfo.setData(tbUserCoupons);
-                return resultInfo;
-            }
+
             //判断通过执行抽奖过程
             TbActivityCouponsRecord record = apiActivityService.extractPrize(oppenId,Integer.valueOf(storeId));
             if (record != null){
                 //将用户的优惠券存入数据库
                 TbUserCoupons tbUserCoupons = apiActivityService.buildUserCoupons(oppenId,record);
-                tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_ACTIVITY);
-                tbUserCoupons.setSourceName("幸运抽奖");
-                tbUserCoupons.setActivityId(Integer.valueOf(activityId));
                 //设置优惠券过期时间
                 Date expireDate = DateUtil.getExpireDate(tbUserCoupons.getReceiveDate(),ApiConstant.USER_COUPONS_EXPIRE_LIMIT);
                 tbUserCoupons.setExpireDate(expireDate);
+                tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_ACTIVITY);
+                tbUserCoupons.setSourceName("幸运抽奖");
+                tbUserCoupons.setActivityId(Integer.valueOf(activityId));
+                tbUserCoupons.setUseWay(0);
+                tbUserCoupons.setExpireType(0);
                 apiActivityService.saveUserCouponsToDb(tbUserCoupons);
                 resultInfo.setData(tbUserCoupons);
                 return resultInfo;

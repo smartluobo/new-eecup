@@ -172,7 +172,7 @@ public class CmsActivityController {
                 return resultInfo;
             }
         }catch (Exception e){
-            LOGGER.error("");
+            LOGGER.error("add activity coupons happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

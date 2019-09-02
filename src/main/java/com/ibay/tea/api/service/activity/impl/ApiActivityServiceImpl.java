@@ -104,12 +104,13 @@ public class ApiActivityServiceImpl implements ApiActivityService {
         tbUserCoupons.setOppenId(oppenId);
         tbUserCoupons.setCouponsId(couponsId);
         tbUserCoupons.setCouponsName(tbCoupons.getCouponsName());
-        tbUserCoupons.setCreateTime(new Date());
         tbUserCoupons.setReceiveDate(Integer.valueOf(DateUtil.getDateYyyyMMdd()));
-        tbUserCoupons.setCouponsPoster(tbCoupons.getCouponsPoster());
+        tbUserCoupons.setCreateTime(new Date());
         tbUserCoupons.setStatus(0);
-        tbUserCoupons.setCouponsType(tbCoupons.getCouponsType());
+        tbUserCoupons.setCouponsPoster(tbCoupons.getCouponsPoster());
+        tbUserCoupons.setIsReferrer(0);
         tbUserCoupons.setCouponsRatio(tbCoupons.getCouponsRatio());
+        tbUserCoupons.setCouponsType(tbCoupons.getCouponsType());
         tbUserCoupons.setUseRules(tbCoupons.getUseRules());
         tbUserCoupons.setUseScope(tbCoupons.getUseScope());
         return tbUserCoupons;

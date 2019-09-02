@@ -26,7 +26,7 @@ public interface TbActivityMapper {
 
     void saveUpdateActivity(TbActivity tbActivity);
 
-    TbActivity findSpecialActivity(String dateYyyyMMdd);
+    TbActivity findSpecialActivity(@Param("storeId") String storeId,@Param("currentDate") String currentDate);
 
     TbActivity findExperienceActivity(Map<String,Object> condition);
 

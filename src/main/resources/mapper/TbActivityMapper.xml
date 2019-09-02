@@ -64,8 +64,8 @@
           <![CDATA[ WHERE  start_date <= #{currentDate} AND end_date >= #{currentDate} AND activity_type = 3 and store_id =#{storeId}]]>
   </select>
 
-  <select id="findSpecialActivity" resultMap="BaseResultMap" parameterType="string">
-    SELECT <include refid="Base_Column_List" /> from tb_activity where activity_type IN (4,5)
+  <select id="findSpecialActivity" resultMap="BaseResultMap" parameterType="map">
+    SELECT <include refid="Base_Column_List" /> from tb_activity where activity_type IN (4,5) AND store_id = #{storeId}
     AND <![CDATA[ start_date <= #{currentDate} AND end_date >= #{currentDate}]]> limit 0,1
   </select>
 

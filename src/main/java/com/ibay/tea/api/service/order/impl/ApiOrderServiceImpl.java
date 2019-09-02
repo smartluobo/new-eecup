@@ -456,7 +456,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
             String groupGiveName = null;
             String fullReduceName = null;
             String couponsName = null;
-            TbActivity tbActivity = tbActivityMapper.findSpecialActivity(DateUtil.getDateYyyyMMdd());
+            TbActivity tbActivity = tbActivityMapper.findSpecialActivity(store.getId().toString(),DateUtil.getDateYyyyMMdd());
             if (tbActivity != null){
                 if (ApiConstant.ACTIVITY_TYPE_1_1 == tbActivity.getActivityType()){
                     if (!CollectionUtils.isEmpty(goodsList)){

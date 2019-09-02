@@ -44,7 +44,7 @@
     values
     <foreach collection="list" item="item" index="index" separator=",">
       (#{item.activityId}, #{item.couponsCode},
-      #{item.createTime}, #{item.backgroundUrl},#{couponsId})
+      #{item.createTime}, #{item.backgroundUrl},#{item.couponsId})
     </foreach>
   </insert>
 

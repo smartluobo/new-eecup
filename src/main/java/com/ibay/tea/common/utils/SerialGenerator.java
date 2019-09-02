@@ -45,7 +45,6 @@ public class SerialGenerator {
         int k = random.nextInt(10);
         int l = random.nextInt(10);
         String code =  ""+i+j+k+l;
-        System.out.println(code);
         return code;
     }
 }

@@ -41,8 +41,6 @@ public class ApiConstant {
     public static final int USER_COUPONS_TYPE_GENERAL = 5;
     //体验券
     public static final int USER_COUPONS_TYPE_EXPERIENCE = 6;
-    //体验券
-    public static final int USER_COUPONS_TYPE_CASH = 7;
 
     //订单提取方式 自取
     public static final int ORDER_TAKE_WAY_SELF_GET = 0;

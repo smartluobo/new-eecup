@@ -53,6 +53,12 @@ public class TbUserCoupons {
 
     private String createTimeStr;
 
+    //使用方式 0 小程序专享 1 门店专享
+    private int useWay;
+
+    //过期类型 0过期时间过期 1 仅限当日有效 2永久有效
+    private int expireType;
+
     public Integer getId() {
         return id;
     }
@@ -231,6 +237,22 @@ public class TbUserCoupons {
 
     public String getCreateTimeStr() {
         return createTimeStr;
+    }
+
+    public int getUseWay() {
+        return useWay;
+    }
+
+    public void setUseWay(int useWay) {
+        this.useWay = useWay;
+    }
+
+    public int getExpireType() {
+        return expireType;
+    }
+
+    public void setExpireType(int expireType) {
+        this.expireType = expireType;
     }
 
     public TbUserCoupons copy() {
