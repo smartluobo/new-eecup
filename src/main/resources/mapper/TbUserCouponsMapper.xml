@@ -57,7 +57,7 @@
         AND receive_date = #{receiveDate}
       </if>
       <if test="source != null">
-        coupons_source = #{couponsSource}
+        and coupons_source = #{couponsSource}
       </if>
       and is_referrer = 0
     </where>
