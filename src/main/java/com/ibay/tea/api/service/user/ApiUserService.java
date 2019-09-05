@@ -24,4 +24,8 @@ public interface ApiUserService {
     boolean bindCompany(Map<String, Integer> params);
 
     TbApiUser getUserInfo(String oppenId);
+
+    boolean receiveCoupons(String oppenId, String couponsId);
+
+    boolean checkReceiveStatus(String oppenId, String couponsId);
 }

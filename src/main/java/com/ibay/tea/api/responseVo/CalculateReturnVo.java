@@ -52,7 +52,7 @@ public class CalculateReturnVo {
 
     public void setOrderReduceAmount(double orderReduceAmount) {
         BigDecimal b = new BigDecimal(orderReduceAmount);
-        this.orderReduceAmount = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();;
+        this.orderReduceAmount = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     public String getCouponsName() {

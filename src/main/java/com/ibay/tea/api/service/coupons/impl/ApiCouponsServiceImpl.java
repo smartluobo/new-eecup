@@ -3,6 +3,7 @@ package com.ibay.tea.api.service.coupons.impl;
 import com.ibay.tea.api.service.coupons.ApiCouponsService;
 import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.common.constant.ApiConstant;
+import com.ibay.tea.dao.TbCouponsMapper;
 import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.dao.UserCouponsMapper;
 import com.ibay.tea.entity.TbCoupons;
@@ -27,7 +28,7 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
     private TbUserCouponsMapper tbUserCouponsMapper;
 
     @Resource
-    private ActivityCache activityCache;
+   private TbCouponsMapper tbCouponsMapper;
 
     @Override
     public TbUserCoupons findCouponsByCondition(Map<String, Object> condition) {
@@ -91,5 +92,10 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
     @Override
     public TbUserCoupons findCurrentDayExperienceCoupons(String oppenId, String currentDate,String activityId) {
         return tbUserCouponsMapper.findCurrentDayExperienceCoupons(oppenId,currentDate,activityId);
+    }
+
+    @Override
+    public List<TbCoupons> getCouponsCenterList() {
+        return tbCouponsMapper.getCouponsCenterList();
     }
 }

@@ -3,21 +3,21 @@ package com.ibay.tea.entity;
 import java.util.Date;
 
 public class TbCoupons {
-    private Integer id;
+    private int id;
 
-    private Integer couponsType;
+    private int couponsType;
 
     private String couponsName;
 
     private String couponsRatio;
 
-    private Integer consumeAmount;
+    private int consumeAmount;
 
-    private Integer reduceAmount;
+    private int reduceAmount;
 
-    private Integer consumeCount;
+    private int consumeCount;
 
-    private Integer giveCount;
+    private int giveCount;
 
     private Date createTime;
 
@@ -29,19 +29,19 @@ public class TbCoupons {
 
     private String useScope;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Integer getCouponsType() {
+    public int getCouponsType() {
         return couponsType;
     }
 
-    public void setCouponsType(Integer couponsType) {
+    public void setCouponsType(int couponsType) {
         this.couponsType = couponsType;
     }
 
@@ -50,7 +50,7 @@ public class TbCoupons {
     }
 
     public void setCouponsName(String couponsName) {
-        this.couponsName = couponsName == null ? null : couponsName.trim();
+        this.couponsName = couponsName;
     }
 
     public String getCouponsRatio() {
@@ -58,38 +58,38 @@ public class TbCoupons {
     }
 
     public void setCouponsRatio(String couponsRatio) {
-        this.couponsRatio = couponsRatio == null ? null : couponsRatio.trim();
+        this.couponsRatio = couponsRatio;
     }
 
-    public Integer getConsumeAmount() {
+    public int getConsumeAmount() {
         return consumeAmount;
     }
 
-    public void setConsumeAmount(Integer consumeAmount) {
+    public void setConsumeAmount(int consumeAmount) {
         this.consumeAmount = consumeAmount;
     }
 
-    public Integer getReduceAmount() {
+    public int getReduceAmount() {
         return reduceAmount;
     }
 
-    public void setReduceAmount(Integer reduceAmount) {
+    public void setReduceAmount(int reduceAmount) {
         this.reduceAmount = reduceAmount;
     }
 
-    public Integer getConsumeCount() {
+    public int getConsumeCount() {
         return consumeCount;
     }
 
-    public void setConsumeCount(Integer consumeCount) {
+    public void setConsumeCount(int consumeCount) {
         this.consumeCount = consumeCount;
     }
 
-    public Integer getGiveCount() {
+    public int getGiveCount() {
         return giveCount;
     }
 
-    public void setGiveCount(Integer giveCount) {
+    public void setGiveCount(int giveCount) {
         this.giveCount = giveCount;
     }
 

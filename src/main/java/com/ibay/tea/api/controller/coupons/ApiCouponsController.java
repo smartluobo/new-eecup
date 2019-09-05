@@ -2,6 +2,7 @@ package com.ibay.tea.api.controller.coupons;
 
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.coupons.ApiCouponsService;
+import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbUserCoupons;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -70,5 +71,26 @@ public class ApiCouponsController {
         }
 
     }
+
+    @RequestMapping("/getCouponsCenterList")
+    public ResultInfo getCouponsCenterList (@RequestBody Map<String,String> params){
+
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            List<TbCoupons> couponsList = apiCouponsService.getCouponsCenterList();
+            resultInfo.setData(couponsList);
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("getCouponsCenterList happen exception",e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+
+    }
+
+
 
 }

@@ -94,4 +94,11 @@ public class ResultInfo {
         return resultInfo;
     }
 
+    public static ResultInfo newRepeatResultInfo(String msg){
+        ResultInfo resultInfo = new ResultInfo();
+        resultInfo.setCode(606);
+        resultInfo.setMsg(msg);
+        return resultInfo;
+    }
+
 }

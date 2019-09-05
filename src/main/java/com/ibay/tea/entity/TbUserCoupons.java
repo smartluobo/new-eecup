@@ -59,6 +59,14 @@ public class TbUserCoupons {
     //过期类型 0过期时间过期 1 仅限当日有效 2永久有效
     private int expireType;
 
+    private int consumeAmount;
+
+    private int reduceAmount;
+
+    private int consumeCount;
+
+    private int giveCount;
+
     public Integer getId() {
         return id;
     }
@@ -253,6 +261,38 @@ public class TbUserCoupons {
 
     public void setExpireType(int expireType) {
         this.expireType = expireType;
+    }
+
+    public int getConsumeAmount() {
+        return consumeAmount;
+    }
+
+    public void setConsumeAmount(int consumeAmount) {
+        this.consumeAmount = consumeAmount;
+    }
+
+    public int getReduceAmount() {
+        return reduceAmount;
+    }
+
+    public void setReduceAmount(int reduceAmount) {
+        this.reduceAmount = reduceAmount;
+    }
+
+    public int getConsumeCount() {
+        return consumeCount;
+    }
+
+    public void setConsumeCount(int consumeCount) {
+        this.consumeCount = consumeCount;
+    }
+
+    public int getGiveCount() {
+        return giveCount;
+    }
+
+    public void setGiveCount(int giveCount) {
+        this.giveCount = giveCount;
     }
 
     public TbUserCoupons copy() {

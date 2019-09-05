@@ -49,7 +49,11 @@
     SELECT <include refid="Base_Column_List" /> from tb_coupons where coupons_type = 2 ORDER BY consume_amount DESC
   </select>
 
-    <delete id="deleteCoupons" parameterType="java.lang.Integer">
+  <select id="getCouponsCenterList" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from tb_coupons where is_coupons_center = 1 ORDER BY consume_amount,consume_count ASC
+  </select>
+
+  <delete id="deleteCoupons" parameterType="java.lang.Integer">
     delete from tb_coupons where id = #{id}
   </delete>
 </mapper>

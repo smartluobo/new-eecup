@@ -21,4 +21,5 @@ public interface TbCouponsMapper {
 
     List<TbCoupons> findFullReduceCoupons();
 
+    List<TbCoupons> getCouponsCenterList();
 }

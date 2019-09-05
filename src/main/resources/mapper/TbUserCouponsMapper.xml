@@ -36,7 +36,7 @@
   </update>
 
   <update id="updateUpgradeCouponsType" parameterType="map">
-    UPDATE tb_user_coupons SET coupons_type = #{couponsType} where id = #{id}
+    UPDATE tb_user_coupons SET coupons_type = #{couponsType},coupons_ratio = 0 where id = #{id}
   </update>
 
   <update id="updateExperience" parameterType="map">
@@ -91,7 +91,7 @@
   </select>
 
   <select id="findReferrerCoupons" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0 and coupons_source = 1
     and is_referrer = 1 and <![CDATA[ coupons_type <> 4]]> order by coupons_ratio limit 0,1
   </select>
   <select id="findExperienceCoupons" resultMap="BaseResultMap">
@@ -118,6 +118,10 @@
         and coupons_code = #{couponsCode}
       </if>
     </where>
+  </select>
+
+  <select id="checkReceiveStatus" resultMap="BaseResultMap" parameterType="map">
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons WHERE oppen_id = #{oppenId} and coupons_id = #{couponsId} and receive_date = #{currentDate} and `status` = 0
   </select>
 
 

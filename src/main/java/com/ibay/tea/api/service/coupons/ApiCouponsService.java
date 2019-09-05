@@ -1,5 +1,6 @@
 package com.ibay.tea.api.service.coupons;
 
+import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbUserCoupons;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface ApiCouponsService {
     TbUserCoupons findCurrentDayUserCoupons(String oppenId, String currentDate,String activityId);
 
     TbUserCoupons findCurrentDayExperienceCoupons(String oppenId, String currentDate,String activityId);
+
+    List<TbCoupons> getCouponsCenterList();
+
+
 }

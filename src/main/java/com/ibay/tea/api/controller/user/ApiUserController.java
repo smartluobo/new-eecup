@@ -7,8 +7,10 @@ import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.dao.TbApiUserMapper;
 import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.entity.TbApiUser;
+import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbUserCoupons;
 import com.ibay.tea.entity.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,19 +121,23 @@ public class ApiUserController {
             if (apiUser.getGiftReceiveStatus() == 0){
                 List<TbUserCoupons> userCouponsList = new ArrayList<>();
                 TbUserCoupons tbUserCoupons = new TbUserCoupons();
-                tbUserCoupons.setSourceName("新人礼包");
-                tbUserCoupons.setCouponsSource(2);
-                tbUserCoupons.setUseScope("任意商品");
-                tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
-                tbUserCoupons.setCouponsName("五折优惠券");
-                tbUserCoupons.setCouponsRatio("0.5");
-                tbUserCoupons.setCreateTime(new Date());
                 String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
-                tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),30));
+
                 tbUserCoupons.setOppenId(oppenId);
+                tbUserCoupons.setCouponsId(0);
+                tbUserCoupons.setCouponsName("五折优惠券");
                 tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
-                tbUserCoupons.setStatus(0);
+                tbUserCoupons.setCreateTime(new Date());
+                tbUserCoupons.setStatus(ApiConstant.USER_COUPONS_STATUS_NO_USE);
+                tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),30));
+                tbUserCoupons.setCouponsRatio("0.5");
+                tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
                 tbUserCoupons.setUseRules("全场折扣下不能使用优惠券哦");
+                tbUserCoupons.setUseScope("任意商品");
+                tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_NEW_USER);
+                tbUserCoupons.setSourceName("新人礼包");
+                tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_APPLET);
+                tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_DEFAULT);
 
                 userCouponsList.add(tbUserCoupons);
                 TbUserCoupons copy1 = tbUserCoupons.copy();
@@ -158,6 +164,38 @@ public class ApiUserController {
             LOGGER.error("getUserInfo params : {}",params,e);
             return ResultInfo.newExceptionResultInfo();
         }
+    }
+
+    @RequestMapping("/receiveCoupons")
+    public ResultInfo receiveCoupons (@RequestBody Map<String,String> params){
+
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        String oppenId = params.get("oppenId");
+        String couponsId = params.get("couponsId");
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            if (StringUtils.isEmpty(oppenId) || StringUtils.isEmpty(couponsId)){
+                return ResultInfo.newEmptyParamsResultInfo();
+            }
+            //判断用户当日是否领取过相同的券且未使用
+            boolean receiveStatus = apiUserService.checkReceiveStatus(oppenId,couponsId);
+            if (!receiveStatus){
+                return ResultInfo.newRepeatResultInfo("您也领取该券且未使用，不可重复领取");
+            }
+
+            boolean flag = apiUserService.receiveCoupons(oppenId,couponsId);
+            if (flag){
+                return resultInfo;
+            }
+            return ResultInfo.newFailResultInfo();
+        }catch (Exception e){
+            LOGGER.error("getCouponsCenterList happen exception",e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+
     }
 
 }

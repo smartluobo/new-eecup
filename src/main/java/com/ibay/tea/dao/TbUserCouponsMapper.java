@@ -48,4 +48,6 @@ public interface TbUserCouponsMapper {
     long countUserExperienceCoupons(Map<String, Object> condition);
 
     void updateExperience(@Param("userCouponsId") int userCouponsId, @Param("useStatus") int useStatus);
+
+    TbUserCoupons checkReceiveStatus(@Param("oppenId") String oppenId, @Param("couponsId") String couponsId, @Param("currentDate") String currentDate);
 }

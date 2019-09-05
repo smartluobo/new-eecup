@@ -532,7 +532,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                 orderTotalPrice += sendPrice;
             }
             CalculateReturnVo calculateReturnVo = getCalculateReturnVo(orderTotalPrice, couponsReduceAmount, couponsName, groupGiveAmount, groupGiveName, fullReduceAmount, fullReduceName);
-            if (calculateReturnVo.getCouponsType() == 3){
+            if (calculateReturnVo.getCouponsType() == ApiConstant.COUPONS_STRATEGY_TYPE_COUPONS){
                 calculateReturnVo.setUserCouponsId(tbUserCoupons.getId());
                 calculateReturnVo.setUserCouponsName(tbUserCoupons.getCouponsName());
             }
@@ -541,14 +541,16 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                 calculateReturnVo.setGoodsList(goodsList);
             }
             if (specialReduceAmount >= calculateReturnVo.getOrderReduceAmount() && specialReduceAmount > 0){
-                calculateReturnVo.setCouponsType(5);
+
                 calculateReturnVo.setOrderReduceAmount(specialReduceAmount);
                 calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.subtract(calculateReturnVo.getOrderTotalAmount(),specialReduceAmount));
                 calculateReturnVo.setGoodsList(goodsList);
                 if (ApiConstant.ACTIVITY_TYPE_1_1 == tbActivity.getActivityType()){
                     calculateReturnVo.setCouponsName("买一赠一");
+                    calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_1_1);
                 }else {
                     calculateReturnVo.setCouponsName("第二杯半价");
+                    calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_TWO_HALF);
                 }
             }
             //判断用户是否是vip公司用户
@@ -566,7 +568,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
                         calculateReturnVo.setOrderReduceAmount(companyReduceAmount);
                         calculateReturnVo.setUserCouponsName("优质企业员工福利");
                         calculateReturnVo.setCouponsName("优质企业员工福利");
-                        calculateReturnVo.setCouponsType(6);
+                        calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_COMPANY);
                         calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.subtract(orderTotalPrice,companyReduceAmount));
                     }
                 }
@@ -617,6 +619,7 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         calculateReturnVo.setOrderTotalAmount(orderTotalPrice);
         calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.add(payment,sendPrice));
         calculateReturnVo.setGoodsList(goodsList);
+        calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_ALL_RATIO);
         LOGGER.info("full activity calculateReturnVo :{}",calculateReturnVo);
         return calculateReturnVo;
     }
@@ -715,23 +718,23 @@ public class ApiOrderServiceImpl implements ApiOrderService {
         calculateReturnVo.setOrderTotalAmount(orderTotalPrice);
         calculateReturnVo.setOrderPayAmount(orderTotalPrice);
         calculateReturnVo.setCouponsName("无优惠");
-        calculateReturnVo.setCouponsType(0);
+        calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_NO);
         if (maxReduceAmount == 0){
             return calculateReturnVo;
         }else if (maxReduceAmount == groupGiveAmount){
             double payAmount = PriceCalculateUtil.subtract(orderTotalPrice, groupGiveAmount);
             buildReturnVo(calculateReturnVo,payAmount,groupGiveAmount,groupGiveName);
-            calculateReturnVo.setCouponsType(1);
+            calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_GROUP);
 
         }else if (maxReduceAmount == fullReduceAmount){
             double payAmount = PriceCalculateUtil.subtract(orderTotalPrice, fullReduceAmount);
             buildReturnVo(calculateReturnVo,payAmount,fullReduceAmount,fullReduceName);
-            calculateReturnVo.setCouponsType(2);
+            calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_FULL_REDUCE);
 
         }else if (maxReduceAmount == couponsReduceAmount){
             double payAmount = PriceCalculateUtil.subtract(orderTotalPrice, couponsReduceAmount);
             buildReturnVo(calculateReturnVo,payAmount,couponsReduceAmount,couponsName);
-            calculateReturnVo.setCouponsType(3);
+            calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_COUPONS);
         }
         return calculateReturnVo;
     }

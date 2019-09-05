@@ -192,8 +192,8 @@ public class ApiActivityController {
                 tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_ACTIVITY);
                 tbUserCoupons.setSourceName("幸运抽奖");
                 tbUserCoupons.setActivityId(Integer.valueOf(activityId));
-                tbUserCoupons.setUseWay(0);
-                tbUserCoupons.setExpireType(0);
+                tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_APPLET);
+                tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_DEFAULT);
                 apiActivityService.saveUserCouponsToDb(tbUserCoupons);
                 resultInfo.setData(tbUserCoupons);
                 return resultInfo;
@@ -274,28 +274,23 @@ public class ApiActivityController {
                 TbUserCoupons tbUserCoupons = new TbUserCoupons();
                 tbUserCoupons.setOppenId(oppenId);
                 tbUserCoupons.setCouponsId(pool.getCouponsId());
+                tbUserCoupons.setCouponsName("门店免费体验券");
                 tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
                 tbUserCoupons.setCreateTime(new Date());
                 tbUserCoupons.setStatus(0);
                 tbUserCoupons.setCouponsPoster(pool.getBackgroundUrl());
                 tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),1));
                 tbUserCoupons.setIsReferrer(0);
-
-                tbUserCoupons.setActivityId(Integer.valueOf(activityId));
-                tbUserCoupons.setSourceName("幸运抽奖");
-                tbUserCoupons.setCouponsSource(0);
-                tbUserCoupons.setUseScope("任意商品");
-                tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_EXPERIENCE);
-                tbUserCoupons.setCouponsName("免费券");
-
-
-
-                tbUserCoupons.setOppenId(oppenId);
-
-
+                tbUserCoupons.setCouponsRatio("0.0");
+                tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_FREE);
                 tbUserCoupons.setUseRules("到店使用，全场任意商品有效");
+                tbUserCoupons.setUseScope("任意商品");
+                tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_ACTIVITY);
                 tbUserCoupons.setCouponsCode(pool.getCouponsCode());
-
+                tbUserCoupons.setSourceName("幸运抽奖");
+                tbUserCoupons.setActivityId(Integer.valueOf(activityId));
+                tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_STORE);
+                tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_CURRENT_DAY);
                 apiActivityService.saveUserCouponsToDb(tbUserCoupons);
                 tbExperienceCouponsPoolMapper.updateReceiveStatus(pool.getId());
                 resultInfo.setData(tbUserCoupons);

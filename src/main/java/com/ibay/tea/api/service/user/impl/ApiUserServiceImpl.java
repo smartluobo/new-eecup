@@ -6,13 +6,13 @@ import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.SendSmsService;
 import com.ibay.tea.common.utils.DateUtil;
-import com.ibay.tea.dao.TbApiUserMapper;
-import com.ibay.tea.dao.TbFavorableCompanyMapper;
-import com.ibay.tea.dao.TbUserCouponsMapper;
-import com.ibay.tea.dao.UserMapper;
+import com.ibay.tea.dao.*;
 import com.ibay.tea.entity.TbApiUser;
+import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbFavorableCompany;
 import com.ibay.tea.entity.TbUserCoupons;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,12 +33,6 @@ public class ApiUserServiceImpl implements ApiUserService{
     private TbApiUserMapper tbApiUserMapper;
 
     @Resource
-    LoadingCache<String,String> wechatTokenGuavaCache;
-
-    @Resource
-    private WechatInfoProperties wechatInfoProperties;
-
-    @Resource
     private SendSmsService sendSmsService;
 
     @Resource
@@ -46,6 +40,9 @@ public class ApiUserServiceImpl implements ApiUserService{
 
     @Resource
     private TbFavorableCompanyMapper tbFavorableCompanyMapper;
+
+    @Resource
+    private TbCouponsMapper tbCouponsMapper;
 
     @Override
     public TbApiUser findApiUserByOppenId(String oppenId) {
@@ -138,6 +135,48 @@ public class ApiUserServiceImpl implements ApiUserService{
     @Override
     public TbApiUser getUserInfo(String oppenId) {
         return tbApiUserMapper.findApiUserByOppenId(oppenId);
+    }
+
+    @Override
+    public boolean receiveCoupons(String oppenId, String couponsId) {
+
+        TbCoupons tbCoupons = tbCouponsMapper.selectByPrimaryKey(Integer.valueOf(couponsId));
+        if (tbCoupons == null){
+            return false;
+        }
+
+        String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
+        TbUserCoupons tbUserCoupons = new TbUserCoupons();
+        tbUserCoupons.setOppenId(oppenId);
+        tbUserCoupons.setCouponsId(tbCoupons.getId());
+        tbUserCoupons.setCouponsName(tbCoupons.getCouponsName());
+        tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
+        tbUserCoupons.setCreateTime(new Date());
+        tbUserCoupons.setStatus(ApiConstant.USER_COUPONS_STATUS_NO_USE);
+        tbUserCoupons.setCouponsPoster(tbCoupons.getCouponsPoster());
+        tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),1));
+        tbUserCoupons.setIsReferrer(0);
+        tbUserCoupons.setCouponsRatio("0.0");
+        tbUserCoupons.setCouponsType(tbCoupons.getCouponsType());
+        tbUserCoupons.setUseRules("全场折扣下不可使用哦");
+        tbUserCoupons.setUseScope("任意商品");
+        tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_RECEIVE);
+        tbUserCoupons.setSourceName("每日领券");
+        tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_APPLET);
+        tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_CURRENT_DAY);
+        tbUserCoupons.setConsumeAmount(tbCoupons.getConsumeAmount());
+        tbUserCoupons.setReduceAmount(tbCoupons.getReduceAmount());
+        tbUserCoupons.setConsumeCount(tbCoupons.getConsumeCount());
+        tbUserCoupons.setGiveCount(tbCoupons.getGiveCount());
+        tbUserCouponsMapper.insert(tbUserCoupons);
+        return true;
+    }
+
+    @Override
+    public boolean checkReceiveStatus(String oppenId, String couponsId) {
+        String currentDate = DateUtil.getDateYyyyMMdd();
+        TbUserCoupons tbUserCoupons = tbUserCouponsMapper.checkReceiveStatus(oppenId, couponsId, currentDate);
+        return tbUserCoupons == null;
     }
 
 }

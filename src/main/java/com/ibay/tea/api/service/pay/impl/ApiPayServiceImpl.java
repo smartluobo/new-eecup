@@ -13,6 +13,7 @@ import com.ibay.tea.dao.*;
 import com.ibay.tea.entity.*;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -159,7 +160,7 @@ public class ApiPayServiceImpl implements ApiPayService {
                     if (tbOrder.getUserCouponsId() != 0){
                         tbUserCouponsMapper.updateStatusById(tbOrder.getUserCouponsId(),ApiConstant.USER_COUPONS_STATUS_USED);
                     }
-                    //tuijianren chuli
+                    //分享优惠券赠送
                     if (tbOrder.getIsFirstOrder() == 1){
                         LOGGER.info("first order pay success recommend handle");
                         TbApiUser apiUser = tbApiUserMapper.findApiUserByOppenId(tbOrder.getOppenId());
@@ -210,17 +211,23 @@ public class ApiPayServiceImpl implements ApiPayService {
 
     private void buildCouponsAndInsert(String referrerOppenId) {
         TbUserCoupons tbUserCoupons = new TbUserCoupons();
+        String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
         tbUserCoupons.setOppenId(referrerOppenId);
-        tbUserCoupons.setCouponsName("分享优惠券");
-        tbUserCoupons.setCreateTime(new Date());
+        tbUserCoupons.setCouponsId(0);
+        tbUserCoupons.setCouponsName("分享折扣券");
         tbUserCoupons.setReceiveDate(Integer.valueOf(DateUtil.getDateYyyyMMdd()));
-        tbUserCoupons.setStatus(0);
-        tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
-        tbUserCoupons.setCouponsRatio("0.6");
-        tbUserCoupons.setExpireDate(DateUtil.addDate(Calendar.YEAR,1));
+        tbUserCoupons.setCreateTime(new Date());
+        tbUserCoupons.setStatus(ApiConstant.USER_COUPONS_STATUS_NO_USE);
+        tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),30));
         tbUserCoupons.setIsReferrer(1);
-        tbUserCoupons.setUseScope("任意商品");
+        tbUserCoupons.setCouponsRatio("0.6");
+        tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
         tbUserCoupons.setUseRules("全场折扣下不能使用优惠券哦");
+        tbUserCoupons.setUseScope("任意商品");
+        tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_SHARE);
+        tbUserCoupons.setSourceName("分享专属");
+        tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_APPLET);
+        tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_DEFAULT);
         tbUserCouponsMapper.insert(tbUserCoupons);
     }
 
