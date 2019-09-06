@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbShoppingCardMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbShoppingCard">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="card_number" jdbcType="VARCHAR" property="cardNumber" />
+    <result column="card_code" jdbcType="VARCHAR" property="cardCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="use_status" jdbcType="INTEGER" property="useStatus" />
+    <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, card_number, card_code, create_time, update_time, use_status, receive_time, amount
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_shopping_card where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_shopping_card where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbShoppingCard">
+    insert into tb_shopping_card (card_number, card_code,
+      create_time, update_time, use_status, 
+      receive_time, amount)
+    values (#{cardNumber,jdbcType=VARCHAR}, #{cardCode,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{useStatus,jdbcType=INTEGER}, 
+      #{receiveTime,jdbcType=TIMESTAMP}, #{amount,jdbcType=INTEGER})
+  </insert>
+</mapper>

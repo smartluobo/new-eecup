@@ -1,6 +1,7 @@
 package com.ibay.tea;
 
 import com.ibay.tea.api.service.pay.ApiPayService;
+import com.ibay.tea.cms.service.coupons.CmsCouponsService;
 import com.ibay.tea.common.utils.WechatSignUtil;
 import com.ibay.tea.dao.TbOrderMapper;
 import com.ibay.tea.entity.TbOrder;
@@ -24,11 +25,19 @@ public class TeaApplicationTests {
 
 	@Resource
 	private ApiPayService apiPayService;
+
+	@Resource
+	private CmsCouponsService cmsCouponsService;
 	@Test
 	public void orderPay() throws Exception{
 		KeyStore keyStore = WechatSignUtil.getKeyStore("12345678");
 		TbOrder tbOrder = tbOrderMapper.selectByPrimaryKey("2019061016121150");
 		apiPayService.createPayOrderToWechat(tbOrder);
+	}
+
+	@Test
+	public void testShoppingCard() throws Exception{
+		cmsCouponsService.generateShoppingCard(1000,30);
 	}
 
 

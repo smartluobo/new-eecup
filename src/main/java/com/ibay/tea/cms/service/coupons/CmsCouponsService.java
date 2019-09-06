@@ -19,4 +19,6 @@ public interface CmsCouponsService {
     long countUserExperienceCoupons(Map<String, Object> condition);
 
     void updateExperience(int userCouponsId, int useStatus);
+
+    boolean generateShoppingCard(int count, int amount);
 }

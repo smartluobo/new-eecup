@@ -15,7 +15,7 @@
 			</jdbcConnection> -->
 
 		<!--oracle配置 -->
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/novel_tea" userId="root" password="root"/>
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://47.106.172.126:3306/novel_tea" userId="root" password="Qaz*963."/>
 
 		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer， 为 true时把JDBC DECIMAL和NUMERIC类型解析为java.math.BigDecimal -->
 		<javaTypeResolver>
@@ -41,8 +41,8 @@
 		</javaClientGenerator>
 
 		<!-- 指定数据库表，要生成哪些表，就写哪些表，要和数据库中对应，不能写错！ -->
-		<table tableName="tb_favorable_company"
-			   domainObjectName="tbFavorableCompany"
+		<table tableName="tb_shopping_card"
+			   domainObjectName="tbShoppingCard"
 			   enableCountByExample="false"
 			   enableUpdateByExample="false"
 			   enableDeleteByExample="false"

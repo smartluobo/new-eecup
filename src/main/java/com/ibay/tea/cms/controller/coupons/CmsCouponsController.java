@@ -118,6 +118,21 @@ public class CmsCouponsController {
             return ResultInfo.newExceptionResultInfo();
         }
     }
+    @RequestMapping("/generateShoppingCard/{count}/{amount}")
+    public ResultInfo generateShoppingCard(@PathVariable("count") int count, @PathVariable("amount") int amount){
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            if (count == 0 || amount == 0){
+                return ResultInfo.newParameterErrorResultInfo();
+
+            }else {
+                boolean flag = cmsCouponsService.generateShoppingCard(count,amount);
+            }
+            return resultInfo;
+        }catch (Exception e){
+            return ResultInfo.newExceptionResultInfo();
+        }
+    }
 
 
 }
