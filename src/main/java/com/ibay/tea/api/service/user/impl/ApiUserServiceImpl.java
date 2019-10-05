@@ -1,28 +1,25 @@
 package com.ibay.tea.api.service.user.impl;
 
-import com.google.common.cache.LoadingCache;
-import com.ibay.tea.api.config.WechatInfoProperties;
 import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.SendSmsService;
 import com.ibay.tea.common.utils.DateUtil;
-import com.ibay.tea.dao.*;
+import com.ibay.tea.dao.TbApiUserMapper;
+import com.ibay.tea.dao.TbCouponsMapper;
+import com.ibay.tea.dao.TbFavorableCompanyMapper;
+import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbFavorableCompany;
 import com.ibay.tea.entity.TbUserCoupons;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class ApiUserServiceImpl implements ApiUserService{
@@ -66,26 +63,6 @@ public class ApiUserServiceImpl implements ApiUserService{
         }
         LOGGER.info("new user login tbApiUser : {}",tbApiUser);
         tbApiUserMapper.insert(tbApiUser);
-        TbUserCoupons coupons = buildUserCoupons(oppenId);
-        tbUserCouponsMapper.insert(coupons);
-    }
-
-    private TbUserCoupons buildUserCoupons(String oppenId) {
-        TbUserCoupons tbUserCoupons = new TbUserCoupons();
-
-        tbUserCoupons.setCouponsName("九折优惠券");
-        tbUserCoupons.setCreateTime(new Date());
-        tbUserCoupons.setReceiveDate(Integer.valueOf(DateUtil.getDateYyyyMMdd()));
-        tbUserCoupons.setStatus(0);
-        tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
-        tbUserCoupons.setCouponsRatio("0.9");
-        tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(DateUtil.getDateYyyyMMdd()),7));
-        tbUserCoupons.setIsReferrer(0);
-        tbUserCoupons.setUseScope("任意商品");
-        tbUserCoupons.setUseRules("全场折扣下不能使用优惠券哦");
-        tbUserCoupons.setCouponsId(4);
-        tbUserCoupons.setOppenId(oppenId);
-        return tbUserCoupons;
     }
 
     @Override
@@ -145,7 +122,7 @@ public class ApiUserServiceImpl implements ApiUserService{
             return false;
         }
 
-        String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
+        String yyyyMMdd = DateUtil.getDateYyyyMMdd();
         TbUserCoupons tbUserCoupons = new TbUserCoupons();
         tbUserCoupons.setOppenId(oppenId);
         tbUserCoupons.setCouponsId(tbCoupons.getId());

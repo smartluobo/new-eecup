@@ -51,21 +51,12 @@ public class ActivityCache implements InitializingBean{
         List<TbStore> storeList = storeCache.getStoreList();
         if (!CollectionUtils.isEmpty(storeList)){
             for (TbStore store : storeList) {
-                //如果有及节日活动优先选择当天活动为节假日活动
-                TbActivity tbActivity = tbActivityMapper.findFullActivity(DateUtil.getDateYyyyMMdd(),store.getId());
-                if (tbActivity == null){
-                    tbActivity = tbActivityMapper.findHolidayActivity(DateUtil.getDateYyyyMMdd(),store.getId());
-                }
-                if(tbActivity == null){
-                    //没有节假日活动查询常规活动
-                    tbActivity = tbActivityMapper.findRegularActivity(DateUtil.getDateYyyyMMdd(),store.getId());
-                }
+                TbActivity tbActivity = tbActivityMapper.findRegularActivity(DateUtil.getDateYyyyMMdd(),store.getId());
                 if (tbActivity != null){
                     todayActivityList.add(tbActivity);
                 }
             }
         }
-
         couponsListCache = tbCouponsMapper.findAll();
         tbActivityCouponsRecordsCache = tbActivityCouponsRecordMapper.findAll();
         if (todayActivityList.size() > 0){

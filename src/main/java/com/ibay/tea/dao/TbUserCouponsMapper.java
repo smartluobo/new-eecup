@@ -25,7 +25,7 @@ public interface TbUserCouponsMapper {
 
     TbUserCoupons selectValidUserCoupons(@Param("oppenId") String oppenId,@Param("id") int id);
 
-    List<TbUserCoupons> findUserValidCoupons(String oppenId);
+    List<TbUserCoupons> findUserValidCoupons(@Param("oppenId") String oppenId,@Param("useWay") String useWay);
 
     List<TbUserCoupons> getUserCouponsByOppenId(String oppenId);
 
@@ -50,4 +50,6 @@ public interface TbUserCouponsMapper {
     void updateExperience(@Param("userCouponsId") int userCouponsId, @Param("useStatus") int useStatus);
 
     TbUserCoupons checkReceiveStatus(@Param("oppenId") String oppenId, @Param("couponsId") String couponsId, @Param("currentDate") String currentDate);
+
+    void updateCashAmount(@Param("id") Integer id, @Param("remainingAmount") double remainingAmount);
 }

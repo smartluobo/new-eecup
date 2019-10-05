@@ -39,8 +39,8 @@ public class ApiConstant {
     public static final int USER_COUPONS_TYPE_FREE = 4;
     //通用券
     public static final int USER_COUPONS_TYPE_GENERAL = 5;
-    //体验券
-    public static final int USER_COUPONS_TYPE_EXPERIENCE = 6;
+    //现金券
+    public static final int USER_COUPONS_TYPE_CASH = 6;
 
     //订单提取方式 自取
     public static final int ORDER_TAKE_WAY_SELF_GET = 0;
@@ -87,13 +87,15 @@ public class ApiConstant {
     //每日领券
     public static final int COUPONS_SOURCE_RECEIVE = 4;
 
+    public static final int COUPONS_SOURCE_SHOPPING_CARD_RECHARGE = 5;
+
     //优惠策略类型
     public static final int COUPONS_STRATEGY_TYPE_NO = 0;
     //使用团购券 如满五送一
     public static final int COUPONS_STRATEGY_TYPE_GROUP = 1;
     //使用满减券 如 满100立减10元
     public static final int COUPONS_STRATEGY_TYPE_FULL_REDUCE = 2;
-    //使用优惠券
+    //一般优惠券
     public static final int COUPONS_STRATEGY_TYPE_COUPONS = 3;
     //全场折扣
     public static final int COUPONS_STRATEGY_TYPE_ALL_RATIO = 5;

@@ -41,8 +41,8 @@
 		</javaClientGenerator>
 
 		<!-- 指定数据库表，要生成哪些表，就写哪些表，要和数据库中对应，不能写错！ -->
-		<table tableName="tb_shopping_card"
-			   domainObjectName="tbShoppingCard"
+		<table tableName="tb_sms_config"
+			   domainObjectName="TbSmsConfig"
 			   enableCountByExample="false"
 			   enableUpdateByExample="false"
 			   enableDeleteByExample="false"

@@ -17,6 +17,8 @@ public class TbPrinter {
 
     private Integer printerType;
 
+    private int printerBrand;
+
     public Integer getId() {
         return id;
     }
@@ -71,6 +73,14 @@ public class TbPrinter {
 
     public void setPrinterType(Integer printerType) {
         this.printerType = printerType;
+    }
+
+    public int getPrinterBrand() {
+        return printerBrand;
+    }
+
+    public void setPrinterBrand(int printerBrand) {
+        this.printerBrand = printerBrand;
     }
 
     @Override

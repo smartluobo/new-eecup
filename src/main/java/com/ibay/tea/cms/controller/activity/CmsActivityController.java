@@ -126,7 +126,7 @@ public class CmsActivityController {
 
     @RequestMapping("/addCoupons")
     public ResultInfo activityAddCoupons(@RequestBody TbActivityCouponsRecord tbActivityCouponsRecord){
-
+        LOGGER.info("tbActivityCouponsRecord : {}",tbActivityCouponsRecord);
         if (tbActivityCouponsRecord == null){
             return ResultInfo.newEmptyParamsResultInfo();
         }
@@ -152,13 +152,14 @@ public class CmsActivityController {
                     experienceCouponsPool.setActivityId(activityId);
                     experienceCouponsPool.setCouponsCode(SerialGenerator.getUniqueCode());
                     experienceCouponsPool.setCreateTime(new Date());
-                    experienceCouponsPool.setBackgroundUrl(tbCoupons.getCouponsPoster());
+                    experienceCouponsPool.setBackgroundUrl(tbCoupons.getStorePoster());
                     experienceCouponsPool.setReceiveStatus(0);
                     experienceCouponsPool.setCouponsId(couponsId);
                     experienceCouponsPool.setCouponsType(tbCoupons.getCouponsType());
                     experienceCouponsPool.setCouponsName(tbCoupons.getCouponsName());
                     pools.add(experienceCouponsPool);
                 }
+                LOGGER.info("insert store coupons count :{}",pools.size());
                 tbExperienceCouponsPoolMapper.insertBatch(pools);
                 return resultInfo;
             }else {

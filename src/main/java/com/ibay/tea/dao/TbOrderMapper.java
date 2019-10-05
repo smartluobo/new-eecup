@@ -38,4 +38,10 @@ public interface TbOrderMapper {
     Integer findHistoryOrderCount(@Param("oppenId") String oppenId);
 
     void updateShareOrder(@Param("orderId") String orderId, @Param("oppenId") String oppenId);
+
+    TbOrder findSendOrderByOppenId(String oppenId);
+
+    Map<String,Object> turnoverStatistical(Map<String, Object> condition);
+
+    List<Map<String,Integer>> orderStatistical(Map<String, Object> condition);
 }

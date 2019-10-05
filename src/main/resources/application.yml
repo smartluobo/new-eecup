@@ -2,7 +2,7 @@ spring:
   application:
     name: ibay-tea
   datasource:
-    url: jdbc:mysql://47.106.172.126:3306/eecup_test
+    url: jdbc:mysql://47.106.172.126:3306/novel_tea
     username: root
     password: Qaz*963.
     driver-class-name: com.mysql.jdbc.Driver

@@ -5,7 +5,9 @@ import com.ibay.tea.api.service.goods.ApiGoodsService;
 import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.cache.GoodsCache;
 import com.ibay.tea.cache.StoreCache;
+import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
+import com.ibay.tea.dao.TbActivityMapper;
 import com.ibay.tea.dao.TbCartMapper;
 import com.ibay.tea.entity.*;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +40,9 @@ public class ApiCartServiceImpl implements ApiCartService {
     @Resource
     private ActivityCache activityCache;
 
+    @Resource
+    private TbActivityMapper tbActivityMapper;
+
     @Override
     public List<TbItem> findCartGoodsListByOppenId(String oppenId,int storeId) {
         List<TbCart> cartGoodsList = tbCartMapper.findCartGoodsListByOppenId(oppenId);
@@ -46,12 +51,9 @@ public class ApiCartServiceImpl implements ApiCartService {
         if (cartGoodsList != null && cartGoodsList.size() > 0){
             for (TbCart tbCart : cartGoodsList) {
                 TbItem goods = buildCartGoodsInfo(tbCart,store);
-                LOGGER.info("goodsInfo view price : {}",goods.getPrice());
-                if (goods != null){
-                    goods.setCartItemId(tbCart.getId());
-                    goods.setSkuDetailDesc(tbCart.getSkuDetailDesc());
-                    result.add(goods);
-                }
+                goods.setCartItemId(tbCart.getId());
+                goods.setSkuDetailDesc(tbCart.getSkuDetailDesc());
+                result.add(goods);
             }
             return result;
         }else {
@@ -88,7 +90,8 @@ public class ApiCartServiceImpl implements ApiCartService {
             LOGGER.info("cache goods price : {}",goodsInfo.getPrice());
             String cartSkuDetailIds = tbCart.getSkuDetailIds();
             goodsInfo.setCartSkuDetailIds(cartSkuDetailIds);
-            apiGoodsService.calculateGoodsPrice(goodsInfo,store.getExtraPrice(),activityCache.getTodayActivityBean(store.getId()));
+            TbActivity fullActivity = tbActivityMapper.findFullActivity(DateUtil.getDateYyyyMMdd(), store.getId());
+            apiGoodsService.calculateGoodsPrice(goodsInfo,store.getExtraPrice(),fullActivity);
             if (StringUtils.isNotBlank(cartSkuDetailIds)){
                 int skuPrice = goodsCache.calculateSkuPrice(cartSkuDetailIds);
                 if (skuPrice != 0){

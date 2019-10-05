@@ -17,8 +17,9 @@ public class MainTest {
 //        System.out.println(smallNumStr);
 
 
-        String str = " ";
-        System.out.println(StringUtils.isNotEmpty(str));
+//        String str = " ";
+//        System.out.println(StringUtils.isNotEmpty(str));
 
+        System.out.println("3".equals(3));
     }
 }

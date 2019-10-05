@@ -14,11 +14,12 @@
     <result column="referrer_oppen_id" jdbcType="VARCHAR" property="referrerOppenId" />
     <result column="company_id" jdbcType="INTEGER" property="companyId" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="gift_receive_status" jdbcType="INTEGER" property="giftReceiveStatus" />
   </resultMap>
 
   <sql id="Base_Column_List">
     id, nick_name, wechat_num, oppen_id, wechat_phone_num, user_bind_phone_num, create_time, 
-    update_time, user_head_image,referrer_oppen_id,company_id,company_name
+    update_time, user_head_image,referrer_oppen_id,company_id,company_name,gift_receive_status
   </sql>
 
   <update id="updateApiUserInfo" parameterType="map">
@@ -36,9 +37,20 @@
   <update id="updateGiftReceiveStatus" parameterType="string">
     UPDATE tb_api_user SET gift_receive_status = 1 where oppen_id = #{oppenId}
   </update>
+  <update id="updateApiUserStore" parameterType="map">
+    UPDATE tb_api_user SET store_id = #{storeId} where oppen_id = #{oppenId}
+  </update>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select  <include refid="Base_Column_List" /> from tb_api_user where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findNoBindStoreUser" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> from tb_api_user where store_id IS null or store_id = 0
+  </select>
+
+  <select id="findNoBindPhoneUser" resultMap="BaseResultMap">
+    SELECT  <include refid="Base_Column_List" /> FROM tb_api_user WHERE user_bind_phone_num IS NULL
   </select>
 
   <select id="findApiUserByOppenId" resultMap="BaseResultMap" parameterType="string">
@@ -73,6 +85,14 @@
     LIMIT #{startIndex} , #{pageSize}
   </select>
 
+  <select id="findUserPhoneByStoreId" resultType="java.lang.String" >
+    SELECT user_bind_phone_num FROM tb_api_user WHERE store_id = #{storeId} and user_bind_phone_num IS NOT NULL
+  </select>
+
+  <select id="findAllUserPhone" resultType="java.lang.String">
+    SELECT user_bind_phone_num FROM tb_api_user where user_bind_phone_num IS NOT NULL
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_api_user where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -80,11 +100,11 @@
   <insert id="insert" parameterType="com.ibay.tea.entity.TbApiUser">
     insert into tb_api_user (nick_name, wechat_num,
       oppen_id, wechat_phone_num, user_bind_phone_num,
-      create_time, update_time, user_head_image,referrer_oppen_id
+      create_time, update_time, user_head_image,referrer_oppen_id,gift_receive_status
       )
     values (#{nickName,jdbcType=VARCHAR}, #{wechatNum,jdbcType=VARCHAR},
       #{oppenId,jdbcType=VARCHAR}, #{wechatPhoneNum,jdbcType=VARCHAR}, #{userBindPhoneNum,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{userHeadImage,jdbcType=VARCHAR},#{referrerOppenId,jdbcType=VARCHAR}
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{userHeadImage,jdbcType=VARCHAR},#{referrerOppenId,jdbcType=VARCHAR},#{giftReceiveStatus}
       )
   </insert>
 

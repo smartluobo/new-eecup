@@ -14,4 +14,6 @@ public interface TbRecommendMapper {
     TbRecommend selectByPrimaryKey(Integer id);
 
     List<Long> findStoreRecommend(String storeId);
+
+    List<TbRecommend> findRecommendByStoreId(int storeId);
 }

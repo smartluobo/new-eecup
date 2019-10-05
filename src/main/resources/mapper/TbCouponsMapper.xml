@@ -15,26 +15,27 @@
     <result column="coupons_poster" jdbcType="VARCHAR" property="couponsPoster" />
     <result column="use_rules" jdbcType="VARCHAR" property="useRules" />
     <result column="use_scope" jdbcType="VARCHAR" property="useScope" />
+    <result column="store_poster" jdbcType="VARCHAR" property="storePoster" />
 
   </resultMap>
   <sql id="Base_Column_List">
     id, coupons_type, coupons_name, coupons_ratio, consume_amount, reduce_amount, consume_count, 
-    give_count, create_time, update_time,coupons_poster,use_rules,use_scope
+    give_count, create_time, update_time,coupons_poster,use_rules,use_scope,store_poster
   </sql>
 
   <insert id="addCoupons" parameterType="com.ibay.tea.entity.TbCoupons">
       INSERT INTO tb_coupons (coupons_type, coupons_name, coupons_ratio, consume_amount, reduce_amount,
-                              consume_count, give_count, create_time, update_time,coupons_poster,use_rules,use_scope)
+                              consume_count, give_count, create_time, update_time,coupons_poster,use_rules,use_scope,store_poster)
       VALUES (#{couponsType},#{couponsName},#{couponsRatio},#{consumeAmount},#{reduceAmount},
-          #{consumeCount},#{giveCount},#{createTime},#{updateTime},#{couponsPoster},#{useRules},#{useScope}
+          #{consumeCount},#{giveCount},#{createTime},#{updateTime},#{couponsPoster},#{useRules},#{useScope},#{storePoster}
       )
   </insert>
 
   <insert id="saveUpdateCoupons" parameterType="com.ibay.tea.entity.TbCoupons">
     INSERT INTO tb_coupons (id,coupons_type, coupons_name, coupons_ratio, consume_amount, reduce_amount,
-    consume_count, give_count, create_time, update_time,coupons_poster,use_rules,use_scope)
+    consume_count, give_count, create_time, update_time,coupons_poster,use_rules,use_scope,store_poster)
     VALUES (#{id},#{couponsType},#{couponsName},#{couponsRatio},#{consumeAmount},#{reduceAmount},
-    #{consumeCount},#{giveCount},#{createTime},#{updateTime},#{couponsPoster},#{useRules},#{useScope}
+    #{consumeCount},#{giveCount},#{createTime},#{updateTime},#{couponsPoster},#{useRules},#{useScope},#{storePoster}
     )
   </insert>
 
@@ -50,7 +51,7 @@
   </select>
 
   <select id="getCouponsCenterList" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List" /> from tb_coupons where is_coupons_center = 1 ORDER BY consume_amount,consume_count ASC
+    SELECT <include refid="Base_Column_List" /> from tb_coupons
   </select>
 
   <delete id="deleteCoupons" parameterType="java.lang.Integer">

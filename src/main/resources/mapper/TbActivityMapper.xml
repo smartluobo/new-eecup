@@ -16,25 +16,29 @@
     <result column="no_start_poster" jdbcType="VARCHAR" property="noStartPoster" />
     <result column="starting_poster" jdbcType="VARCHAR" property="startingPoster" />
     <result column="win_poster" jdbcType="VARCHAR" property="winPoster" />
+    <result column="no_win_poster" jdbcType="VARCHAR" property="noWinPoster" />
+    <result column="repeat_poster" jdbcType="VARCHAR" property="repeatPoster" />
+    <result column="activity_ratio" jdbcType="VARCHAR" property="activityRatio" />
+    <result column="empty_poster" jdbcType="VARCHAR" property="emptyPoster" />
   </resultMap>
 
   <sql id="Base_Column_List">
     id, start_date, end_date, start_hour, end_hour, activity_type, create_time, update_time, 
-    activity_name,tips,store_id,no_start_poster,starting_poster,win_poster
+    activity_name,tips,store_id,no_start_poster,starting_poster,win_poster,no_win_poster,repeat_poster,activity_ratio,empty_poster
   </sql>
 
   <insert id="addActivity" parameterType="com.ibay.tea.entity.TbActivity">
       INSERT INTO tb_activity (start_date, end_date, start_hour, end_hour, activity_type, activity_name, create_time, tips,store_id,
-                               no_start_poster,starting_poster,win_poster)
+                               no_start_poster,starting_poster,win_poster,no_win_poster,repeat_poster,activity_ratio,empty_poster)
       VALUES (#{startDate},#{endDate},#{startHour},#{endHour},#{activityType},#{activityName},#{createTime},#{tips},#{storeId},
-              #{noStartPoster},#{startingPoster},#{winPoster})
+              #{noStartPoster},#{startingPoster},#{winPoster},#{noWinPoster},#{repeatPoster},#{activityRatio},#{emptyPoster})
   </insert>
 
   <insert id="saveUpdateActivity" parameterType="com.ibay.tea.entity.TbActivity">
     INSERT INTO tb_activity (id,start_date, end_date, start_hour, end_hour, activity_type, activity_name, create_time, tips,store_id,
-                             no_start_poster,starting_poster,win_poster)
+                             no_start_poster,starting_poster,win_poster,no_win_poster,repeat_poster,activity_ratio,empty_poster)
     VALUES (#{id},#{startDate},#{endDate},#{startHour},#{endHour},#{activityType},#{activityName},#{createTime},#{tips},#{storeId},
-                  #{noStartPoster},#{startingPoster},#{winPoster})
+                  #{noStartPoster},#{startingPoster},#{winPoster},#{noWinPoster},#{repeatPoster},#{activityRatio},#{emptyPoster})
   </insert>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -56,7 +60,7 @@
 
   <select id="findRegularActivity" resultMap="BaseResultMap" parameterType="map">
     SELECT * FROM tb_activity
-          <![CDATA[ WHERE  start_date <= #{currentDate} AND end_date >= #{currentDate} AND activity_type = 1 and store_id = #{storeId}]]>
+          <![CDATA[ WHERE  start_date <= #{currentDate} AND end_date >= #{currentDate} AND activity_type in (1,3) and store_id = #{storeId}]]>
   </select>
 
   <select id="findFullActivity" resultMap="BaseResultMap">

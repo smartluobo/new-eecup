@@ -27,6 +27,8 @@ public class CalculateReturnVo {
 
     private String phoneNum;
 
+    private double postFee;
+
     public double getOrderTotalAmount() {
         return orderTotalAmount;
     }
@@ -109,6 +111,14 @@ public class CalculateReturnVo {
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public double getPostFee() {
+        return postFee;
+    }
+
+    public void setPostFee(double postFee) {
+        this.postFee = postFee;
     }
 
     @Override

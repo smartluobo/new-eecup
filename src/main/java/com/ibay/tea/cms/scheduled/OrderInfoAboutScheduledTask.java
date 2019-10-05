@@ -19,9 +19,9 @@ import java.util.Map;
 
 @Component
 @EnableScheduling
-public class OrderCloseScheduledTask {
+public class OrderInfoAboutScheduledTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderCloseScheduledTask.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderInfoAboutScheduledTask.class);
 
     private static final long timeout = 30*60*1000;
     @Resource

@@ -44,6 +44,8 @@ public class ApiActivityServiceImpl implements ApiActivityService {
     @Resource
     private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
+    private Random random = new Random();
+
     @Override
     public TbActivity getTodayActivity(int storeId) {
         TbActivity activity = activityCache.getTodayActivity(storeId);
@@ -56,8 +58,9 @@ public class ApiActivityServiceImpl implements ApiActivityService {
     @Override
     public TbActivityCouponsRecord extractPrize(String oppenId,int storeId) {
         TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(storeId);
+        LOGGER.info("todayActivityBean : {}",todayActivityBean);
         TbActivityCouponsRecord record = null;
-        if (todayActivityBean == null || todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
+        if (todayActivityBean == null){
             return null;
         }
         List<TbActivityCouponsRecord> tbActivityCouponsRecordList = todayActivityBean.getTbActivityCouponsRecordList();
@@ -137,7 +140,6 @@ public class ApiActivityServiceImpl implements ApiActivityService {
             //活动正在进行中
             return ApiConstant.ACTIVITY_STATUS_STARTING;
         }
-
         return ApiConstant.ACTIVITY_STATUS_END;
     }
 
@@ -193,6 +195,13 @@ public class ApiActivityServiceImpl implements ApiActivityService {
 
         if (CollectionUtils.isEmpty(tbExperienceCouponsPools)){
             return null;
+        }
+        if (tbExperienceCouponsPools.size() > 0){
+            if (random.nextInt(100) > 50){
+                TbExperienceCouponsPool tbExperienceCouponsPool = new TbExperienceCouponsPool();
+                tbExperienceCouponsPool.setIsEmpty(1);
+                return tbExperienceCouponsPool;
+            }
         }
         synchronized (tbExperienceCouponsPools){
             if (tbExperienceCouponsPools.size() > 0){

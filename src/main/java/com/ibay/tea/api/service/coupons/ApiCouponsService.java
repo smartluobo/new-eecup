@@ -1,6 +1,7 @@
 package com.ibay.tea.api.service.coupons;
 
 import com.ibay.tea.entity.TbCoupons;
+import com.ibay.tea.entity.TbShoppingCard;
 import com.ibay.tea.entity.TbUserCoupons;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface ApiCouponsService {
 
     TbUserCoupons findOneCouponsByOppenId(String oppenId,String currentDate);
 
-    List<TbUserCoupons> findUserValidCoupons(String oppenId);
+    List<TbUserCoupons> findUserValidCoupons(String oppenId,String useWay);
 
     List<TbUserCoupons> getUserCouponsByOppenId(String oppenId);
 
@@ -21,5 +22,7 @@ public interface ApiCouponsService {
 
     List<TbCoupons> getCouponsCenterList();
 
+    TbShoppingCard queryShoppingCardInfo(String couponsCode);
 
+    boolean rechargeByShoppingCard(String couponsCode, String oppenId,TbShoppingCard tbShoppingCard);
 }

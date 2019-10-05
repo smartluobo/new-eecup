@@ -21,6 +21,8 @@ public class TbExperienceCouponsPool {
 
     private String couponsName;
 
+    private int isEmpty;
+
     public Integer getId() {
         return id;
     }
@@ -91,5 +93,13 @@ public class TbExperienceCouponsPool {
 
     public void setCouponsName(String couponsName) {
         this.couponsName = couponsName;
+    }
+
+    public int getIsEmpty() {
+        return isEmpty;
+    }
+
+    public void setIsEmpty(int isEmpty) {
+        this.isEmpty = isEmpty;
     }
 }

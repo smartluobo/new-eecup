@@ -7,11 +7,8 @@ import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.dao.TbApiUserMapper;
 import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.entity.TbApiUser;
-import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbUserCoupons;
-import com.ibay.tea.entity.User;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -115,13 +112,13 @@ public class ApiUserController {
                 return ResultInfo.newEmptyResultInfo();
             }
             if (apiUser.getGiftReceiveStatus() == 1){
-                resultInfo.setData(2);
+                return ResultInfo.newFailResultInfo("您已领取过新人礼包，不能重复领取");
             }
 
             if (apiUser.getGiftReceiveStatus() == 0){
                 List<TbUserCoupons> userCouponsList = new ArrayList<>();
                 TbUserCoupons tbUserCoupons = new TbUserCoupons();
-                String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
+                String yyyyMMdd = DateUtil.getDateYyyyMMdd();
 
                 tbUserCoupons.setOppenId(oppenId);
                 tbUserCoupons.setCouponsId(0);
@@ -159,6 +156,7 @@ public class ApiUserController {
                 tbApiUserMapper.updateGiftReceiveStatus(oppenId);
                 resultInfo.setData(1);
             }
+            resultInfo.setMsg("新人礼包领取成功，请到优惠券列表查看");
             return resultInfo;
         }catch (Exception e){
             LOGGER.error("getUserInfo params : {}",params,e);

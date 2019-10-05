@@ -4,6 +4,8 @@ import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.goods.ApiGoodsService;
 import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.cache.StoreCache;
+import com.ibay.tea.common.utils.DateUtil;
+import com.ibay.tea.dao.TbActivityMapper;
 import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbItem;
 import com.ibay.tea.entity.TbStore;
@@ -31,6 +33,9 @@ public class ApiGoodsController {
     @Resource
     private ActivityCache activityCache;
 
+    @Resource
+    private TbActivityMapper tbActivityMapper;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiGoodsController.class);
 
     @RequestMapping("/listByCategoryId")
@@ -49,14 +54,14 @@ public class ApiGoodsController {
         TbStore store = storeCache.findStoreById(storeId.intValue());
         //店铺扩展价格
         int extraPrice = store.getExtraPrice();
-        TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(storeId.intValue());
+        TbActivity fullActivity = tbActivityMapper.findFullActivity(DateUtil.getDateYyyyMMdd(), store.getId());
 
         //根据店铺信息查看是否存在全场活动
         try {
             ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             List<TbItem> goodsListByCategoryId = apiGoodsService.getGoodsListByCategoryId(categoryId);
             //查询店铺信息，商品价格添加店铺扩展价格.和活动信息计算商品价格
-            apiGoodsService.calculateGoodsPrice(goodsListByCategoryId,extraPrice,todayActivityBean);
+            apiGoodsService.calculateGoodsPrice(goodsListByCategoryId,extraPrice,fullActivity);
             apiGoodsService.checkGoodsInventory(goodsListByCategoryId,storeId.intValue());
             resultInfo.setData(goodsListByCategoryId);
             return resultInfo;
@@ -82,9 +87,9 @@ public class ApiGoodsController {
             TbStore store = storeCache.findStoreById(storeId.intValue());
             //店铺扩展价格
             int extraPrice = store.getExtraPrice();
-            TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(storeId.intValue());
+            TbActivity fullActivity = tbActivityMapper.findFullActivity(DateUtil.getDateYyyyMMdd(), store.getId());
 
-            apiGoodsService.calculateGoodsPrice(goods,extraPrice,todayActivityBean);
+            apiGoodsService.calculateGoodsPrice(goods,extraPrice,fullActivity);
             apiGoodsService.checkGoodsInventory(goods,storeId.intValue());
             if (goods.getShowActivityPrice() == 1){
                 goods.setPrice(goods.getActivityPrice());

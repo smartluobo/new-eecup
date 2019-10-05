@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Repository
 public interface TbApiUserMapper {
@@ -33,5 +34,13 @@ public interface TbApiUserMapper {
 
     void updateGiftReceiveStatus(String oppenId);
 
+    Set<String> findUserPhoneByStoreId(int storeId);
 
+    Set<String> findAllUserPhone();
+
+    List<TbApiUser> findNoBindPhoneUser();
+
+    List<TbApiUser> findNoBindStoreUser();
+
+    void updateApiUserStore(@Param("oppenId") String oppenId, @Param("storeId") int storeId);
 }

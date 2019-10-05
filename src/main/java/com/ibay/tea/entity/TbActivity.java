@@ -35,9 +35,17 @@ public class TbActivity {
 
     private String winPoster;
 
+    private String noWinPoster;
+
+    private String repeatPoster;
+
     private String extractTime;
 
     private String showImageUrl;
+
+    private String activityRatio;
+
+    private String emptyPoster;
 
     public Integer getId() {
         return id;
@@ -175,8 +183,66 @@ public class TbActivity {
         this.showImageUrl = showImageUrl;
     }
 
+    public String getActivityRatio() {
+        return activityRatio;
+    }
+
+    public void setActivityRatio(String activityRatio) {
+        this.activityRatio = activityRatio;
+    }
+
+    public String getNoWinPoster() {
+        return noWinPoster;
+    }
+
+    public void setNoWinPoster(String noWinPoster) {
+        this.noWinPoster = noWinPoster;
+    }
+
+    public String getRepeatPoster() {
+        return repeatPoster;
+    }
+
+    public void setRepeatPoster(String repeatPoster) {
+        this.repeatPoster = repeatPoster;
+    }
+
+    public String getEmptyPoster() {
+        return emptyPoster;
+    }
+
+    public void setEmptyPoster(String emptyPoster) {
+        this.emptyPoster = emptyPoster;
+    }
+
     public TbActivity copy(){
         String thisStr = JSONObject.toJSONString(this);
         return JSONObject.parseObject(thisStr, TbActivity.class);
+    }
+
+    @Override
+    public String toString() {
+        return "TbActivity{" +
+                "id=" + id +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", startHour=" + startHour +
+                ", endHour=" + endHour +
+                ", activityType=" + activityType +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", activityName='" + activityName + '\'' +
+                ", status=" + status +
+                ", tips='" + tips + '\'' +
+                ", storeId=" + storeId +
+                ", noStartPoster='" + noStartPoster + '\'' +
+                ", startingPoster='" + startingPoster + '\'' +
+                ", winPoster='" + winPoster + '\'' +
+                ", noWinPoster='" + noWinPoster + '\'' +
+                ", repeatPoster='" + repeatPoster + '\'' +
+                ", extractTime='" + extractTime + '\'' +
+                ", showImageUrl='" + showImageUrl + '\'' +
+                ", activityRatio='" + activityRatio + '\'' +
+                '}';
     }
 }

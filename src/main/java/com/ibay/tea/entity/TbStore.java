@@ -27,6 +27,10 @@ public class TbStore {
 
     private int distributionDistance;
 
+    private int sendCost;
+
+    private int storeFlag;
+
     public Integer getId() {
         return id;
     }
@@ -121,5 +125,21 @@ public class TbStore {
 
     public void setDistributionDistance(int distributionDistance) {
         this.distributionDistance = distributionDistance;
+    }
+
+    public int getSendCost() {
+        return sendCost;
+    }
+
+    public void setSendCost(int sendCost) {
+        this.sendCost = sendCost;
+    }
+
+    public void setStoreFlag(int storeFlag){
+        this.storeFlag = storeFlag;
+    }
+
+    public int getStoreFlag(){
+        return storeFlag;
     }
 }

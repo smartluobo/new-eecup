@@ -82,4 +82,18 @@ public class TbShoppingCard {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
+    @Override
+    public String toString() {
+        return "TbShoppingCard{" +
+                "id=" + id +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", cardCode='" + cardCode + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", useStatus=" + useStatus +
+                ", receiveTime=" + receiveTime +
+                ", amount=" + amount +
+                '}';
+    }
 }

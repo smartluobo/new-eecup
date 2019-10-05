@@ -7,6 +7,12 @@ public class TbRecommend {
 
     private Integer storeId;
 
+    private String goodsName;
+
+    private String goodsPoster;
+
+    private String storeName;
+
     public Integer getId() {
         return id;
     }
@@ -29,5 +35,29 @@ public class TbRecommend {
 
     public void setStoreId(Integer storeId) {
         this.storeId = storeId;
+    }
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
+
+    public String getGoodsPoster() {
+        return goodsPoster;
+    }
+
+    public void setGoodsPoster(String goodsPoster) {
+        this.goodsPoster = goodsPoster;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 }

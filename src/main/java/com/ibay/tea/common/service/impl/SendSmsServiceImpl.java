@@ -11,11 +11,18 @@ import com.aliyuncs.profile.IClientProfile;
 import com.google.common.cache.Cache;
 import com.ibay.tea.common.service.SendSmsService;
 import com.ibay.tea.config.SmsSysProperties;
+import com.ibay.tea.dao.TbApiUserMapper;
+import com.ibay.tea.dao.TbSmsConfigMapper;
+import com.ibay.tea.entity.TbSmsConfig;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class SendSmsServiceImpl implements SendSmsService {
@@ -26,6 +33,12 @@ public class SendSmsServiceImpl implements SendSmsService {
 
     @Resource
     private Cache<String,String> verificationCodeCache;
+
+    @Resource
+    private TbApiUserMapper tbApiUserMapper;
+
+    @Resource
+    private TbSmsConfigMapper tbSmsConfigMapper;
 
 
 
@@ -82,6 +95,81 @@ public class SendSmsServiceImpl implements SendSmsService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void sendSmsContent(TbSmsConfig tbSmsConfig) {
+        if (tbSmsConfig == null){
+            return ;
+        }
+        int storeId = tbSmsConfig.getStoreId();
+        Set<String> userPhoneList;
+        if (storeId != -1){
+            userPhoneList = tbApiUserMapper.findUserPhoneByStoreId(storeId);
+        }else{
+            userPhoneList = tbApiUserMapper.findAllUserPhone();
+        }
+
+        if (userPhoneList != null){
+            //更新发送状态
+            LOGGER.info("userPhoneList size : {}",userPhoneList.size());
+            LOGGER.info("userPhoneList :{}",userPhoneList);
+            tbSmsConfig.setSendStatus(1);
+            tbSmsConfig.setShouldSendCount(userPhoneList.size());
+            List<String> failList = new ArrayList<>(userPhoneList.size());
+            tbSmsConfigMapper.updateByPrimaryKey(tbSmsConfig);
+            int actualCount = 0;
+            int count = 0;
+            for (String userPhone : userPhoneList) {
+                count++;
+                boolean flag = sendActivityInform(tbSmsConfig, userPhone);
+                if (flag){
+                    actualCount++;
+                }else{
+                    failList.add(userPhone);
+                }
+                if (count%10 == 0){
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            LOGGER.info("failList : {}",failList);
+            tbSmsConfig.setSendStatus(2);
+            tbSmsConfig.setActualSendCount(actualCount);
+            tbSmsConfigMapper.updateByPrimaryKey(tbSmsConfig);
+        }
+
+    }
+
+    public boolean sendActivityInform(TbSmsConfig smsConfig,String phoneNum){
+        try {
+            System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
+            System.setProperty("sun.net.client.defaultReadTimeout", "10000");
+            IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", smsSysProperties.getAccessKeyId(), smsSysProperties.getAccessKeySecret());
+            DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", smsSysProperties.getProduct(), smsSysProperties.getDomain());
+            IAcsClient acsClient = new DefaultAcsClient(profile);
+            SendSmsRequest request = new SendSmsRequest();
+            request.setMethod(MethodType.POST);
+            request.setPhoneNumbers(phoneNum);
+            request.setSignName(smsConfig.getSignName());
+            request.setTemplateCode(smsConfig.getTemplateCode());
+            request.setOutId("yourOutId");
+            SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
+            if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+                //请求成功
+                LOGGER.info("remote call sms inform send success phoneNum : {}",phoneNum);
+                return true;
+            }else {
+                LOGGER.info("remote call sms inform send fail return result : {}",sendSmsResponse.getMessage());
+                return false;
+            }
+        }catch (Exception e) {
+            LOGGER.error("remote call sms inform send  happen exception",e);
+            return false;
+        }
     }
 
 

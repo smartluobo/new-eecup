@@ -38,7 +38,15 @@ public class PriceCalculateUtil {
        return  new BigDecimal(String.valueOf(totalAmount)).subtract(new BigDecimal(String.valueOf(reduceAmount))).doubleValue();
     }
 
+    public static double subtract(String totalAmount,String reduceAmount){
+        return  new BigDecimal(String.valueOf(totalAmount)).subtract(new BigDecimal(String.valueOf(reduceAmount))).doubleValue();
+    }
+
     public static double add(double specialReduceAmount, double cartPrice) {
         return new BigDecimal(String.valueOf(specialReduceAmount)).add(new BigDecimal(String.valueOf(cartPrice))).doubleValue();
+    }
+
+    public static double add(String amount1, String amount2) {
+        return new BigDecimal(amount1).add(new BigDecimal(amount2)).doubleValue();
     }
 }

@@ -29,6 +29,8 @@ public class TbCoupons {
 
     private String useScope;
 
+    private String storePoster;
+
     public int getId() {
         return id;
     }
@@ -131,5 +133,33 @@ public class TbCoupons {
 
     public void setUseScope(String useScope) {
         this.useScope = useScope;
+    }
+
+    public String getStorePoster() {
+        return storePoster;
+    }
+
+    public void setStorePoster(String storePoster) {
+        this.storePoster = storePoster;
+    }
+
+    @Override
+    public String toString() {
+        return "TbCoupons{" +
+                "id=" + id +
+                ", couponsType=" + couponsType +
+                ", couponsName='" + couponsName + '\'' +
+                ", couponsRatio='" + couponsRatio + '\'' +
+                ", consumeAmount=" + consumeAmount +
+                ", reduceAmount=" + reduceAmount +
+                ", consumeCount=" + consumeCount +
+                ", giveCount=" + giveCount +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", couponsPoster='" + couponsPoster + '\'' +
+                ", useRules='" + useRules + '\'' +
+                ", useScope='" + useScope + '\'' +
+                ", storePoster='" + storePoster + '\'' +
+                '}';
     }
 }

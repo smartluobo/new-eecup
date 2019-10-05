@@ -2,7 +2,7 @@ package com.ibay.tea.category;
 
 import com.ibay.tea.BaseTest;
 import com.ibay.tea.cache.StoreCache;
-import com.ibay.tea.cms.scheduled.OrderCloseScheduledTask;
+import com.ibay.tea.cms.scheduled.OrderInfoAboutScheduledTask;
 import com.ibay.tea.common.service.PrintService;
 import com.ibay.tea.common.utils.PrintUtil;
 import com.ibay.tea.dao.TbOrderMapper;
@@ -29,7 +29,7 @@ public class CategoryTest extends BaseTest {
     private PrintService printService;
 
     @Resource
-    private OrderCloseScheduledTask orderCloseScheduledTask;
+    private OrderInfoAboutScheduledTask orderCloseScheduledTask;
 //    @Resource
 //    private CategoryMapper categoryMapper;
 //

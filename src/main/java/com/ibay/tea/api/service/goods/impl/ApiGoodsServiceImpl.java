@@ -1,13 +1,12 @@
 package com.ibay.tea.api.service.goods.impl;
 
 import com.ibay.tea.api.service.goods.ApiGoodsService;
-import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.cache.GoodsCache;
-import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
-import com.ibay.tea.dao.TbItemMapper;
 import com.ibay.tea.dao.TbStoreGoodsMapper;
-import com.ibay.tea.entity.*;
+import com.ibay.tea.entity.TbActivity;
+import com.ibay.tea.entity.TbItem;
+import com.ibay.tea.entity.TbStoreGoods;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -21,13 +20,7 @@ import java.util.Map;
 public class ApiGoodsServiceImpl implements ApiGoodsService {
 
     @Resource
-    private TbItemMapper tbItemMapper;
-
-    @Resource
     private GoodsCache goodsCache;
-
-    @Resource
-    private ActivityCache activityCache;
 
     @Resource
     private TbStoreGoodsMapper tbStoreGoodsMapper;
@@ -56,21 +49,19 @@ public class ApiGoodsServiceImpl implements ApiGoodsService {
     }
 
     @Override
-    public void calculateGoodsPrice(List<TbItem> goodsListByCategoryId, int extraPrice, TodayActivityBean todayActivityBean) {
-        if (extraPrice == 0 && todayActivityBean == null){
+    public void calculateGoodsPrice(List<TbItem> goodsListByCategoryId, int extraPrice, TbActivity tbActivity) {
+        if (extraPrice == 0 && tbActivity == null){
             return;
         }
-        if (todayActivityBean != null){
+        if (tbActivity != null){
             //活动类型为全场折扣
-            if (todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
+            for (TbItem tbItem : goodsListByCategoryId) {
+                calculateActivityPrice(tbItem, extraPrice, tbActivity);
+            }
+        }else {
+            if (!CollectionUtils.isEmpty(goodsListByCategoryId)){
                 for (TbItem tbItem : goodsListByCategoryId) {
-                    calculateActivityPrice(tbItem, extraPrice, todayActivityBean);
-                }
-            }else {
-                if (extraPrice != 0 && !CollectionUtils.isEmpty(goodsListByCategoryId)){
-                    for (TbItem tbItem : goodsListByCategoryId) {
-                        tbItem.setPrice(tbItem.getPrice() + extraPrice);
-                    }
+                    tbItem.setPrice(tbItem.getPrice() + extraPrice);
                 }
             }
         }
@@ -112,33 +103,28 @@ public class ApiGoodsServiceImpl implements ApiGoodsService {
     }
 
     @Override
-    public void calculateGoodsPrice(TbItem goodsInfo, int extraPrice, TodayActivityBean todayActivityBean) {
+    public void calculateGoodsPrice(TbItem goodsInfo, int extraPrice, TbActivity tbActivity) {
         if (goodsInfo == null){
             return ;
         }
-        if (extraPrice == 0 && todayActivityBean == null){
+        if (extraPrice == 0 && tbActivity == null){
             return;
         }
-        if (todayActivityBean != null){
+        if (tbActivity != null){
             //活动类型为全场折扣
-            if (todayActivityBean.getTbActivity().getActivityType() == ApiConstant.ACTIVITY_TYPE_FULL){
-                calculateActivityPrice(goodsInfo, extraPrice, todayActivityBean);
-            }else {
-                if (extraPrice != 0){
-                    goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
-                }
+           calculateActivityPrice(goodsInfo, extraPrice, tbActivity);
+            if (extraPrice != 0){
+                goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
             }
         }else {
             goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
         }
     }
 
-    private void calculateActivityPrice(TbItem goodsInfo, int extraPrice, TodayActivityBean todayActivityBean) {
+    private void calculateActivityPrice(TbItem goodsInfo, int extraPrice, TbActivity tbActivity) {
         goodsInfo.setShowActivityPrice(1);
         goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
-        TbActivityCouponsRecord tbActivityCouponsRecord = todayActivityBean.getTbActivityCouponsRecordList().get(0);
-        TbCoupons tbCoupons = activityCache.getTbCouponsById(tbActivityCouponsRecord.getCouponsId());
-        double activityPrice = PriceCalculateUtil.multiply(goodsInfo.getPrice(),tbCoupons.getCouponsRatio());
+        double activityPrice = PriceCalculateUtil.multiply(goodsInfo.getPrice(),tbActivity.getActivityRatio());
         goodsInfo.setActivityPrice(activityPrice);
     }
 

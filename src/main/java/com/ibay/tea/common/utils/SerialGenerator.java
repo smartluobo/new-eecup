@@ -1,5 +1,6 @@
 package com.ibay.tea.common.utils;
 
+import com.ibay.tea.entity.TbStore;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Random;
@@ -14,11 +15,15 @@ public class SerialGenerator {
 
     private static Random random = new Random();
 
-    public static String getOrderSerial(){
+    public static String getOrderSerial(TbStore store){
         int orderSerial = orderIndex.getAndIncrement();
         String takeCode = StringUtils.leftPad(String.valueOf(orderSerial),4,"0");
         String dateYyyyMMddHHmm = DateUtil.getDateYyyyMMddHHmm();
-        return dateYyyyMMddHHmm + takeCode;
+        if (store == null){
+            return dateYyyyMMddHHmm + takeCode;
+        }else {
+            return store.getStoreFlag() + dateYyyyMMddHHmm + takeCode;
+        }
     }
 
     public static String getPayRecordSerial(){

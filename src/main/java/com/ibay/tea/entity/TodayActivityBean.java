@@ -34,4 +34,13 @@ public class TodayActivityBean {
     public void setTbActivityCouponsRecordList(List<TbActivityCouponsRecord> tbActivityCouponsRecordList) {
         this.tbActivityCouponsRecordList = tbActivityCouponsRecordList;
     }
+
+    @Override
+    public String toString() {
+        return "TodayActivityBean{" +
+                "tbActivity=" + tbActivity +
+                ", couponsMap=" + couponsMap +
+                ", tbActivityCouponsRecordList=" + tbActivityCouponsRecordList +
+                '}';
+    }
 }

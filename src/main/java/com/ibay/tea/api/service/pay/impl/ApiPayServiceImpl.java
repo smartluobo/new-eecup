@@ -13,7 +13,6 @@ import com.ibay.tea.dao.*;
 import com.ibay.tea.entity.*;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -211,7 +210,7 @@ public class ApiPayServiceImpl implements ApiPayService {
 
     private void buildCouponsAndInsert(String referrerOppenId) {
         TbUserCoupons tbUserCoupons = new TbUserCoupons();
-        String yyyyMMdd = DateUtils.formatDate(new Date(), "yyyyMMdd");
+        String yyyyMMdd = DateUtil.getDateYyyyMMdd();
         tbUserCoupons.setOppenId(referrerOppenId);
         tbUserCoupons.setCouponsId(0);
         tbUserCoupons.setCouponsName("分享折扣券");

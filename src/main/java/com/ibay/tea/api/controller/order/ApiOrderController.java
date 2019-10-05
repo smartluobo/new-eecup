@@ -4,8 +4,10 @@ import com.ibay.tea.api.paramVo.CartOrderParamVo;
 import com.ibay.tea.api.paramVo.GoodsOrderParamVo;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.responseVo.CalculateReturnVo;
+import com.ibay.tea.api.service.calculate.CalculateService;
 import com.ibay.tea.api.service.order.ApiOrderService;
 import com.ibay.tea.api.service.pay.ApiPayService;
+import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.common.utils.WechatXmlParser;
 import com.ibay.tea.common.utils.WxUtil;
@@ -47,6 +49,9 @@ public class ApiOrderController {
     @Resource
     private TbApiUserMapper tbApiUserMapper;
 
+    @Resource
+    private CalculateService calculateService;
+
     @RequestMapping("createOrderByCart")
     public ResultInfo createOrderByCart(@RequestBody CartOrderParamVo cartOrderParamVo){
         if (cartOrderParamVo == null){
@@ -83,8 +88,12 @@ public class ApiOrderController {
                 return ResultInfo.newParameterErrorResultInfo();
             }
             Map<String, Object> payMap = apiOrderService.createOrderByCart(cartOrderParamVo);
-            resultInfo.setData(payMap);
-            return resultInfo;
+            if (payMap.size() == 0){
+                return resultInfo;
+            }else {
+                resultInfo.setData(payMap);
+                return resultInfo;
+            }
         }catch (Exception e){
             LOGGER.error("createOrderByCart happen exception oppenId : {}, cartItemIds : {}, userCouponsId: {} ,addressId :{} selfGet : {}",
                     oppenId,cartItemIds,userCouponsId,addressId,selfGet,e);
@@ -189,7 +198,7 @@ public class ApiOrderController {
         try {
             LOGGER.info("calculateCartOrderPrice CartOrderParamVo : {}",paramVo);
         	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-            CalculateReturnVo calculateReturnVo = apiOrderService.calculateCartOrderPrice(paramVo,false);
+            CalculateReturnVo calculateReturnVo = calculateService.calculateCartOrderPrice(paramVo,false);
             if (calculateReturnVo != null){
                 TbApiUser apiUserByOppenId = tbApiUserMapper.findApiUserByOppenId(paramVo.getOppenId());
                 if (apiUserByOppenId != null){

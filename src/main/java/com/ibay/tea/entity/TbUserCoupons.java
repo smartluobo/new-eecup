@@ -27,9 +27,9 @@ public class TbUserCoupons {
 
     private String expireDateStr;
 
-    private int bigNum;
+    private String bigNum;
 
-    private int smallNum;
+    private String smallNum;
 
     private int couponsType;
 
@@ -66,6 +66,11 @@ public class TbUserCoupons {
     private int consumeCount;
 
     private int giveCount;
+
+    private String cashAmount;
+
+    //是否当日过期 0 不是 1 是
+    private int currentDayExpire;
 
     public Integer getId() {
         return id;
@@ -155,19 +160,19 @@ public class TbUserCoupons {
         }
     }
 
-    public int getBigNum() {
+    public String getBigNum() {
         return bigNum;
     }
 
-    public void setBigNum(int bigNum) {
+    public void setBigNum(String bigNum) {
         this.bigNum = bigNum;
     }
 
-    public int getSmallNum() {
+    public String getSmallNum() {
         return smallNum;
     }
 
-    public void setSmallNum(int smallNum) {
+    public void setSmallNum(String smallNum) {
         this.smallNum = smallNum;
     }
 
@@ -293,6 +298,22 @@ public class TbUserCoupons {
 
     public void setGiveCount(int giveCount) {
         this.giveCount = giveCount;
+    }
+
+    public String getCashAmount() {
+        return cashAmount;
+    }
+
+    public void setCashAmount(String cashAmount) {
+        this.cashAmount = cashAmount;
+    }
+
+    public int getCurrentDayExpire() {
+        return currentDayExpire;
+    }
+
+    public void setCurrentDayExpire(int currentDayExpire) {
+        this.currentDayExpire = currentDayExpire;
     }
 
     public TbUserCoupons copy() {

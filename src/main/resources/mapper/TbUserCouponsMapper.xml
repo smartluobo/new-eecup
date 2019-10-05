@@ -21,10 +21,13 @@
     <result column="source_name" jdbcType="VARCHAR" property="sourceName" />
     <result column="activity_id" jdbcType="INTEGER" property="activityId" />
     <result column="use_way" jdbcType="INTEGER" property="useWay" />
+    <result column="expire_type" jdbcType="INTEGER" property="expireType" />
+    <result column="cash_amount" jdbcType="VARCHAR" property="cashAmount" />
   </resultMap>
   <sql id="Base_Column_List">
     id, oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,
-    is_referrer,coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id,use_way
+    is_referrer,coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id,use_way,
+    expire_type,cash_amount
   </sql>
 
   <update id="updateStatusById" parameterType="int">
@@ -41,6 +44,10 @@
 
   <update id="updateExperience" parameterType="map">
     UPDATE tb_user_coupons SET `status` =#{useStatus} where id = #{userCouponsId}
+  </update>
+
+  <update id="updateCashAmount" parameterType="map">
+    UPDATE tb_user_coupons SET cash_amount =#{remainingAmount} where id = #{id}
   </update>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -73,7 +80,7 @@
   </select>
 
   <select id="findUserValidCoupons" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0
+    SELECT <include refid="Base_Column_List" /> from tb_user_coupons where oppen_id = #{oppenId} and `status` = 0 and use_way = #{useWay}
       <![CDATA[ and DATE_FORMAT(now(), '%Y%m%d') <= DATE_FORMAT(expire_date, '%Y%m%d') ]]>
   </select>
   <select id="getUserCouponsByOppenId" resultMap="BaseResultMap" parameterType="string">
@@ -101,7 +108,7 @@
   <select id="findUserExperienceCoupons" resultMap="BaseResultMap" parameterType="map">
     SELECT <include refid="Base_Column_List" /> from tb_user_coupons
     <where>
-      coupons_type = 6
+      use_way = 1
       <if test="couponsCode != null">
         and coupons_code = #{couponsCode}
       </if>
@@ -131,24 +138,26 @@
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbUserCoupons" keyProperty="id" useGeneratedKeys="true">
     insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,
-                                 coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id,use_way)
+                                 coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,
+                                 activity_id,use_way,expire_type,cash_amount)
     values (#{oppenId,jdbcType=VARCHAR}, #{couponsId,jdbcType=INTEGER},
       #{couponsName,jdbcType=VARCHAR}, #{receiveDate,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER},#{couponsPoster},#{expireDate},#{isReferrer},
-      #{couponsRatio,jdbcType=VARCHAR}, #{couponsType,jdbcType=INTEGER},#{useRules},#{useScope},#{couponsSource},#{couponsCode},#{sourceName},#{activityId},#{useWay}
+      #{couponsRatio,jdbcType=VARCHAR}, #{couponsType,jdbcType=INTEGER},#{useRules},#{useScope},#{couponsSource},#{couponsCode},#{sourceName},
+      #{activityId},#{useWay},#{expireType},#{cashAmount}
     )
   </insert>
 
   <insert id="insertBatch" parameterType="list">
       insert into tb_user_coupons (oppen_id, coupons_id, coupons_name, receive_date, create_time, `status`,coupons_poster,expire_date,is_referrer,
-                                   coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id,use_way)
+                                   coupons_ratio,coupons_type,use_rules,use_scope,coupons_source,coupons_code,source_name,activity_id,use_way,expire_type,cash_amount)
       values
     <foreach collection="list" item="item" index="index" separator=",">
       (#{item.oppenId,jdbcType=VARCHAR}, #{item.couponsId,jdbcType=INTEGER},
-          #{item.couponsName,jdbcType=VARCHAR}, #{item.receiveDate,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP},
-          #{item.status,jdbcType=INTEGER},#{item.couponsPoster},#{item.expireDate},#{item.isReferrer},
-          #{item.couponsRatio,jdbcType=VARCHAR}, #{item.couponsType,jdbcType=INTEGER},#{item.useRules},#{item.useScope},#{item.couponsSource},
-      #{item.couponsCode},#{item.sourceName},#{item.activityId},#{item.useWay}
+       #{item.couponsName,jdbcType=VARCHAR}, #{item.receiveDate,jdbcType=INTEGER}, #{item.createTime,jdbcType=TIMESTAMP},
+       #{item.status,jdbcType=INTEGER},#{item.couponsPoster},#{item.expireDate},#{item.isReferrer},
+       #{item.couponsRatio,jdbcType=VARCHAR}, #{item.couponsType,jdbcType=INTEGER},#{item.useRules},#{item.useScope},#{item.couponsSource},
+       #{item.couponsCode},#{item.sourceName},#{item.activityId},#{item.useWay},#{item.expireType},#{item.cashAmount}
       )
     </foreach>
   </insert>

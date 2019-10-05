@@ -100,6 +100,23 @@
     SELECT count(1) FROM tb_order WHERE oppen_id = #{oppenId} and `status` in (0,1,2,3)
   </select>
 
+  <select id="findSendOrderByOppenId" resultMap="BaseResultMap" parameterType="string">
+    SELECT <include refid="Base_Column_List" /> FROM tb_order where oppen_id = #{oppenId} and self_get = 1 and user_address_id is not null  limit 0,1
+  </select>
+
+  <select id="turnoverStatistical" resultType="java.util.Map" parameterType="map">
+    SELECT SUM(1)orderCount,
+           SUM(goods_total_count) AS goodsCount,
+           SUM(payment) AS payAmount,
+           SUM(order_payment) AS originalPriceAmount
+    FROM tb_order WHERE store_id = #{storeId} and  <![CDATA[ create_time >= #{startTime} and create_time <= #{endTime}]]> and  `status` in (1,2,3,8)
+  </select>
+
+  <select id="orderStatistical" resultType="java.util.Map" parameterType="list">
+    SELECT `status`,SUM(1) AS orderCount
+    FROM tb_order WHERE store_id = #{storeId} and  <![CDATA[ create_time >= #{startTime} and create_time <= #{endTime}]]> group by `status`
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from tb_order where order_id = #{orderId,jdbcType=VARCHAR}
   </delete>
@@ -114,7 +131,7 @@
 
     <insert id="insert" parameterType="com.ibay.tea.entity.TbOrder">
     insert into tb_order (order_id, payment, payment_type, 
-      post_fee, status, create_time, 
+      post_fee, `status`, create_time,
       update_time, payment_time, consign_time, 
       end_time, close_time, shipping_name, 
       shipping_code, user_id, buyer_message, 

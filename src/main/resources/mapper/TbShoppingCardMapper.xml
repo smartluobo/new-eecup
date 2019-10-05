@@ -15,8 +15,16 @@
     id, card_number, card_code, create_time, update_time, use_status, receive_time, amount
   </sql>
 
+  <update id="updateUseStatusById" parameterType="map">
+    UPDATE  tb_shopping_card SET use_status = #{useStatus} where id = #{id}
+  </update>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select <include refid="Base_Column_List" /> from tb_shopping_card where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByCouponsCode" resultMap="BaseResultMap" parameterType="string">
+    SELECT <include refid="Base_Column_List" /> from tb_shopping_card where card_code = #{cardCode}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

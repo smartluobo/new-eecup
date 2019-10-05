@@ -3,6 +3,7 @@ package com.ibay.tea.cms.controller.order;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.sendMsg.OrderMessageSendService;
 import com.ibay.tea.cache.StoreCache;
+import com.ibay.tea.cms.responseVo.OrderStatisticalVo;
 import com.ibay.tea.cms.service.order.CmsOrderService;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.PrintService;
@@ -12,10 +13,7 @@ import com.ibay.tea.entity.TbOrderItem;
 import com.ibay.tea.entity.TbStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -152,4 +150,42 @@ public class CmsOrderController {
         }
 
     }
+
+    @RequestMapping("/orderStatistical")
+    public ResultInfo orderStatistical(@RequestBody Map<String,Object> condition){
+
+        if (condition == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            OrderStatisticalVo resultVo = cmsOrderService.orderStatistical(condition);
+            resultInfo.setData(resultVo);
+            return resultInfo;
+        }catch (Exception e){
+            return ResultInfo.newExceptionResultInfo();
+        }
+
+    }
+
+    @RequestMapping("/turnoverStatistical")
+    public ResultInfo turnoverStatistical(@RequestBody Map<String,Object> condition){
+
+        if (condition == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            Map<String,Object> resultMap = cmsOrderService.turnoverStatistical(condition);
+            resultInfo.setData(resultMap);
+            return resultInfo;
+        }catch (Exception e){
+            return ResultInfo.newExceptionResultInfo();
+        }
+
+    }
+
+
 }

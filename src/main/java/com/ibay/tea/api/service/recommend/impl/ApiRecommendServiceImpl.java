@@ -5,7 +5,10 @@ import com.ibay.tea.api.service.recommend.ApiRecommendService;
 import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.cache.GoodsCache;
 import com.ibay.tea.cache.StoreCache;
+import com.ibay.tea.common.utils.DateUtil;
+import com.ibay.tea.dao.TbActivityMapper;
 import com.ibay.tea.dao.TbRecommendMapper;
+import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbItem;
 import com.ibay.tea.entity.TbStore;
 import com.ibay.tea.entity.TodayActivityBean;
@@ -27,7 +30,7 @@ public class ApiRecommendServiceImpl implements ApiRecommendService {
     private TbRecommendMapper tbRecommendMapper;
 
     @Resource
-    private ActivityCache activityCache;
+    private TbActivityMapper tbActivityMapper;
 
     @Resource
     private StoreCache storeCache;
@@ -56,9 +59,9 @@ public class ApiRecommendServiceImpl implements ApiRecommendService {
             }
         }
         Integer storeIdInt = Integer.valueOf(storeId);
-        TodayActivityBean todayActivityBean = activityCache.getTodayActivityBean(storeIdInt);
         TbStore store = storeCache.findStoreById(storeIdInt);
-        apiGoodsService.calculateGoodsPrice(goodsList,store.getExtraPrice(),todayActivityBean);
+        TbActivity fullActivity = tbActivityMapper.findFullActivity(DateUtil.getDateYyyyMMdd(), store.getId());
+        apiGoodsService.calculateGoodsPrice(goodsList,store.getExtraPrice(),fullActivity);
         apiGoodsService.checkGoodsInventory(goodsList,storeIdInt);
         return goodsList;
     }

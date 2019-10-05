@@ -13,21 +13,26 @@
     <result column="longitude" jdbcType="VARCHAR" property="longitude" />
     <result column="latitude" jdbcType="VARCHAR" property="latitude" />
     <result column="distribution_distance" jdbcType="INTEGER" property="distributionDistance" />
-
-
+    <result column="send_cost" jdbcType="INTEGER" property="sendCost" />
+    <result column="store_flag" jdbcType="INTEGER" property="storeFlag" />
   </resultMap>
+
   <sql id="Base_Column_List">
-    id, store_name, store_address, create_time, update_time,extra_price,order_printer_id,order_item_printer_id,longitude,latitude,distribution_distance
+    id, store_name, store_address, create_time, update_time,extra_price,order_printer_id,order_item_printer_id,longitude,latitude,distribution_distance,send_cost,store_flag
   </sql>
 
   <insert id="addStore" parameterType="com.ibay.tea.entity.TbStore">
-    INSERT INTO tb_store (store_name, store_address, create_time, extra_price,order_printer_id,order_item_printer_id,longitude,latitude,distribution_distance)
-    VALUES (#{storeName},#{storeAddress},#{createTime},#{extraPrice},#{orderPrinterId},#{orderItemPrinterId},#{longitude},#{latitude},#{distributionDistance})
+    INSERT INTO tb_store (store_name, store_address, create_time, extra_price,order_printer_id,order_item_printer_id,longitude,
+                          latitude,distribution_distance,send_cost,store_flag)
+    VALUES (#{storeName},#{storeAddress},#{createTime},#{extraPrice},#{orderPrinterId},#{orderItemPrinterId},#{longitude},
+            #{latitude},#{distributionDistance},#{sendCost},#{storeFlag})
   </insert>
 
   <insert id="saveUpdateStore" parameterType="com.ibay.tea.entity.TbStore">
-    INSERT INTO tb_store (id,store_name, store_address, create_time, extra_price,order_printer_id,order_item_printer_id,longitude,latitude,distribution_distance)
-    VALUES (#{id},#{storeName},#{storeAddress},#{createTime},#{extraPrice},#{orderPrinterId},#{orderItemPrinterId},#{longitude},#{latitude},#{distributionDistance})
+    INSERT INTO tb_store (id,store_name, store_address, create_time, extra_price,order_printer_id,order_item_printer_id,longitude,
+                          latitude,distribution_distance,send_cost,store_flag)
+    VALUES (#{id},#{storeName},#{storeAddress},#{createTime},#{extraPrice},#{orderPrinterId},#{orderItemPrinterId},#{longitude},
+                  #{latitude},#{distributionDistance},#{send_cost},#{storeFlag})
   </insert>
 
   <delete id="deleteStore" parameterType="int">
