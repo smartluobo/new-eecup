@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbSmsConfigMapper">
+  <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbSmsConfig">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="template_name" jdbcType="VARCHAR" property="templateName" />
+    <result column="sign_name" jdbcType="VARCHAR" property="signName" />
+    <result column="template_code" jdbcType="VARCHAR" property="templateCode" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="send_status" jdbcType="INTEGER" property="sendStatus" />
+    <result column="should_send_count" jdbcType="INTEGER" property="shouldSendCount" />
+    <result column="actual_send_count" jdbcType="INTEGER" property="actualSendCount" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, template_name, sign_name, template_code, store_id, create_time,send_status,should_send_count,actual_send_count
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from tb_sms_config where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM tb_sms_config
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tb_sms_config where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ibay.tea.entity.TbSmsConfig">
+    insert into tb_sms_config (template_name, sign_name,
+      template_code, store_id, create_time,send_status,should_send_count,actual_send_count
+      )
+    values (#{templateName}, #{signName},
+      #{templateCode}, #{storeId}, #{createTime},#{sendStatus},${shouldSendCount},#{actualSendCount}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.ibay.tea.entity.TbSmsConfig">
+    update tb_sms_config
+    set template_name = #{templateName,jdbcType=VARCHAR},
+      sign_name = #{signName,jdbcType=VARCHAR},
+      template_code = #{templateCode,jdbcType=VARCHAR},
+      store_id = #{storeId,jdbcType=INTEGER},
+      send_status= #{sendStatus},
+      should_send_count = #{shouldSendCount},
+      actual_send_count = #{actualSendCount}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>
