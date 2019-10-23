@@ -10,6 +10,8 @@ import com.ibay.tea.dao.TbOrderMapper;
 import com.ibay.tea.entity.TbOrder;
 import com.ibay.tea.entity.TbOrderItem;
 import com.ibay.tea.entity.TbStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -19,6 +21,8 @@ import java.util.Map;
 
 @Service
 public class CmsOrderServiceImpl implements CmsOrderService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmsOrderServiceImpl.class);
 
     @Resource
     private TbOrderItemMapper tbOrderItemMapper;
@@ -31,6 +35,7 @@ public class CmsOrderServiceImpl implements CmsOrderService {
 
     @Resource
     private PrintService printService;
+
     @Override
     public List<TbOrderItem> findOrderDetail(String orderId) {
         return tbOrderItemMapper.findOrderItemByOrderId(orderId);
@@ -56,27 +61,31 @@ public class CmsOrderServiceImpl implements CmsOrderService {
     @Override
     public OrderStatisticalVo orderStatistical(Map<String, Object> condition) {
 
-        List<Map<String, Integer>> maps = tbOrderMapper.orderStatistical(condition);
+        List<Map<String, Object>> maps = tbOrderMapper.orderStatistical(condition);
         if (CollectionUtils.isEmpty(maps)){
             return null;
         }
         OrderStatisticalVo orderStatisticalVo = new OrderStatisticalVo();
 
-        for (Map<String, Integer> map : maps) {
-            if (map.get("status") == 0){
-                orderStatisticalVo.setNoPayOrderCount(map.get("orderCount"));
-            } else if (map.get("status") == 1){
-                orderStatisticalVo.setPayOrderCount(map.get("orderCount"));
-            } else if (map.get("status") == 2){
-                orderStatisticalVo.setCompletedCount(map.get("orderCount"));
-            } else if (map.get("status") == 3){
-                orderStatisticalVo.setCloseOrderCount(map.get("orderCount"));
-            } else if (map.get("status") == 4){
-                orderStatisticalVo.setTimeOutOrderCount(map.get("orderCount"));
-            } else if (map.get("status") == 5){
-                orderStatisticalVo.setCancelOrderCount(map.get("orderCount"));
-            } else if (map.get("status") == 8){
-                orderStatisticalVo.setProxyOrderCount(map.get("orderCount"));
+        for (Map<String, Object> map : maps) {
+            String orderCount = map.get("orderCount").toString();
+            LOGGER.error("**************orderCount : {}************",orderCount);
+            Integer status = Integer.valueOf(map.get("status").toString());
+            LOGGER.error("**************orderCount : {}************",orderCount);
+            if (status == 0){
+                orderStatisticalVo.setNoPayOrderCount(Integer.valueOf(orderCount));
+            } else if (status == 1){
+                orderStatisticalVo.setPayOrderCount(Integer.valueOf(orderCount));
+            } else if (status == 2){
+                orderStatisticalVo.setCompletedCount(Integer.valueOf(orderCount));
+            } else if (status == 3){
+                orderStatisticalVo.setCloseOrderCount(Integer.valueOf(orderCount));
+            } else if (status == 4){
+                orderStatisticalVo.setTimeOutOrderCount(Integer.valueOf(orderCount));
+            } else if (status == 5){
+                orderStatisticalVo.setCancelOrderCount(Integer.valueOf(orderCount));
+            } else if (status == 8){
+                orderStatisticalVo.setProxyOrderCount(Integer.valueOf(orderCount));
             }
         }
         return orderStatisticalVo;

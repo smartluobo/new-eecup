@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -160,10 +161,17 @@ public class CmsOrderController {
 
         try {
             ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            long startTime = (long) condition.get("startTime");
+            long endTime = (long) condition.get("endTime");
+            Date start = new Date(startTime);
+            Date end = new Date(endTime);
+            condition.put("startTime",start);
+            condition.put("endTime",end);
             OrderStatisticalVo resultVo = cmsOrderService.orderStatistical(condition);
             resultInfo.setData(resultVo);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("orderStatistical happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
 
@@ -178,10 +186,17 @@ public class CmsOrderController {
 
         try {
             ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            long startTime = (long) condition.get("startTime");
+            long endTime = (long) condition.get("endTime");
+            Date start = new Date(startTime);
+            Date end = new Date(endTime);
+            condition.put("startTime",start);
+            condition.put("endTime",end);
             Map<String,Object> resultMap = cmsOrderService.turnoverStatistical(condition);
             resultInfo.setData(resultMap);
             return resultInfo;
         }catch (Exception e){
+            LOGGER.error("turnoverStatistical happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
 

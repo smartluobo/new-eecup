@@ -43,5 +43,5 @@ public interface TbOrderMapper {
 
     Map<String,Object> turnoverStatistical(Map<String, Object> condition);
 
-    List<Map<String,Integer>> orderStatistical(Map<String, Object> condition);
+    List<Map<String,Object>> orderStatistical(Map<String, Object> condition);
 }

@@ -1,7 +1,9 @@
 package com.ibay.tea.cms.service.recommend;
 
+import com.ibay.tea.dao.TbItemMapper;
 import com.ibay.tea.dao.TbRecommendMapper;
 import com.ibay.tea.dao.TbStoreMapper;
+import com.ibay.tea.entity.TbItem;
 import com.ibay.tea.entity.TbRecommend;
 import com.ibay.tea.entity.TbStore;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class CmsRecommendService {
 
     @Resource
     private TbStoreMapper tbStoreMapper;
+
+    @Resource
+    private TbItemMapper tbItemMapper;
 
     public List<TbRecommend> findRecommendByStoreId(int storeId) {
 
@@ -36,6 +41,8 @@ public class CmsRecommendService {
             }
             recommend.setStoreName(tbStore.getStoreName());
         }
+        TbItem tbItem = tbItemMapper.selectByPrimaryKey((long) recommend.getGoodsId());
+        recommend.setGoodsPoster(tbItem.getPosterImage());
         tbRecommendMapper.insert(recommend);
         return true;
 

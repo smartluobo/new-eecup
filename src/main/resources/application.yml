@@ -2,9 +2,9 @@ spring:
   application:
     name: ibay-tea
   datasource:
-    url: jdbc:mysql://47.106.172.126:3306/novel_tea
+    url: jdbc:mysql://localhost:3306/novel_tea
     username: root
-    password: Qaz*963.
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
   mvc:
