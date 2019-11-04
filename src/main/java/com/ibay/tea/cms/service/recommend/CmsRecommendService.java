@@ -42,6 +42,7 @@ public class CmsRecommendService {
             recommend.setStoreName(tbStore.getStoreName());
         }
         TbItem tbItem = tbItemMapper.selectByPrimaryKey((long) recommend.getGoodsId());
+        recommend.setGoodsName(tbItem.getTitle());
         recommend.setGoodsPoster(tbItem.getPosterImage());
         tbRecommendMapper.insert(recommend);
         return true;

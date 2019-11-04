@@ -42,13 +42,7 @@ public class ApiActivityController {
     private ApiUserService apiUserService;
 
     @Resource
-    private ActivityCache activityCache;
-
-    @Resource
     private TbActivityMapper tbActivityMapper;
-
-    @Resource
-    private TbUserCouponsMapper tbUserCouponsMapper;
 
     @Resource
     private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
