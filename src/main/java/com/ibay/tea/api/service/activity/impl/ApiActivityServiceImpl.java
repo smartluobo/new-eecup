@@ -116,6 +116,7 @@ public class ApiActivityServiceImpl implements ApiActivityService {
         tbUserCoupons.setCouponsType(tbCoupons.getCouponsType());
         tbUserCoupons.setUseRules(tbCoupons.getUseRules());
         tbUserCoupons.setUseScope(tbCoupons.getUseScope());
+        tbUserCoupons.setCashAmount(tbCoupons.getCashAmount());
         return tbUserCoupons;
     }
 

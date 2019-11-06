@@ -31,6 +31,8 @@ public class TbCoupons {
 
     private String storePoster;
 
+    private String cashAmount;
+
     public int getId() {
         return id;
     }
@@ -141,6 +143,14 @@ public class TbCoupons {
 
     public void setStorePoster(String storePoster) {
         this.storePoster = storePoster;
+    }
+
+    public String getCashAmount() {
+        return cashAmount;
+    }
+
+    public void setCashAmount(String cashAmount) {
+        this.cashAmount = cashAmount;
     }
 
     @Override
