@@ -79,11 +79,13 @@ public class ApiActivityServiceImpl implements ApiActivityService {
                     break;
                 }
             }
-            for (TbActivityCouponsRecord tbActivityCouponsRecord : tbActivityCouponsRecordList) {
-                if (tbActivityCouponsRecord.getCouponsCount() > 0){
-                    tbActivityCouponsRecord.setCouponsCount(tbActivityCouponsRecord.getCouponsCount()-1);
-                    record = tbActivityCouponsRecord;
-                    break;
+            if (record == null){
+                for (TbActivityCouponsRecord tbActivityCouponsRecord : tbActivityCouponsRecordList) {
+                    if (tbActivityCouponsRecord.getCouponsCount() > 0){
+                        tbActivityCouponsRecord.setCouponsCount(tbActivityCouponsRecord.getCouponsCount()-1);
+                        record = tbActivityCouponsRecord;
+                        break;
+                    }
                 }
             }
         }
