@@ -79,6 +79,13 @@ public class ApiActivityServiceImpl implements ApiActivityService {
                     break;
                 }
             }
+            for (TbActivityCouponsRecord tbActivityCouponsRecord : tbActivityCouponsRecordList) {
+                if (tbActivityCouponsRecord.getCouponsCount() > 0){
+                    tbActivityCouponsRecord.setCouponsCount(tbActivityCouponsRecord.getCouponsCount()-1);
+                    record = tbActivityCouponsRecord;
+                    break;
+                }
+            }
         }
         if (record != null){
             //表示已经抽取到优惠券
@@ -117,6 +124,13 @@ public class ApiActivityServiceImpl implements ApiActivityService {
         tbUserCoupons.setUseRules(tbCoupons.getUseRules());
         tbUserCoupons.setUseScope(tbCoupons.getUseScope());
         tbUserCoupons.setCashAmount(tbCoupons.getCashAmount());
+        if (tbCoupons.getExpireType() == 1){
+            tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_CURRENT_DAY);
+            tbUserCoupons.setExpireDate(new Date());
+        }else if (tbCoupons.getExpireType() == 0){
+            Date expireDate = DateUtil.getExpireDate(tbUserCoupons.getReceiveDate(),ApiConstant.USER_COUPONS_EXPIRE_LIMIT);
+            tbUserCoupons.setExpireDate(expireDate);
+        }
         return tbUserCoupons;
     }
 

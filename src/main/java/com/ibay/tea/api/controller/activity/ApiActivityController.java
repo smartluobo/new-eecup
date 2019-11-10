@@ -188,14 +188,10 @@ public class ApiActivityController {
             }
             //将用户的优惠券存入数据库
             TbUserCoupons tbUserCoupons = apiActivityService.buildUserCoupons(oppenId,record);
-            //设置优惠券过期时间
-            Date expireDate = DateUtil.getExpireDate(tbUserCoupons.getReceiveDate(),ApiConstant.USER_COUPONS_EXPIRE_LIMIT);
-            tbUserCoupons.setExpireDate(expireDate);
             tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_ACTIVITY);
             tbUserCoupons.setSourceName("幸运抽奖");
             tbUserCoupons.setActivityId(Integer.valueOf(activityId));
             tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_APPLET);
-            tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_DEFAULT);
             apiActivityService.saveUserCouponsToDb(tbUserCoupons);
             resultMap.put("type","1");
             resultMap.put("poster",tbUserCoupons.getCouponsPoster());

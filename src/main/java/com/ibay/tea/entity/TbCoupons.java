@@ -33,6 +33,9 @@ public class TbCoupons {
 
     private String cashAmount;
 
+    //过期类型 0默认 1当日有效 2 永久有效
+    private int expireType;
+
     public int getId() {
         return id;
     }
@@ -151,6 +154,14 @@ public class TbCoupons {
 
     public void setCashAmount(String cashAmount) {
         this.cashAmount = cashAmount;
+    }
+
+    public int getExpireType() {
+        return expireType;
+    }
+
+    public void setExpireType(int expireType) {
+        this.expireType = expireType;
     }
 
     @Override

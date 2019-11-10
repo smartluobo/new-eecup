@@ -123,17 +123,10 @@ public class PrintServiceImpl implements PrintService {
                 "订单编号："+ tbOrder.getOrderId()+"\\r\n" +
                 "*************商品***************\\r<FH><FW> \n" +
                 productList+
-  /*              "同步菜      x1    10.00\\r\n" +
-                "Dan         x1    7.80\\r\n" +
-                "</FW></FH>\n" +*/
                 "************************<FH>\n" +
                 "订单金额：￥"+tbOrder.getOrderPayment()+"\\r\n" +
                 "实付金额：￥"+tbOrder.getPayment()+"\\r\n" +
                  sendStr;
-
-               /* "配送地址：棕榈南岸 4栋3单元404号\\r\n" +
-                "牟（先生）：186-9830-9092\\r\n" +*/
-
         if (StringUtils.isNotEmpty(tbOrder.getBuyerMessage())){
             printContent +=  "\\r\n订单备注："+tbOrder.getBuyerMessage()+"\\r";
         }
@@ -178,8 +171,11 @@ public class PrintServiceImpl implements PrintService {
             if (tbOrder.getBuyerMessage() != null){
                 printContent += "订单备注: "+tbOrder.getBuyerMessage()+"<BR>";
             }
+        }else{
+            if (StringUtils.isNotEmpty(tbOrder.getBuyerMessage())){
+                printContent += "备注：                 "+tbOrder.getBuyerMessage()+"<BR>";
+            }
         }
-
         return printContent;
     }
 
