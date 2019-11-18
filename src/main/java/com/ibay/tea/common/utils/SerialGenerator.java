@@ -13,6 +13,8 @@ public class SerialGenerator {
 
     private static final char[] CHARS = {'a','b','c','d','e','f','g','h','i','j','k','m','n','p','q','r','s','t','u','v','w','x','y','z','2','3','4','5','6','7','8','9'};
 
+    private static final char[] NUMS = {'1','2','3','4','5','6','7','8','9','0'};
+
     private static Random random = new Random();
 
     public static String getOrderSerial(TbStore store){
@@ -63,6 +65,18 @@ public class SerialGenerator {
         char[] codeChars = new char[length];
         for (int i = 0; i < length; i++) {
             codeChars[i] = CHARS[random.nextInt(range)];
+        }
+        return new String(codeChars);
+    }
+
+    public static String getCashCouponsCode(int length) {
+        int range = NUMS.length;
+        if (length <=0){
+            return null;
+        }
+        char[] codeChars = new char[length];
+        for (int i = 0; i < length; i++) {
+            codeChars[i] = NUMS[random.nextInt(range)];
         }
         return new String(codeChars);
     }

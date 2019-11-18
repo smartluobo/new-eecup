@@ -20,5 +20,5 @@ public interface CmsCouponsService {
 
     void updateExperience(int userCouponsId, int useStatus);
 
-    boolean generateShoppingCard(int count, int amount);
+    boolean generateShoppingCard(int count, int amount,int type);
 }

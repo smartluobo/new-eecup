@@ -10,9 +10,10 @@
     <result column="use_status" jdbcType="INTEGER" property="useStatus" />
     <result column="receive_time" jdbcType="TIMESTAMP" property="receiveTime" />
     <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, card_number, card_code, create_time, update_time, use_status, receive_time, amount
+    id, card_number, card_code, create_time, update_time, use_status, receive_time, amount,`type`
   </sql>
 
   <update id="updateUseStatusById" parameterType="map">
@@ -34,9 +35,9 @@
   <insert id="insert" parameterType="com.ibay.tea.entity.TbShoppingCard">
     insert into tb_shopping_card (card_number, card_code,
       create_time, update_time, use_status, 
-      receive_time, amount)
+      receive_time, amount,`type`)
     values (#{cardNumber,jdbcType=VARCHAR}, #{cardCode,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{useStatus,jdbcType=INTEGER}, 
-      #{receiveTime,jdbcType=TIMESTAMP}, #{amount,jdbcType=INTEGER})
+      #{receiveTime,jdbcType=TIMESTAMP}, #{amount,jdbcType=INTEGER},#{type,jdbcType=INTEGER})
   </insert>
 </mapper>

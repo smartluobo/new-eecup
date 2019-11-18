@@ -70,7 +70,7 @@ public class CmsCouponsServiceImpl implements CmsCouponsService {
     }
 
     @Override
-    public boolean generateShoppingCard(int count, int amount) {
+    public boolean generateShoppingCard(int count, int amount,int type) {
         int dbCount = 0;
         TbShoppingCard tbShoppingCard = new TbShoppingCard();
         tbShoppingCard.setAmount(amount);
@@ -78,8 +78,16 @@ public class CmsCouponsServiceImpl implements CmsCouponsService {
         tbShoppingCard.setUpdateTime(new Date());
         while (dbCount < 10000 && count > 0){
             dbCount++;
-            String shoppingCardCode = SerialGenerator.getShoppingCardCode(10);
-            tbShoppingCard.setCardCode(shoppingCardCode);
+            if (type == 0){
+                String shoppingCardCode = SerialGenerator.getShoppingCardCode(10);
+                tbShoppingCard.setCardCode(shoppingCardCode);
+            }
+
+            if (type == 1){
+                String shoppingCardCode = SerialGenerator.getCashCouponsCode(10);
+                tbShoppingCard.setCardCode(shoppingCardCode);
+                tbShoppingCard.setType(1);
+            }
             try {
                 tbShoppingCardMapper.insert(tbShoppingCard);
                 count--;
@@ -87,6 +95,7 @@ public class CmsCouponsServiceImpl implements CmsCouponsService {
                 LOGGER.error("tbShoppingCardMapper insert happen exception",e);
             }
         }
+        LOGGER.info("generateShoppingCard save success dbCount : {}",dbCount);
         return true;
     }
 }
