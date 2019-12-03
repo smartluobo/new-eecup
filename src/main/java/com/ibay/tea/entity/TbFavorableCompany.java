@@ -13,6 +13,12 @@ public class TbFavorableCompany {
 
     private String companyRatio;
 
+    private int couponsType;
+
+    private int chargeAmount;
+
+    private int actualAmount;
+
     public Integer getId() {
         return id;
     }
@@ -51,5 +57,29 @@ public class TbFavorableCompany {
 
     public void setCompanyRatio(String companyRatio) {
         this.companyRatio = companyRatio == null ? null : companyRatio.trim();
+    }
+
+    public int getCouponsType() {
+        return couponsType;
+    }
+
+    public void setCouponsType(int couponsType) {
+        this.couponsType = couponsType;
+    }
+
+    public int getChargeAmount() {
+        return chargeAmount;
+    }
+
+    public void setChargeAmount(int chargeAmount) {
+        this.chargeAmount = chargeAmount;
+    }
+
+    public int getActualAmount() {
+        return actualAmount;
+    }
+
+    public void setActualAmount(int actualAmount) {
+        this.actualAmount = actualAmount;
     }
 }

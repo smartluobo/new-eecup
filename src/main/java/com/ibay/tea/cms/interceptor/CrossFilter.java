@@ -28,6 +28,7 @@ public class CrossFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse)response;
 
         String origin = req.getHeader("Origin");
+        LOGGER.error("**************************CrossFilter doFilter origin: {} ***************",origin);
         if (origin == null ){
             resp.setHeader("Access-Control-Allow-Origin", "http://47.106.172.126:8668");
         }
@@ -47,33 +48,13 @@ public class CrossFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-//    @Override
-//    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-//        LOGGER.error("filter ------------------------------");
-//        HttpServletRequest request = (HttpServletRequest) servletRequest;
-//        HttpServletResponse response = (HttpServletResponse) servletResponse;
-//
-//        if (request.getRequestURI().contains("/login")){
-//            setHeaders(response);
-//
-//            filterChain.doFilter(request, response);
-//        }
-//        Object user = request.getSession().getAttribute("user");
-//        if (user == null){
-//            response.getWriter().print(JSONObject.toJSON(ResultInfo.newNoLoginResultInfo()));
-//            return;
-//        }else {
-//            setHeaders(response);
-//            filterChain.doFilter(request, response);
-//        }
-//    }
-
     @Override
     public void destroy() {
 
     }
 
     private void setHeaders( HttpServletResponse response){
+       LOGGER.error("CrossFilter setHeaders is called..............");
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACES");
         response.setHeader("Access-Control-Max-Age", "3600");

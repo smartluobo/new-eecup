@@ -7,10 +7,13 @@
     <result column="company_address" jdbcType="VARCHAR" property="companyAddress" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="company_ratio" jdbcType="VARCHAR" property="companyRatio" />
+    <result column="coupons_type" jdbcType="INTEGER" property="couponsType" />
+    <result column="charge_amount" jdbcType="INTEGER" property="chargeAmount" />
+    <result column="actual_amount" jdbcType="INTEGER" property="actualAmount" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, company_name, company_address, create_time, company_ratio
+    id, company_name, company_address, create_time, company_ratio,coupons_type,charge_amount,actual_amount
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">

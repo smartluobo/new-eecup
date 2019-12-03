@@ -121,7 +121,7 @@ public class ApiActivityController {
                 LOGGER.info("getActivityInfo activity no start");
                 activityInfo.setStatus(activityStatus);
                 activityInfo.setShowImageUrl(activityInfo.getNoStartPoster());
-                result.put("type",1);
+                result.put("type",5);
                 result.put("info",activityInfo);
                 resultInfo.setData(result);
                 return resultInfo;

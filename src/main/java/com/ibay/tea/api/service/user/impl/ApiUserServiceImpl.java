@@ -1,5 +1,6 @@
 package com.ibay.tea.api.service.user.impl;
 
+import com.ibay.tea.api.service.activity.ApiActivityService;
 import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.SendSmsService;
@@ -40,6 +41,9 @@ public class ApiUserServiceImpl implements ApiUserService{
 
     @Resource
     private TbCouponsMapper tbCouponsMapper;
+
+    @Resource
+    private ApiActivityService apiActivityService;
 
     @Override
     public TbApiUser findApiUserByOppenId(String oppenId) {
@@ -103,10 +107,44 @@ public class ApiUserServiceImpl implements ApiUserService{
         if (tbFavorableCompany == null){
             return false;
         }
-        tbApiUser.setCompanyId(companyId);
-        tbApiUser.setCompanyName(tbFavorableCompany.getCompanyName());
-        tbApiUserMapper.bindCompany(tbApiUser);
+        if (tbFavorableCompany.getCouponsType() == 1){
+            return userCharge(tbApiUser,tbFavorableCompany);
+        }else{
+            tbApiUser.setCompanyId(companyId);
+            tbApiUser.setCompanyName(tbFavorableCompany.getCompanyName());
+            tbApiUserMapper.bindCompany(tbApiUser);
+            return true;
+        }
+
+    }
+
+    private boolean userCharge(TbApiUser tbApiUser,TbFavorableCompany tbFavorableCompany) {
+        if (tbFavorableCompany == null || tbFavorableCompany.getCouponsType() == 0){
+            return false;
+        }
+        TbUserCoupons tbUserCoupons = new TbUserCoupons();
+        String yyyyMMdd = DateUtil.getDateYyyyMMdd();
+        tbUserCoupons.setOppenId(tbApiUser.getOppenId());
+        tbUserCoupons.setCouponsId(tbFavorableCompany.getId());
+        tbUserCoupons.setCouponsName("现金券");
+        tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
+        tbUserCoupons.setCreateTime(new Date());
+        tbUserCoupons.setStatus(ApiConstant.USER_COUPONS_STATUS_NO_USE);
+        tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),360));
+        tbUserCoupons.setIsReferrer(0);
+        tbUserCoupons.setCouponsRatio("0.0");
+        tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_CASH);
+        tbUserCoupons.setUseRules("不可与其他优惠叠加使用");
+        tbUserCoupons.setUseScope("任意商品");
+        tbUserCoupons.setCouponsSource(ApiConstant.COUPONS_SOURCE_SHOPPING_CARD_RECHARGE);
+        tbUserCoupons.setCouponsCode("000000");
+        tbUserCoupons.setSourceName("现金充值充值");
+        tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_APPLET);
+        tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_DEFAULT);
+        tbUserCoupons.setCashAmount(String.valueOf(tbFavorableCompany.getActualAmount()));
+        apiActivityService.saveUserCouponsToDb(tbUserCoupons);
         return true;
+
     }
 
     @Override
