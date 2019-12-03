@@ -55,7 +55,7 @@ public class TeaApplicationTests {
 
 	@Test
 	public void testShoppingCard() throws Exception{
-		cmsCouponsService.generateShoppingCard(1000,30);
+		cmsCouponsService.generateShoppingCard(1000,30,1);
 	}
 
 

@@ -19,6 +19,8 @@ public class TbShoppingCard {
 
     private int amount;
 
+    private int type;
+
     public int getId() {
         return id;
     }
@@ -81,6 +83,14 @@ public class TbShoppingCard {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override
