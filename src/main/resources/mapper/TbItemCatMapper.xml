@@ -36,7 +36,11 @@
       SELECT * from tb_item_cat WHERE `status` = 1 ORDER BY sort_order DESC
   </select>
 
-  <delete id="deleteCategoryById" parameterType="int">
+  <select id="findByStoreId" resultMap="BaseResultMap" parameterType="string">
+      select * from tb_item_cat where `status` = 1 and ( store_id = -1 or store_id = #{storeId}) ORDER BY sort_order DESC
+  </select>
+
+    <delete id="deleteCategoryById" parameterType="int">
     DELETE FROM tb_item_cat WHERE id = #{id}
   </delete>
 

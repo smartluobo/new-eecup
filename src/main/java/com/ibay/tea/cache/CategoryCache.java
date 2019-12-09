@@ -49,7 +49,7 @@ public class CategoryCache implements InitializingBean {
         initCategoryCache();
     }
 
-    public List<TbItemCat> findAll(){
+    public List<TbItemCat> findAll(String storeId){
         return categories;
     }
 

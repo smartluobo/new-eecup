@@ -17,4 +17,6 @@ public interface TbItemCatMapper {
     void deleteCategoryById(long id);
 
     void saveUpdateCategory(TbItemCat tbItemCat);
+
+    List<TbItemCat> findByStoreId(String storeId);
 }

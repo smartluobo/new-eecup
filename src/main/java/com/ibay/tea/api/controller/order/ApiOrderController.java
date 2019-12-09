@@ -20,6 +20,7 @@ import com.ibay.tea.entity.TbStore;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -88,12 +89,10 @@ public class ApiOrderController {
                 return ResultInfo.newParameterErrorResultInfo();
             }
             Map<String, Object> payMap = apiOrderService.createOrderByCart(cartOrderParamVo);
-            if (payMap.size() == 0){
-                return resultInfo;
-            }else {
-                resultInfo.setData(payMap);
-                return resultInfo;
-            }
+
+            resultInfo.setData(payMap);
+            return resultInfo;
+
         }catch (Exception e){
             LOGGER.error("createOrderByCart happen exception oppenId : {}, cartItemIds : {}, userCouponsId: {} ,addressId :{} selfGet : {}",
                     oppenId,cartItemIds,userCouponsId,addressId,selfGet,e);

@@ -19,4 +19,9 @@ public class ApiCategoryServiceImpl implements ApiCategoryService {
     public List<TbItemCat> findAll() {
         return tbItemCatMapper.findAll();
     }
+
+    @Override
+    public List<TbItemCat> findByStoreId(String storeId) {
+        return tbItemCatMapper.findByStoreId(storeId);
+    }
 }

@@ -28,7 +28,6 @@ public class CrossFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse)response;
 
         String origin = req.getHeader("Origin");
-        LOGGER.error("**************************CrossFilter doFilter origin: {} ***************",origin);
         if (origin == null ){
             resp.setHeader("Access-Control-Allow-Origin", "http://47.106.172.126:8668");
         }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ApiCategoryService {
     List<TbItemCat> findAll();
+
+    List<TbItemCat> findByStoreId(String storeId);
 }
