@@ -28,21 +28,21 @@ public class ApiCategoryController {
     private ApiCategoryService apiCategoryService;
 
     @RequestMapping("list")
-    public ResultInfo list(HttpServletRequest request){
+    public ResultInfo list(HttpServletRequest request) {
         try {
             String storeId = request.getParameter("storeId");
             LOGGER.info("ApiCategoryService list param : {}", storeId);
             List<TbItemCat> catList;
-            if (StringUtils.isNotEmpty(storeId)){
+            if (StringUtils.isNotEmpty(storeId)) {
                 catList = apiCategoryService.findByStoreId(storeId);
-            }else{
+            } else {
                 catList = apiCategoryService.findByStoreId("-1");
             }
             ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             resultInfo.setData(catList);
             return resultInfo;
-        }catch (Exception e){
-            LOGGER.error("ApiCategoryController list happen exception",e);
+        } catch (Exception e) {
+            LOGGER.error("ApiCategoryController list happen exception", e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

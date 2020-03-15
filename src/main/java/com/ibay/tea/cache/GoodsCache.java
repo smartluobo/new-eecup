@@ -9,6 +9,7 @@ import com.ibay.tea.entity.TbSkuType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class GoodsCache implements InitializingBean {
     }
 
     private void setGoodsSkuShowInfo(String skuTypeIds,String defaultSkuDetailIds, TbItem tbItem) {
-        if (StringUtils.isEmpty(skuTypeIds)){
+        if (StringUtils.isBlank(skuTypeIds) || StringUtils.isBlank(defaultSkuDetailIds)){
             return;
         }
         List<TbSkuType> skuTypes = new ArrayList<>();

@@ -122,12 +122,12 @@ public class ApiUserController {
 
                 tbUserCoupons.setOppenId(oppenId);
                 tbUserCoupons.setCouponsId(0);
-                tbUserCoupons.setCouponsName("五折优惠券");
+                tbUserCoupons.setCouponsName("八折优惠券");
                 tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
                 tbUserCoupons.setCreateTime(new Date());
                 tbUserCoupons.setStatus(ApiConstant.USER_COUPONS_STATUS_NO_USE);
                 tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),30));
-                tbUserCoupons.setCouponsRatio("0.5");
+                tbUserCoupons.setCouponsRatio("0.8");
                 tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_RATIO);
                 tbUserCoupons.setUseRules("全场折扣下不能使用优惠券哦");
                 tbUserCoupons.setUseScope("任意商品");
@@ -138,8 +138,8 @@ public class ApiUserController {
 
                 userCouponsList.add(tbUserCoupons);
                 TbUserCoupons copy1 = tbUserCoupons.copy();
-                copy1.setCouponsName("68折优惠券");
-                copy1.setCouponsRatio("0.68");
+                copy1.setCouponsName("八折优惠券");
+                copy1.setCouponsRatio("0.8");
                 userCouponsList.add(copy1);
 
                 TbUserCoupons copy2 = tbUserCoupons.copy();
@@ -148,8 +148,8 @@ public class ApiUserController {
                 userCouponsList.add(copy2);
 
                 TbUserCoupons copy3 = tbUserCoupons.copy();
-                copy3.setCouponsName("85折优惠券");
-                copy3.setCouponsRatio("0.85");
+                copy3.setCouponsName("八折优惠券");
+                copy3.setCouponsRatio("0.8");
                 userCouponsList.add(copy3);
 
                 tbUserCouponsMapper.insertBatch(userCouponsList);
