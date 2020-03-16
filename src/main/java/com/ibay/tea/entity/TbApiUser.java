@@ -28,6 +28,9 @@ public class TbApiUser {
     //是否领取过新人礼包 0 未领取  1 已领取
     private int giftReceiveStatus;
 
+    //会员折扣
+    private String membersDiscount;
+
     public String getUserHeadImage() {
         return userHeadImage;
     }
@@ -132,6 +135,14 @@ public class TbApiUser {
 
     public void setGiftReceiveStatus(int giftReceiveStatus) {
         this.giftReceiveStatus = giftReceiveStatus;
+    }
+
+    public String getMembersDiscount() {
+        return membersDiscount;
+    }
+
+    public void setMembersDiscount(String membersDiscount) {
+        this.membersDiscount = membersDiscount;
     }
 
     @Override

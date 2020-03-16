@@ -4,9 +4,12 @@ import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.DateUtil;
+import com.ibay.tea.common.utils.PriceCalculateUtil;
 import com.ibay.tea.dao.TbApiUserMapper;
+import com.ibay.tea.dao.TbFavorableCompanyMapper;
 import com.ibay.tea.dao.TbUserCouponsMapper;
 import com.ibay.tea.entity.TbApiUser;
+import com.ibay.tea.entity.TbFavorableCompany;
 import com.ibay.tea.entity.TbUserCoupons;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,6 +38,9 @@ public class ApiUserController {
 
     @Resource
     private TbUserCouponsMapper tbUserCouponsMapper;
+
+    @Resource
+    private TbFavorableCompanyMapper tbFavorableCompanyMapper;
 
 
     @RequestMapping("/reportApiUserInfo")
@@ -88,6 +94,12 @@ public class ApiUserController {
         try {
             ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
             TbApiUser apiUser = apiUserService.getUserInfo(oppenId);
+            if (apiUser != null && apiUser.getCompanyId() >0){
+                TbFavorableCompany tbFavorableCompany = tbFavorableCompanyMapper.selectByPrimaryKey(apiUser.getCompanyId());
+                String companyRatio = tbFavorableCompany.getCompanyRatio();
+                double multiply = PriceCalculateUtil.multiply(Double.parseDouble(companyRatio), 10);
+                apiUser.setMembersDiscount(String.valueOf(multiply));
+            }
             resultInfo.setData(apiUser);
             return resultInfo;
         }catch (Exception e){

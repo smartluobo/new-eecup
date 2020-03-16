@@ -4,19 +4,14 @@ import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.category.ApiCategoryService;
 import com.ibay.tea.entity.TbItemCat;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/category")
