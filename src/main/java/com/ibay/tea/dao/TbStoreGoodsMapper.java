@@ -1,5 +1,6 @@
 package com.ibay.tea.dao;
 
+import com.ibay.tea.entity.TbItem;
 import com.ibay.tea.entity.TbStoreGoods;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -31,4 +32,5 @@ public interface TbStoreGoodsMapper {
 
     void clearStoreGoods(int storeId);
 
+    List<Long> findGoodsIdByStoreId(Long storeId);
 }

@@ -5,20 +5,15 @@ import com.ibay.tea.api.service.goods.ApiGoodsService;
 import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.cache.StoreCache;
 import com.ibay.tea.common.utils.DateUtil;
-import com.ibay.tea.dao.TbActivityMapper;
-import com.ibay.tea.entity.TbActivity;
-import com.ibay.tea.entity.TbItem;
-import com.ibay.tea.entity.TbStore;
-import com.ibay.tea.entity.TodayActivityBean;
+import com.ibay.tea.dao.*;
+import com.ibay.tea.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/goods")
@@ -31,15 +26,24 @@ public class ApiGoodsController {
     private StoreCache storeCache;
 
     @Resource
-    private ActivityCache activityCache;
+    private TbActivityMapper tbActivityMapper;
 
     @Resource
-    private TbActivityMapper tbActivityMapper;
+    private TbStoreGoodsMapper tbStoreGoodsMapper;
+
+    @Resource
+    private TbItemMapper tbItemMapper;
+    @Resource
+    private TbItemCatMapper tbItemCatMapper;
+
+    @Resource
+    private TbStoreMapper tbStoreMapper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiGoodsController.class);
 
     @RequestMapping("/listByCategoryId")
     public ResultInfo getGoodsListByCategoryId(@RequestBody Map<String,Long> params){
+        LOGGER.info("listByCategoryId params {}",params);
         if (CollectionUtils.isEmpty(params)){
             return ResultInfo.newEmptyParamsResultInfo();
         }
@@ -102,4 +106,42 @@ public class ApiGoodsController {
             return ResultInfo.newExceptionResultInfo();
         }
     }
+
+    @RequestMapping("/initStoreGoods/{storeId}")
+    public ResultInfo initStoreGoods(@PathVariable("storeId") Long storeId ){
+        LOGGER.info("initStoreGoods storeId : {}",storeId);
+        if (storeId == null || storeId == 0){
+            return  ResultInfo.newEmptyParamsResultInfo();
+        }
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            TbStore store = tbStoreMapper.selectByPrimaryKey(storeId.intValue());
+            tbStoreGoodsMapper.deleteByStoreId(storeId.intValue());
+            List<Long> storeCatIds = tbItemCatMapper.findCatIdByStoreId(storeId);
+            LOGGER.info("initStoreGoods storeCatIds : {}",storeCatIds);
+            List<TbItem> goodsList = tbItemMapper.findGoodsListByCatIds(storeCatIds);
+            LOGGER.info("initStoreGoods goodsList size : {}",goodsList.size());
+            List<TbStoreGoods> storeGoodsList = new ArrayList<>();
+            Date currentDate = new Date();
+            for (TbItem tbItem : goodsList) {
+                TbStoreGoods tbStoreGoods = new TbStoreGoods();
+                tbStoreGoods.setGoodsId(tbItem.getId().intValue());
+                tbStoreGoods.setGoodsName(tbItem.getTitle());
+                tbStoreGoods.setCreateTime(currentDate);
+                tbStoreGoods.setUpdateTime(currentDate);
+                tbStoreGoods.setStoreId(storeId.intValue());
+                tbStoreGoods.setStoreName(store.getStoreName());
+                tbStoreGoods.setGoodsInventory(10);
+                storeGoodsList.add(tbStoreGoods);
+            }
+            tbStoreGoodsMapper.insertBatch(storeGoodsList);
+
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("getGoodsDetailById happen exception ",e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+    }
+
+
 }

@@ -143,7 +143,7 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
         tbUserCoupons.setReceiveDate(Integer.valueOf(yyyyMMdd));
         tbUserCoupons.setCreateTime(new Date());
         tbUserCoupons.setStatus(ApiConstant.USER_COUPONS_STATUS_NO_USE);
-        tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),180));
+
         tbUserCoupons.setIsReferrer(0);
         tbUserCoupons.setCouponsRatio("0.0");
         tbUserCoupons.setCouponsType(ApiConstant.USER_COUPONS_TYPE_CASH);
@@ -154,6 +154,11 @@ public class ApiCouponsServiceImpl implements ApiCouponsService {
         tbUserCoupons.setSourceName("购物卡充值");
         tbUserCoupons.setUseWay(ApiConstant.COUPONS_USE_WAY_APPLET);
         tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_DEFAULT);
+        tbUserCoupons.setExpireDate(DateUtil.getExpireDate(Integer.valueOf(yyyyMMdd),180));
+        if (tbShoppingCard.getType() == 1){//充值卡为现金券充值后仅当天可以使用
+            tbUserCoupons.setExpireType(ApiConstant.COUPONS_EXPIRE_TYPE_CURRENT_DAY);
+            tbUserCoupons.setExpireDate(new Date());
+        }
         tbUserCoupons.setCashAmount(String.valueOf(tbShoppingCard.getAmount()));
         apiActivityService.saveUserCouponsToDb(tbUserCoupons);
         tbShoppingCardMapper.updateUseStatusById(tbShoppingCard.getId(),1);

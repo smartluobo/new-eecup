@@ -49,7 +49,7 @@
     </select>
 
   <select id="findAll" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List" /> from tb_item WHERE `status` = 1
+    SELECT <include refid="Base_Column_List" /> from tb_item WHERE `status` = 1 order by  price desc
   </select>
   <select id="findGoodsListByPage" resultMap="BaseResultMap" parameterType="map">
       SELECT <include refid="Base_Column_List" /> FROM tb_item
@@ -73,6 +73,12 @@
         and cid = #{cid}
       </if>
     </where>
+  </select>
+  <select id="findGoodsListByCatIds" resultMap="BaseResultMap">
+    select * from tb_item where cid in
+    <foreach collection="list" item="cid" index="index" open="(" close=")" separator=",">
+      #{cid}
+    </foreach>
   </select>
 
   <delete id="deleteGoods" parameterType="java.lang.Long">

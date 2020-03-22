@@ -19,4 +19,6 @@ public interface TbItemCatMapper {
     void saveUpdateCategory(TbItemCat tbItemCat);
 
     List<TbItemCat> findByStoreId(String storeId);
+
+    List<Long> findCatIdByStoreId(Long storeId);
 }

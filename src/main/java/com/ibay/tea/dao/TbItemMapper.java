@@ -25,4 +25,6 @@ public interface TbItemMapper {
     void addGoods(TbItem tbItem);
 
     void saveUpdateGoods(TbItem tbItem);
+
+    List<TbItem> findGoodsListByCatIds(List<Long> storeCatIds);
 }

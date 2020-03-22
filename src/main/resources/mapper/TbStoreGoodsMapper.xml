@@ -39,6 +39,10 @@
     SELECT goods_inventory FROM tb_store_goods WHERE goods_id = #{goodsId} and store_id = #{storeId}
   </select>
 
+  <select id="findGoodsIdByStoreId" resultType="java.lang.Long">
+    select goods_id from tb_store_goods where store_id = #{storeId}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_store_goods where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -49,10 +53,10 @@
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbStoreGoods">
     insert into tb_store_goods (goods_id, goods_name,
-      goods_inventory, create_time, update_time, 
+      goods_inventory, create_time, update_time,
       store_id, store_name)
     values (#{goodsId,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR},
-      #{goodsInventory,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{goodsInventory,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{storeId,jdbcType=INTEGER}, #{storeName,jdbcType=VARCHAR})
   </insert>
 
