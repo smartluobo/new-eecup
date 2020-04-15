@@ -65,14 +65,14 @@
   </select>
   <select id="countGoodsByCondition" resultType="java.lang.Long" parameterType="map">
     SELECT count(1) FROM tb_item
-    <where>
-      <if test="title != null">
-        title like #{title}
-      </if>
-      <if test="cid != null">
-        and cid = #{cid}
-      </if>
-    </where>
+      <where>
+          <if test="title != null">
+              title like #{title}
+          </if>
+          <if test="cid != null">
+              and cid = #{cid}
+          </if>
+      </where>
   </select>
   <select id="findGoodsListByCatIds" resultMap="BaseResultMap">
     select * from tb_item where cid in

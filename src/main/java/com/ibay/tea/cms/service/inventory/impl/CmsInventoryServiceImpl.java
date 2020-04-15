@@ -1,19 +1,21 @@
 package com.ibay.tea.cms.service.inventory.impl;
 
+import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.inventory.CmsInventoryService;
+import com.ibay.tea.common.CommonConstant;
+import com.ibay.tea.common.utils.CommonUtil;
 import com.ibay.tea.dao.TbItemMapper;
 import com.ibay.tea.dao.TbStoreGoodsMapper;
 import com.ibay.tea.dao.TbStoreMapper;
 import com.ibay.tea.entity.TbItem;
 import com.ibay.tea.entity.TbStore;
 import com.ibay.tea.entity.TbStoreGoods;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CmsInventoryServiceImpl implements CmsInventoryService {
@@ -28,9 +30,23 @@ public class CmsInventoryServiceImpl implements CmsInventoryService {
     private TbItemMapper tbItemMapper;
 
     @Override
-    public List<TbStoreGoods> findAll(int storeId) {
-        return tbStoreGoodsMapper.findAllByStoreId(storeId);
-
+    public ResultInfo findAll(Map<String,String> params) {
+        ResultInfo resultInfo = new ResultInfo();
+        Map<String,Object> condition = new HashMap<>();
+        int pageNum = Integer.valueOf(params.get("pageNum"));
+        int pageSize = Integer.valueOf(params.get("pageSize"));
+        String storeId = params.get("storeId");
+        String goodsName = params.get("goodsName");
+        int startIndex = (pageNum-1) * pageSize;
+        condition.put("startIndex",startIndex);
+        condition.put("pageSize",pageSize);
+        condition.put("storeId",storeId);
+        condition.put("goodsName", CommonUtil.getLikeQueryStr(goodsName));
+        long total = tbStoreGoodsMapper.countByCondition(condition);
+        List<TbStoreGoods> allByStoreId = tbStoreGoodsMapper.findAllByStoreId(condition);
+        resultInfo.setData(allByStoreId);
+        resultInfo.setTotal(total);
+        return resultInfo;
     }
 
     @Override
@@ -51,7 +67,7 @@ public class CmsInventoryServiceImpl implements CmsInventoryService {
             return ;
         }
         tbStoreGoodsMapper.deleteByPrimaryKey(storeGoods.getId());
-        tbStoreGoodsMapper.saveUpdateMenu(storeGoods);
+        tbStoreGoodsMapper.updateInventoryByStoreGoods(storeGoods);
 
     }
 
@@ -62,29 +78,7 @@ public class CmsInventoryServiceImpl implements CmsInventoryService {
         if (store == null){
             return ;
         }
-
-        List<TbItem> goodsList = tbItemMapper.findAll();
-
-        if (CollectionUtils.isEmpty(goodsList)){
-            return ;
-        }
-        List<TbStoreGoods> storeGoodsList = new ArrayList<>();
-
-        for (TbItem tbItem : goodsList) {
-            TbStoreGoods tbStoreGoods = new TbStoreGoods();
-            tbStoreGoods.setCreateTime(new Date());
-            Long goodsId = tbItem.getId();
-            tbStoreGoods.setGoodsId(goodsId.intValue());
-            tbStoreGoods.setGoodsName(tbItem.getTitle());
-            tbStoreGoods.setGoodsInventory(30);
-            tbStoreGoods.setStoreId(store.getId());
-            tbStoreGoods.setStoreName(store.getStoreName());
-            storeGoodsList.add(tbStoreGoods);
-        }
-        tbStoreGoodsMapper.deleteByStoreId(storeId);
-        tbStoreGoodsMapper.insertBatch(storeGoodsList);
-
-
+        tbStoreGoodsMapper.updateInventoryByStoreId(storeId);
     }
 
     @Override

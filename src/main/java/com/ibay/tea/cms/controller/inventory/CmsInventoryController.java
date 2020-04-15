@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -20,14 +22,11 @@ public class CmsInventoryController {
     private CmsInventoryService cmsInventoryService;
 
 
-    @RequestMapping("/list/{storeId}")
-    public ResultInfo list(@PathVariable("storeId") int storeId){
+    @RequestMapping("/list")
+    public ResultInfo list(@RequestBody Map<String,String> param){
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-            List<TbStoreGoods> menuList = cmsInventoryService.findAll(storeId);
-            resultInfo.setData(menuList);
-            return resultInfo;
+           return cmsInventoryService.findAll(param);
         }catch (Exception e){
             LOGGER.error("list happen exception ",e);
             return ResultInfo.newExceptionResultInfo();

@@ -1,5 +1,6 @@
 package com.ibay.tea.cms.service.goods.impl;
 
+import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.goods.CmsGoodsService;
 import com.ibay.tea.dao.GoodsMapper;
 import com.ibay.tea.dao.TbItemMapper;
@@ -18,12 +19,17 @@ public class CmsGoodsServiceImpl implements CmsGoodsService {
     @Resource
     private TbItemMapper tbItemMapper;
     @Override
-    public List<TbItem> findGoodsListByPage(Map<String,Object> condition,Integer pageNum, Integer pageSize) {
+    public ResultInfo findGoodsListByPage(Map<String,Object> condition, Integer pageNum, Integer pageSize) {
+        ResultInfo resultInfo = new ResultInfo();
+        long total = countGoodsByCondition(condition);
         int startIndex = (pageNum-1) * pageSize;
         condition.put("startIndex",startIndex);
         condition.put("pageSize",pageSize);
 
-        return tbItemMapper.findGoodsListByPage(condition);
+        List<TbItem> goodsListByPage = tbItemMapper.findGoodsListByPage(condition);
+        resultInfo.setData(goodsListByPage);
+        resultInfo.setTotal(total);
+        return resultInfo;
     }
 
     @Override

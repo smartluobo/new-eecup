@@ -1,11 +1,13 @@
 package com.ibay.tea.cms.service.inventory;
 
+import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.entity.TbStoreGoods;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CmsInventoryService {
-    List<TbStoreGoods> findAll(int storeId);
+    ResultInfo findAll(Map<String,String> params);
 
     void addStoreGoods(TbStoreGoods storeGoods);
 

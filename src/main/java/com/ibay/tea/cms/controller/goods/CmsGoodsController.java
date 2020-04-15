@@ -34,7 +34,7 @@ public class CmsGoodsController {
            }
            LOGGER.info("cms goods list params : {}",params);
        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-           long total = cmsGoodsService.countGoodsByCondition(new HashMap<>());
+
            int pageNum = Integer.valueOf(params.get("pageNum"));
            int pageSize = Integer.valueOf(params.get("pageSize"));
            String title = params.get("title");
@@ -48,10 +48,10 @@ public class CmsGoodsController {
                condition.put("cid",cid);
            }
            LOGGER.info("cms goods list condition : {}",condition);
-           List<TbItem> goodsList = cmsGoodsService.findGoodsListByPage(condition,pageNum,pageSize);
-           resultInfo.setTotal(total);
-           resultInfo.setData(goodsList);
-       	return resultInfo;
+
+           return cmsGoodsService.findGoodsListByPage(condition,pageNum,pageSize);
+
+
        }catch (Exception e){
             LOGGER.error("cms goods list happen exception",e);
        	    return ResultInfo.newExceptionResultInfo();

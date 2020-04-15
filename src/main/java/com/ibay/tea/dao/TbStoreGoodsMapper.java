@@ -20,9 +20,7 @@ public interface TbStoreGoodsMapper {
 
     void updateInventory(@Param("goodsId") long itemId, @Param("storeId") int storeId, @Param("num") int num);
 
-    List<TbStoreGoods> findAllByStoreId(int storeId);
-
-    void saveUpdateMenu(TbStoreGoods storeGoods);
+    List<TbStoreGoods> findAllByStoreId(Map<String,Object> params);
 
     void insertBatch(List<TbStoreGoods> storeGoodsList);
 
@@ -33,4 +31,10 @@ public interface TbStoreGoodsMapper {
     void clearStoreGoods(int storeId);
 
     List<Long> findGoodsIdByStoreId(Long storeId);
+
+    long countByCondition(Map<String, Object> condition);
+
+    void updateInventoryByStoreId(int storeId);
+
+    void updateInventoryByStoreGoods(TbStoreGoods storeGoods);
 }
