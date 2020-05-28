@@ -47,6 +47,16 @@ public class TbActivity {
 
     private String emptyPoster;
 
+    private String goodsIds;
+
+    public String getGoodsIds() {
+        return goodsIds;
+    }
+
+    public void setGoodsIds(String goodsIds) {
+        this.goodsIds = goodsIds;
+    }
+
     public Integer getId() {
         return id;
     }

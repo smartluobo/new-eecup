@@ -1,5 +1,6 @@
 package com.ibay.tea.cms.service.order;
 
+import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.responseVo.OrderStatisticalVo;
 import com.ibay.tea.entity.TbOrderItem;
 
@@ -15,4 +16,8 @@ public interface CmsOrderService {
     OrderStatisticalVo orderStatistical(Map<String, Object> condition);
 
     Map<String,Object> turnoverStatistical(Map<String, Object> condition);
+
+    ResultInfo findShufuleiByPage(Map<String, Object> condition, int pageNum, int pageSize);
+
+    List<Map<String, Object>> shufuleiCountStatistical(Map<String, Object> condition);
 }

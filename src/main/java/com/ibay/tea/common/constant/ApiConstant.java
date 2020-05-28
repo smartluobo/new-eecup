@@ -15,6 +15,9 @@ public class ApiConstant {
     //门店专享活动
     public static final int ACTIVITY_TYPE_STORE = 6;
 
+    //门店专享活动
+    public static final int ACTIVITY_TYPE_TEJIA = 7;
+
     //活动未开始
     public static final int ACTIVITY_STATUS_NOT_START = 0;
     //活动进行中
@@ -109,6 +112,8 @@ public class ApiConstant {
     public static final int COUPONS_STRATEGY_TYPE_CASH = 9;
     //使用积分抵扣
     public static final int COUPONS_STRATEGY_TYPE_INTEGRAL = 10;
+
+    public static final int COUPONS_STRATEGY_TYPE_TEJIA = 11;
 
     //优惠券使用方式 0 小程序专享
     public static final int COUPONS_USE_WAY_APPLET = 0;

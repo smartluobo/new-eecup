@@ -23,18 +23,33 @@
   <select id="findOrderItemByOrderId" resultMap="BaseResultMap" parameterType="string">
     SELECT <include refid="Base_Column_List" /> from tb_order_item where order_id = #{orderId}
   </select>
+    <select id="countShufuleiCondition" resultType="java.lang.Long" parameterType="map">
+        SELECT COUNT(1) FROM tb_order_item WHERE title LIKE '%舒芙蕾%' AND order_id IN(
+        SELECT order_id FROM tb_order WHERE  <![CDATA[ create_time >= #{startTime} AND create_time <= #{endTime}]]> AND `status` IN (1,2,3) )
+    </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="int">
+    <select id="findShufuleiListByPage" resultMap="BaseResultMap">
+        SELECT * FROM tb_order_item WHERE title LIKE '%舒芙蕾%' AND order_id IN(
+        SELECT order_id FROM tb_order WHERE  <![CDATA[ create_time >= #{startTime} AND create_time <= #{endTime}]]> AND `status` IN (1,2,3))
+        LIMIT #{startIndex} , #{pageSize}
+    </select>
+
+    <select id="shufuleiCountStatistical" resultType="java.util.Map" parameterType="map">
+        SELECT title,SUM(num) as num FROM tb_order_item WHERE title LIKE '%舒芙蕾%' AND order_id IN(
+        SELECT order_id FROM tb_order WHERE <![CDATA[ create_time >= #{startTime} AND create_time <= #{endTime}]]>  AND `status` IN (1,2,3) ) GROUP BY title
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="int">
     delete from tb_order_item where id = #{id,jdbcType=INTEGER}
   </delete>
 
   <insert id="insert" parameterType="com.ibay.tea.entity.TbOrderItem">
     insert into tb_order_item (item_id, order_id,
-      num, title, price, 
+      num, title, price,
       total_fee, pic_path, sku_detail_ids,sku_detail_desc
       )
     values (#{itemId,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR},
-      #{num,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{num,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
       #{totalFee,jdbcType=DECIMAL}, #{picPath,jdbcType=VARCHAR}, #{skuDetailIds,jdbcType=VARCHAR},#{skuDetailDesc,jdbcType=VARCHAR}
       )
   </insert>

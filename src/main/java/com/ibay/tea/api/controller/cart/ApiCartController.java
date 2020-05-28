@@ -3,7 +3,10 @@ package com.ibay.tea.api.controller.cart;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.cart.ApiCartService;
 import com.ibay.tea.api.service.goods.ApiGoodsService;
+import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
+import com.ibay.tea.dao.TbActivityMapper;
+import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbCart;
 import com.ibay.tea.entity.TbItem;
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/cart")
@@ -29,6 +31,9 @@ public class ApiCartController {
 
     @Resource
     private ApiGoodsService apiGoodsService;
+
+    @Resource
+    private TbActivityMapper tbActivityMapper;
 
     @RequestMapping("cartGoodsList")
     public ResultInfo getCartList(@RequestBody Map<String,String> params){
@@ -49,10 +54,33 @@ public class ApiCartController {
             if (CollectionUtils.isEmpty(cartGoodsList)){
                 return ResultInfo.newEmptyResultInfo();
             }
-            for (TbItem tbItem : cartGoodsList) {
-                if (tbItem.getShowActivityPrice() == 1){
-                    tbItem.setCartPrice(tbItem.getActivityPrice());
-                    tbItem.setCartTotalPrice(PriceCalculateUtil.multiply(tbItem.getCartPrice(),tbItem.getCartItemCount()));
+            TbActivity teJiaActivity = tbActivityMapper.findTeJiaActivity(storeId, DateUtil.getDateYyyyMMdd());
+            if (teJiaActivity != null){
+                List<String> goodsIdList = new ArrayList<>();
+                for (TbItem tbItem : cartGoodsList) {
+                    goodsIdList.add(String.valueOf(tbItem.getId()));
+                }
+                Set<String> tejiaIdSet = new HashSet<>(Arrays.asList(StringUtils.split(teJiaActivity.getGoodsIds(),",")));
+                boolean flag = true;
+                for (String goodsId : goodsIdList) {
+                    if (!tejiaIdSet.contains(goodsId)){
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag){
+                    for (TbItem tbItem : cartGoodsList) {
+                        tbItem.setShowActivityPrice(1);
+                        tbItem.setCartPrice(tbItem.getTejiaPrice());
+                        tbItem.setCartTotalPrice(PriceCalculateUtil.multiply(tbItem.getTejiaPrice(),tbItem.getCartItemCount()));
+                    }
+                }
+            }else{
+                for (TbItem tbItem : cartGoodsList) {
+                    if (tbItem.getShowActivityPrice() == 1){
+                        tbItem.setCartPrice(tbItem.getActivityPrice());
+                        tbItem.setCartTotalPrice(PriceCalculateUtil.multiply(tbItem.getCartPrice(),tbItem.getCartItemCount()));
+                    }
                 }
             }
             apiGoodsService.checkGoodsInventory(cartGoodsList,Integer.valueOf(storeId));

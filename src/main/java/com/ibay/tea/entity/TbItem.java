@@ -60,6 +60,16 @@ public class TbItem implements Comparable<TbItem>{
 
     private int isIngredients;
 
+    private double tejiaPrice;
+
+    public double getTejiaPrice() {
+        return tejiaPrice;
+    }
+
+    public void setTejiaPrice(double tejiaPrice) {
+        this.tejiaPrice = tejiaPrice;
+    }
+
     public Long getId() {
         return id;
     }

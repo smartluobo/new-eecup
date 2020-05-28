@@ -66,9 +66,7 @@ public class CmsInventoryServiceImpl implements CmsInventoryService {
         if (dbStoreGoods == null){
             return ;
         }
-        tbStoreGoodsMapper.deleteByPrimaryKey(storeGoods.getId());
         tbStoreGoodsMapper.updateInventoryByStoreGoods(storeGoods);
-
     }
 
     @Override

@@ -2,19 +2,18 @@ package com.ibay.tea.api.service.goods.impl;
 
 import com.ibay.tea.api.service.goods.ApiGoodsService;
 import com.ibay.tea.cache.GoodsCache;
+import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
 import com.ibay.tea.dao.TbStoreGoodsMapper;
 import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbItem;
 import com.ibay.tea.entity.TbStoreGoods;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ApiGoodsServiceImpl implements ApiGoodsService {
@@ -51,6 +50,7 @@ public class ApiGoodsServiceImpl implements ApiGoodsService {
     @Override
     public void calculateGoodsPrice(List<TbItem> goodsListByCategoryId, int extraPrice, TbActivity tbActivity) {
         if (extraPrice == 0 && tbActivity == null){
+
             return;
         }
         if (tbActivity != null){
@@ -122,10 +122,25 @@ public class ApiGoodsServiceImpl implements ApiGoodsService {
     }
 
     private void calculateActivityPrice(TbItem goodsInfo, int extraPrice, TbActivity tbActivity) {
-        goodsInfo.setShowActivityPrice(1);
-        goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
-        double activityPrice = PriceCalculateUtil.multiply(goodsInfo.getPrice(),tbActivity.getActivityRatio());
-        goodsInfo.setActivityPrice(activityPrice);
+        if (ApiConstant.ACTIVITY_TYPE_TEJIA == tbActivity.getActivityType()){
+            String goodsIds = tbActivity.getGoodsIds();
+            if (StringUtils.isEmpty(goodsIds)){
+                return ;
+            }
+            List<String> goodsIdList = Arrays.asList(StringUtils.split(goodsIds, ","));
+            for (String goodsId : goodsIdList) {
+                if (goodsInfo.getId().intValue() == Integer.valueOf(goodsId) && goodsInfo.getTejiaPrice() > 1){
+                    goodsInfo.setShowActivityPrice(1);
+                    goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
+                    goodsInfo.setActivityPrice(goodsInfo.getTejiaPrice() + extraPrice);
+                }
+            }
+        }else {
+            goodsInfo.setShowActivityPrice(1);
+            goodsInfo.setPrice(goodsInfo.getPrice() + extraPrice);
+            double activityPrice = PriceCalculateUtil.multiply(goodsInfo.getPrice(), tbActivity.getActivityRatio());
+            goodsInfo.setActivityPrice(activityPrice);
+        }
     }
 
 

@@ -59,6 +59,9 @@ public class ApiGoodsController {
         //店铺扩展价格
         int extraPrice = store.getExtraPrice();
         TbActivity fullActivity = tbActivityMapper.findFullActivity(DateUtil.getDateYyyyMMdd(), store.getId());
+        if (fullActivity== null){
+            fullActivity = tbActivityMapper.findTeJiaActivity(String.valueOf(store.getId()),DateUtil.getDateYyyyMMdd());
+        }
 
         //根据店铺信息查看是否存在全场活动
         try {

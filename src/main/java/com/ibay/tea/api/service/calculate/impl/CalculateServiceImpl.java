@@ -11,6 +11,7 @@ import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.common.utils.PriceCalculateUtil;
 import com.ibay.tea.dao.*;
 import com.ibay.tea.entity.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -110,6 +111,23 @@ public class CalculateServiceImpl implements CalculateService {
                 LOGGER.info("goods info :title:{},price:{},cartPrice:{},cartTotalPrice:{},itemCount:{},skuDesc:{}",tbItem.getTitle(),tbItem.getPrice(),tbItem.getCartPrice(),tbItem.getCartTotalPrice(),tbItem.getCartItemCount(),tbItem.getSkuDetailDesc());
             }
 
+            //特价活动计算
+            TbActivity teJiaActivity = tbActivityMapper.findTeJiaActivity(String.valueOf(store.getId()), DateUtil.getDateYyyyMMdd());
+            if (teJiaActivity != null){
+                String goodsIds = teJiaActivity.getGoodsIds();
+                Set<String> goodsIdSet = new HashSet<>(Arrays.asList(StringUtils.split(goodsIds, ",")));
+                boolean flag = true;
+                for (TbItem tbItem : goodsList) {
+                    if (!goodsIdSet.contains(String.valueOf(tbItem.getId()))){
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag){
+                    CalculateReturnVo calculateReturnVo = tejiaCalculate(sendPrice, goodsList);
+                    return calculateReturnVo;
+                }
+            }
             //全场折扣下不支持其他任何折扣
             TbActivity fullActivity = tbActivityMapper.findFullActivity(DateUtil.getDateYyyyMMdd(), store.getId());
             if (fullActivity != null){
@@ -405,6 +423,27 @@ public class CalculateServiceImpl implements CalculateService {
         calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.add(payment,sendPrice));
         calculateReturnVo.setGoodsList(goodsList);
         calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_ALL_RATIO);
+        return calculateReturnVo;
+    }
+
+    private CalculateReturnVo tejiaCalculate(int sendPrice, List<TbItem> goodsList) {
+        LOGGER.info("特价活动的价格计算");
+        //全场折扣下所有商品不在重新计算优惠
+        double orderTotalPrice = 0.0;
+        double payment = 0.0;
+        for (TbItem tbItem : goodsList) {
+            double itemPrice = PriceCalculateUtil.multiply(tbItem.getPrice(), tbItem.getCartItemCount());
+            double itemTejiaPrice = PriceCalculateUtil.multiply(tbItem.getTejiaPrice(), tbItem.getCartItemCount());
+            orderTotalPrice = PriceCalculateUtil.add(orderTotalPrice,itemPrice);
+            payment = PriceCalculateUtil.add(payment,itemTejiaPrice);
+        }
+        CalculateReturnVo calculateReturnVo = new CalculateReturnVo();
+        calculateReturnVo.setCouponsName("特价商品，不使用其他优惠");
+        calculateReturnVo.setOrderReduceAmount(PriceCalculateUtil.subtract(orderTotalPrice,payment));
+        calculateReturnVo.setOrderTotalAmount(PriceCalculateUtil.add(orderTotalPrice,sendPrice));
+        calculateReturnVo.setOrderPayAmount(PriceCalculateUtil.add(payment,sendPrice));
+        calculateReturnVo.setGoodsList(goodsList);
+        calculateReturnVo.setCouponsType(ApiConstant.COUPONS_STRATEGY_TYPE_TEJIA);
         return calculateReturnVo;
     }
 }

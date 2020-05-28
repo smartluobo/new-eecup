@@ -80,6 +80,17 @@ public class ApiActivityController {
                 return resultInfo;
             }
 
+            //查看当前店铺是否有特价活动
+            TbActivity teJiaActivity = tbActivityMapper.findTeJiaActivity(storeId,DateUtil.getDateYyyyMMdd());
+            if (teJiaActivity != null){
+                LOGGER.info("getActivityInfo return teJiaActivity ");
+                teJiaActivity.setShowImageUrl(teJiaActivity.getStartingPoster());
+                result.put("type",5);
+                result.put("info",teJiaActivity);
+                resultInfo.setData(result);
+                return resultInfo;
+            }
+
             //查询是否有体验活动
             TbActivity experienceActivity = tbActivityMapper.findExperienceActivity(condition);
             if (experienceActivity != null){

@@ -202,5 +202,55 @@ public class CmsOrderController {
 
     }
 
+    @RequestMapping("/shufuleiCountStatistical")
+    public ResultInfo shufuleiCountStatistical(@RequestBody Map<String,Object> condition){
+
+        if (condition == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            long startTime = (long) condition.get("startTime");
+            long endTime = (long) condition.get("endTime");
+            Date start = new Date(startTime);
+            Date end = new Date(endTime);
+            condition.put("startTime",start);
+            condition.put("endTime",end);
+            List<Map<String,Object>> resultList = cmsOrderService.shufuleiCountStatistical(condition);
+            resultInfo.setData(resultList);
+            return resultInfo;
+        }catch (Exception e){
+            LOGGER.error("turnoverStatistical happen exception",e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+
+    }
+
+    @RequestMapping("/findShufuleiByPage")
+    public ResultInfo findShufuleiByPage(@RequestBody Map<String,String> params){
+
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+
+        try {
+            Map<String,Object> condition = new HashMap<>();
+            long startTime = Long.parseLong(params.get("startTime"));
+            long endTime = Long.parseLong(params.get("endTime"));
+            int pageNum = Integer.valueOf(params.get("pageNum"));
+            int pageSize = Integer.valueOf(params.get("pageSize"));
+            Date start = new Date(startTime);
+            Date end = new Date(endTime);
+            condition.put("startTime",start);
+            condition.put("endTime",end);
+           return cmsOrderService.findShufuleiByPage(condition,pageNum,pageSize);
+        }catch (Exception e){
+            LOGGER.error("turnoverStatistical happen exception",e);
+            return ResultInfo.newExceptionResultInfo();
+        }
+
+    }
+
 
 }

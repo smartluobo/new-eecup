@@ -1,5 +1,6 @@
 package com.ibay.tea.cms.service.order.impl;
 
+import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cache.StoreCache;
 import com.ibay.tea.cms.responseVo.OrderStatisticalVo;
 import com.ibay.tea.cms.service.order.CmsOrderService;
@@ -7,6 +8,7 @@ import com.ibay.tea.common.constant.ApiConstant;
 import com.ibay.tea.common.service.PrintService;
 import com.ibay.tea.dao.TbOrderItemMapper;
 import com.ibay.tea.dao.TbOrderMapper;
+import com.ibay.tea.entity.TbItem;
 import com.ibay.tea.entity.TbOrder;
 import com.ibay.tea.entity.TbOrderItem;
 import com.ibay.tea.entity.TbStore;
@@ -94,5 +96,24 @@ public class CmsOrderServiceImpl implements CmsOrderService {
     @Override
     public Map<String, Object> turnoverStatistical(Map<String, Object> condition) {
         return tbOrderMapper.turnoverStatistical(condition);
+    }
+
+    @Override
+    public ResultInfo findShufuleiByPage(Map<String, Object> condition, int pageNum, int pageSize) {
+        ResultInfo resultInfo = new ResultInfo();
+        long total = tbOrderItemMapper.countShufuleiCondition(condition);
+        int startIndex = (pageNum-1) * pageSize;
+        condition.put("startIndex",startIndex);
+        condition.put("pageSize",pageSize);
+
+        List<TbOrderItem> orderItems = tbOrderItemMapper.findShufuleiListByPage(condition);
+        resultInfo.setData(orderItems);
+        resultInfo.setTotal(total);
+        return resultInfo;
+    }
+
+    @Override
+    public List<Map<String, Object>> shufuleiCountStatistical(Map<String, Object> condition) {
+        return tbOrderItemMapper.shufuleiCountStatistical(condition);
     }
 }
