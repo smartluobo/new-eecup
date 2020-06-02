@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ibay.tea.dao.system.SysRoleRoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.ibay.tea.entity.system.SysRoleRole" >
+        <id column="id" property="id"/>
+        <result column="role_id" property="roleId"/>
+        <result column="low_role_id" property="associatedRoleId"/>
+    </resultMap>
+
+    <sql id="BASE_TABLE">
+        sys_new_role_role
+    </sql>
+
+    <sql id="BASE_COLUMN">
+        role_id, low_role_id
+    </sql>
+
+    <!--保存角色与角色的关联关系 -->
+    <insert id="save" parameterType="com.ibay.tea.entity.system.SysRoleRole">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        (
+        role_id,
+        low_role_id
+        )
+        VALUES
+        (
+        #{roleId},
+        #{associatedRoleId}
+        )
+    </insert>
+
+    <!-- 删除角色与角色的关联关系 -->
+    <select id="deleteSysRoleRole" resultMap="BaseResultMap">
+       DELETE FROM sys_new_role_role WHERE low_role_id = #{roleId} or role_id = #{roleId}
+    </select>
+
+
+    <!--批量角色与角色的关联关系-->
+    <insert id="batchSaveSysRoleRole" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO
+        sys_new_role_role
+        (
+        role_id,
+        low_role_id
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.roleId},
+            #{item.associatedRoleId}
+            )
+        </foreach>
+
+    </insert>
+
+</mapper>

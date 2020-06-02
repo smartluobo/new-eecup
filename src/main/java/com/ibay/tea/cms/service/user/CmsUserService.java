@@ -1,17 +1,44 @@
 package com.ibay.tea.cms.service.user;
 
+import com.ibay.tea.dao.TbCmsUserMapper;
 import com.ibay.tea.entity.TbCmsUser;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-public interface CmsUserService {
-    TbCmsUser findUserById(int id);
+@Service
+public class CmsUserService {
 
-    List<TbCmsUser> findAll();
+    @Resource
+    private TbCmsUserMapper tbCmsUserMapper;
 
-    void addCmsUser(TbCmsUser tbCmsUser);
 
-    void deleteCmsUser(int id);
+    public TbCmsUser findUserById(int id) {
+        return tbCmsUserMapper.selectByPrimaryKey(id);
+    }
 
-    void updateCmsUser(TbCmsUser tbCmsUser);
+
+    public List<TbCmsUser> findAll() {
+        return tbCmsUserMapper.findAll();
+    }
+
+
+    public void addCmsUser(TbCmsUser tbCmsUser) {
+        tbCmsUserMapper.addCmsUser(tbCmsUser);
+    }
+
+
+    public void deleteCmsUser(int id) {
+        tbCmsUserMapper.deleteByPrimaryKey(id);
+    }
+
+    public void updateCmsUser(TbCmsUser tbCmsUser) {
+        TbCmsUser dbCmsUser = tbCmsUserMapper.selectByPrimaryKey(tbCmsUser.getId());
+        if (dbCmsUser == null){
+            return;
+        }
+        tbCmsUserMapper.deleteByPrimaryKey(tbCmsUser.getId());
+        tbCmsUserMapper.saveUpdateCmsUser(tbCmsUser);
+    }
 }

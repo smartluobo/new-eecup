@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ibay.tea.dao.system.SysUserRoleMapper">
+
+    <resultMap id="SysUserRoleBaseResultMap" type="com.ibay.tea.entity.system.SysUserRole">
+        <result column="user_id" property="userId"/>
+        <result column="role_id" property="roleId"/>
+    </resultMap>
+
+    <sql id="BASE_TABLE">
+        sys_new_user_role
+    </sql>
+
+    <sql id="BASE_COLUMN">
+        user_id, role_id
+    </sql>
+
+    <!--批量保存用户与角色关联关系-->
+    <insert id="batchSaveSysUserRole" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO
+        sys_new_user_role
+        (
+        user_id,
+        role_id
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.userId},
+            #{item.roleId}
+            )
+        </foreach>
+
+    </insert>
+    <!--批量保存用户与角色关联关系-->
+    <insert id="batchSaveSysUserRoleOld" parameterType="java.util.List" useGeneratedKeys="true">
+        INSERT INTO
+        sys_user_role
+        (
+        user_id,
+        role_id
+        )
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.userId},
+            #{item.roleId}
+            )
+        </foreach>
+
+    </insert>
+
+    <select id="deleteSysUserRole" parameterType="Integer">
+       DELETE FROM sys_new_user_role WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectSysUserRole" parameterType="Integer" resultMap="SysUserRoleBaseResultMap">
+       select * FROM sys_new_user_role WHERE user_id = #{userId}
+    </select>
+</mapper>

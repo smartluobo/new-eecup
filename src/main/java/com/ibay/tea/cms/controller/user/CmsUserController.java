@@ -5,7 +5,6 @@ import com.ibay.tea.api.service.user.ApiUserService;
 import com.ibay.tea.cms.service.user.CmsUserService;
 import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.TbCmsUser;
-import com.ibay.tea.entity.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

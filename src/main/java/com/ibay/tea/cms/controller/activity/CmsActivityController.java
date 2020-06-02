@@ -12,6 +12,7 @@ import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbActivityCouponsRecord;
 import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbExperienceCouponsPool;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,7 @@ public class CmsActivityController {
     private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
     @RequestMapping("/list/{storeId}")
+    @RequiresPermissions("tea:activity:edit")
     public ResultInfo list(@PathVariable("storeId") int storeId){
 
         try {

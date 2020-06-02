@@ -1,10 +1,21 @@
 package com.ibay.tea.api.response;
 
+import com.ibay.tea.common.ReturnCodeEnum;
+
 public class ResultInfo {
     private int code;
     private String msg;
     private Object data;
     private long total;
+
+    public ResultInfo(ReturnCodeEnum returnCodeEnum){
+        code = returnCodeEnum.getStatus();
+        msg = returnCodeEnum.getMsg();
+    }
+
+    public ResultInfo(){
+
+    }
 
     public int getCode() {
         return code;
