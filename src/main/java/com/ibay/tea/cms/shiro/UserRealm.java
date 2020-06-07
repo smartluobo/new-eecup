@@ -74,19 +74,6 @@ public class UserRealm extends AuthorizingRealm {
         if (StringUtils.isBlank(loginName)) {
             throw new AccountException("Null username are not allowed by this realm.");
         }
-        //验证码逻辑判断
-        if (userToken instanceof UsernamePasswordCaptchaToken){
-            UsernamePasswordCaptchaToken captchaToken = (UsernamePasswordCaptchaToken) userToken;
-            // 增加判断验证码逻辑
-            String captcha = captchaToken.getCaptcha();
-            Session session = SecurityUtils.getSubject().getSession();
-            String exitCode = (String) session.getAttribute(SystemShiroFilter.DEFAULT_CAPTCHA_PARAM);
-
-            if (null == captcha || !captcha.equalsIgnoreCase(exitCode)) {
-                throw new CaptchaException("captcha code is error");
-            }
-        }
-
         SysUser sysUser = sysUserService.getUserByLoginName(loginName);
         //用户不存在
         if (null == sysUser){

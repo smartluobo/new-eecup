@@ -26,7 +26,6 @@ import java.util.Map;
 @Slf4j
 public class ShiroConfig {
 
-
     /**
      * 设置自定义的SecurityManager
      * @return
@@ -52,26 +51,26 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(){
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
-        shiroFilterFactoryBean.setLoginUrl("/tea/cms/newLogin/system/login");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/tea/cms/newLogin/system/login/error");
+        shiroFilterFactoryBean.setLoginUrl("/cms/newLogin/system/login");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/cms/newLogin/system/login/error");
 
         Map<String, Filter> filters = shiroFilterFactoryBean.getFilters();
         //如果map里面key值为authc,表示所有名为authc的过滤条件使用这个自定义的filter
-        filters.put("authc", new SystemShiroFilter());
-        filters.put("user", new ShiroSessionFilter());
-
+        //filters.put("authc", new SystemShiroFilter());
+        filters.put("user", new SystemShiroFilter());
 
         // 过滤链定义，从上向下顺序执行，一般将 / ** 放在最为下边:这是一个坑呢，一不小心代码就不好使了;
         // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问 user:配置记住我或认证通过可以访问
         Map<String, String> filterChainDefinitionMap = shiroFilterFactoryBean.getFilterChainDefinitionMap();
-        filterChainDefinitionMap.put("/tea/cms/newLogin/system/login", "authc");
-        filterChainDefinitionMap.put("/tea/cms/newLogin/system/logout", "authc");
-        filterChainDefinitionMap.put("/system/findPassword", "anon");
-        filterChainDefinitionMap.put("/system/resetPassword", "anon");
-        filterChainDefinitionMap.put("/system/getCaptcha", "anon");
-        filterChainDefinitionMap.put("/system/updatePassword", "anon");
+        filterChainDefinitionMap.put("/cms/newLogin/system/login", "user");
+        filterChainDefinitionMap.put("/cms/**", "user");
+//        filterChainDefinitionMap.put("/cms/newLogin/system/logout", "authc");
+//        filterChainDefinitionMap.put("/cms/newLogin/system/findPassword", "anon");
+//        filterChainDefinitionMap.put("/cms/newLogin/system/resetPassword", "anon");
+//        filterChainDefinitionMap.put("/cms/newLogin/system/getCaptcha", "anon");
+//        filterChainDefinitionMap.put("/cms/newLogin/system/updatePassword", "anon");
         //主要这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需x要认证
-        filterChainDefinitionMap.put("/tea/cms/**", "user");
+//        filterChainDefinitionMap.put("/cms/**", "user");
         return shiroFilterFactoryBean;
     }
 

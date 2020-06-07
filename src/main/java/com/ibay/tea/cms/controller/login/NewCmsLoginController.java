@@ -3,7 +3,6 @@ package com.ibay.tea.cms.controller.login;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.login.NewCmsLoginService;
 import com.ibay.tea.cms.service.system.SysUserService;
-import com.ibay.tea.cms.service.system.UserCacheService;
 import com.ibay.tea.common.ReturnCodeEnum;
 import com.ibay.tea.entity.system.SysUser;
 import com.ibay.tea.entity.system.UpdatePasswordInfo;
@@ -23,7 +22,7 @@ import java.io.IOException;
 @RestController
 @CrossOrigin()
 @Slf4j
-@RequestMapping("cms/newLogin")
+@RequestMapping("/cms/newLogin")
 public class NewCmsLoginController {
     @Resource
     private SysUserService sysUserService;
@@ -35,7 +34,7 @@ public class NewCmsLoginController {
      * @return
      */
     @RequestMapping(value = "/system/login")
-    public Object login(String username, String password) {
+    public Object login(HttpServletRequest request,String username, String password) {
         if(StringUtils.isEmpty(username) && StringUtils.isEmpty(password)){
             return new ResultInfo(ReturnCodeEnum.LOGIN_ERROR);
         }
