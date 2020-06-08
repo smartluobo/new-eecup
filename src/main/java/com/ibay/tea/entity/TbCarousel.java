@@ -1,7 +1,12 @@
 package com.ibay.tea.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
+@Data
 public class TbCarousel {
     private Integer id;
 
@@ -9,47 +14,9 @@ public class TbCarousel {
 
     private String gotoUrl;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private int storeId;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl == null ? null : imageUrl.trim();
-    }
-
-    public String getGotoUrl() {
-        return gotoUrl;
-    }
-
-    public void setGotoUrl(String gotoUrl) {
-        this.gotoUrl = gotoUrl == null ? null : gotoUrl.trim();
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public int getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
-    }
 }

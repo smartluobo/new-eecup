@@ -1,17 +1,45 @@
 package com.ibay.tea.cms.service.store;
 
+import com.ibay.tea.dao.TbStoreMapper;
 import com.ibay.tea.entity.TbStore;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
-public interface CmsStoreService {
-    List<TbStore> findAll();
+@Service
+public class CmsStoreService {
 
-    void addStore(TbStore tbStore);
+    @Resource
+    private TbStoreMapper tbStoreMapper;
 
-    void deleteStore(int id);
+    public List<TbStore> findAll() {
+        return tbStoreMapper.findAll();
+    }
 
-    void updateStore(TbStore tbStore);
+    public void addStore(TbStore tbStore) {
+        if (tbStore.getDistributionDistance() == 0){
+            tbStore.setDistributionDistance(2000);
+        }
+        tbStoreMapper.addStore(tbStore);
+    }
 
-    List<TbStore> findByIds(String storeIds);
+    public void deleteStore(int id) {
+        tbStoreMapper.deleteStore(id);
+    }
+
+    public void updateStore(TbStore tbStore) {
+        TbStore dbStore = tbStoreMapper.selectByPrimaryKey(tbStore.getId());
+        if (dbStore == null){
+            return;
+        }
+        tbStoreMapper.deleteStore(tbStore.getId());
+        tbStoreMapper.saveUpdateStore(tbStore);
+    }
+
+    public List<TbStore> findByIds(String storeIds) {
+        String[] split = storeIds.split(",");
+        return tbStoreMapper.findByIds(Arrays.asList(split));
+    }
 }

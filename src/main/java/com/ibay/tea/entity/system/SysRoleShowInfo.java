@@ -23,8 +23,4 @@ public class SysRoleShowInfo {
      * 数据权限
      */
     private Map<Integer, List<SysRole>> dataAuthor;
-    /**
-     * tab权限
-     */
-    private Map<Integer, Set<String>> tabAuthor;
 }

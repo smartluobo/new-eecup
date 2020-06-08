@@ -1,8 +1,11 @@
 package com.ibay.tea.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
 
+@Data
 public class TbSkuType {
     private Integer id;
 
@@ -13,44 +16,4 @@ public class TbSkuType {
     private List<TbSkuDetail> skuDetails;
 
     private String remark;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getSkuTypeName() {
-        return skuTypeName;
-    }
-
-    public void setSkuTypeName(String skuTypeName) {
-        this.skuTypeName = skuTypeName == null ? null : skuTypeName.trim();
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public List<TbSkuDetail> getSkuDetails() {
-        return skuDetails;
-    }
-
-    public void setSkuDetails(List<TbSkuDetail> skuDetails) {
-        this.skuDetails = skuDetails;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }

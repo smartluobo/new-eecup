@@ -1,18 +1,16 @@
 package com.ibay.tea.cms.controller.goods;
 
 import com.ibay.tea.api.response.ResultInfo;
+
 import com.ibay.tea.cms.service.goods.CmsGoodsService;
-import com.ibay.tea.common.utils.PageUtil;
 import com.ibay.tea.entity.TbItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController

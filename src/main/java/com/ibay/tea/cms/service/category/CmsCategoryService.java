@@ -1,16 +1,36 @@
 package com.ibay.tea.cms.service.category;
 
+import com.ibay.tea.dao.TbItemCatMapper;
 import com.ibay.tea.entity.TbItemCat;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-public interface CmsCategoryService {
-    List<TbItemCat> findAll();
+@Service
+public class CmsCategoryService {
 
-    void addCategory(TbItemCat tbItemCat);
+    @Resource
+    private TbItemCatMapper tbItemCatMapper;
 
-    void deleteCategoryById(long id);
+    public List<TbItemCat> findAll() {
+        return tbItemCatMapper.findAll();
+    }
 
-    void updateCategory(TbItemCat tbItemCat);
+    public void addCategory(TbItemCat tbItemCat) {
+        tbItemCatMapper.addCategory(tbItemCat);
+    }
 
+    public void deleteCategoryById(long id) {
+        tbItemCatMapper.deleteCategoryById(id);
+    }
+
+    public void updateCategory(TbItemCat tbItemCat) {
+        TbItemCat dbCategory = tbItemCatMapper.selectByPrimaryKey(tbItemCat.getId());
+        if (dbCategory == null){
+            return;
+        }
+        tbItemCatMapper.deleteCategoryById(tbItemCat.getId());
+        tbItemCatMapper.saveUpdateCategory(tbItemCat);
+    }
 }

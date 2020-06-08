@@ -45,7 +45,7 @@ public class CmsActivityController {
     private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
     @RequestMapping("/list/{storeId}")
-    @RequiresPermissions("tea:activity:edit")
+    @RequiresPermissions("ui:wicket:view")
     public ResultInfo list(@PathVariable("storeId") int storeId){
 
         try {

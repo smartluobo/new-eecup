@@ -356,4 +356,7 @@ public class SysUserService {
     }
 
 
+    public SysUser getUserByName(String loginName) {
+        return sysUserMapper.getUserByName(loginName);
+    }
 }

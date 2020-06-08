@@ -1,7 +1,12 @@
 package com.ibay.tea.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
+@Data
 public class TbFavorableCompany {
     private Integer id;
 
@@ -9,6 +14,8 @@ public class TbFavorableCompany {
 
     private String companyAddress;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private String companyRatio;
@@ -19,67 +26,4 @@ public class TbFavorableCompany {
 
     private int actualAmount;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName == null ? null : companyName.trim();
-    }
-
-    public String getCompanyAddress() {
-        return companyAddress;
-    }
-
-    public void setCompanyAddress(String companyAddress) {
-        this.companyAddress = companyAddress == null ? null : companyAddress.trim();
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCompanyRatio() {
-        return companyRatio;
-    }
-
-    public void setCompanyRatio(String companyRatio) {
-        this.companyRatio = companyRatio == null ? null : companyRatio.trim();
-    }
-
-    public int getCouponsType() {
-        return couponsType;
-    }
-
-    public void setCouponsType(int couponsType) {
-        this.couponsType = couponsType;
-    }
-
-    public int getChargeAmount() {
-        return chargeAmount;
-    }
-
-    public void setChargeAmount(int chargeAmount) {
-        this.chargeAmount = chargeAmount;
-    }
-
-    public int getActualAmount() {
-        return actualAmount;
-    }
-
-    public void setActualAmount(int actualAmount) {
-        this.actualAmount = actualAmount;
-    }
 }

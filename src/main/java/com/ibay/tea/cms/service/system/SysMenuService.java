@@ -4,7 +4,7 @@ import com.ibay.tea.dao.system.SysMenuMapper;
 import com.ibay.tea.entity.system.SysMenu;
 import com.ibay.tea.entity.system.SysMenuRequest;
 import com.ibay.tea.entity.system.SysMenuTree;
-import lombok.extern.java.Log;
+import com.ibay.tea.entity.system.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -268,5 +268,11 @@ public class SysMenuService {
             }
         });
         return mapList;
+    }
+
+    public List<SysMenuRequest> getSysMenuList() {
+        SysUser sysUser = userCacheService.getSysUser();
+        List<SysMenuRequest> sysMenuList = buildSysMenuRequest(sysMenuMapper.getSysMenuByUserId(sysUser.getId()));
+        return sysMenuList;
     }
 }

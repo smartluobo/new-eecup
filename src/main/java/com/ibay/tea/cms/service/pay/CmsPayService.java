@@ -1,4 +1,7 @@
 package com.ibay.tea.cms.service.pay;
 
-public interface CmsPayService {
+import org.springframework.stereotype.Service;
+
+@Service
+public class CmsPayService {
 }

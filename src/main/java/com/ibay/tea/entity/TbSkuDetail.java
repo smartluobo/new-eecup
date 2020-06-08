@@ -1,9 +1,11 @@
 package com.ibay.tea.entity;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.Data;
 
 import java.util.Date;
 
+@Data
 public class TbSkuDetail {
     private Integer id;
 
@@ -19,66 +21,6 @@ public class TbSkuDetail {
     private int isSelected;
 
     private String cmsView;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getSkuTypeId() {
-        return skuTypeId;
-    }
-
-    public void setSkuTypeId(Integer skuTypeId) {
-        this.skuTypeId = skuTypeId;
-    }
-
-    public String getSkuDetailName() {
-        return skuDetailName;
-    }
-
-    public void setSkuDetailName(String skuDetailName) {
-        this.skuDetailName = skuDetailName == null ? null : skuDetailName.trim();
-    }
-
-    public int getSkuDetailPrice() {
-        return skuDetailPrice;
-    }
-
-    public void setSkuDetailPrice(Integer skuDetailPrice) {
-        this.skuDetailPrice = skuDetailPrice;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public int getIsSelected() {
-        return isSelected;
-    }
-
-    public void setIsSelected(int isSelected) {
-        this.isSelected = isSelected;
-    }
-
-    public void setSkuDetailPrice(int skuDetailPrice) {
-        this.skuDetailPrice = skuDetailPrice;
-    }
-
-    public String getCmsView() {
-        return cmsView;
-    }
-
-    public void setCmsView(String cmsView) {
-        this.cmsView = cmsView;
-    }
 
     public TbSkuDetail copy(){
         String thisStr = JSONObject.toJSONString(this);

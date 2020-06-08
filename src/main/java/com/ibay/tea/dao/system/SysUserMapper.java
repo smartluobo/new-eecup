@@ -10,11 +10,6 @@ import java.util.List;
 
 /**
  * 用户dao层
- *
- * @author Sunny
- * @version 1.0
- * @className SysUserMapper
- * @date 2019-07-23 15:24
  */
 @Component
 @Mapper
@@ -97,4 +92,8 @@ public interface SysUserMapper {
      * @return
      */
     List<SysUser> getSysUserByRoleId(@Param("roleId") Integer roleId);
+
+    SysUser getUserById(Integer id);
+
+    SysUser getUserByName(String userName);
 }

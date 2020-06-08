@@ -1,19 +1,41 @@
 package com.ibay.tea.cms.service.sku;
 
+import com.ibay.tea.dao.TbSkuDetailMapper;
 import com.ibay.tea.entity.TbSkuDetail;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-public interface CmsSkuDetailService {
-    List<TbSkuDetail> findAll();
+@Service
+public class CmsSkuDetailService {
 
-    void addSkuDetail(TbSkuDetail tbSkuDetail);
+    @Resource
+    private TbSkuDetailMapper tbSkuDetailMapper;
 
-    void deleteSkuDetail(int id);
+    public List<TbSkuDetail> findAll() {
+        return tbSkuDetailMapper.findAll();
+    }
 
-    void updateSkuDetail(TbSkuDetail tbSkuDetail);
+    public void addSkuDetail(TbSkuDetail tbSkuDetail) {
+        tbSkuDetailMapper.addSkuDetail(tbSkuDetail);
 
-    List<TbSkuDetail> findSkuDetailByTypeId(int typeId);
+    }
 
+    public void deleteSkuDetail(int id) {
+        tbSkuDetailMapper.deleteByPrimaryKey(id);
+    }
+
+    public void updateSkuDetail(TbSkuDetail tbSkuDetail) {
+        TbSkuDetail dbSkuDetail = tbSkuDetailMapper.selectByPrimaryKey(tbSkuDetail.getId());
+        if (dbSkuDetail == null){
+            return;
+        }
+        tbSkuDetailMapper.deleteByPrimaryKey(tbSkuDetail.getId());
+        tbSkuDetailMapper.saveUpdateSkuDetail(tbSkuDetail);
+    }
+
+    public List<TbSkuDetail> findSkuDetailByTypeId(int typeId) {
+        return tbSkuDetailMapper.findSkuDetailByTypeId(typeId);
+    }
 }

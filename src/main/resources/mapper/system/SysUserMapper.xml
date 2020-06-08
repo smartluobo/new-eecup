@@ -192,6 +192,13 @@
         </where>
     </select>
 
+    <select id="getUserById" resultMap="BaseResultMap" parameterType="int">
+        select * from sys_new_user where id = #{id}
+    </select>
+    <select id="getUserByName" resultMap="BaseResultMap" parameterType="string">
+        select * from sys_new_user where login_name = #{name}
+    </select>
+
 
     <!-- 根据id更新数据库 -->
     <update id="update" parameterType="com.ibay.tea.entity.system.SysUser">

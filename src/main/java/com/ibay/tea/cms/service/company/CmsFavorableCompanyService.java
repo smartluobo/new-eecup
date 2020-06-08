@@ -1,15 +1,32 @@
 package com.ibay.tea.cms.service.company;
 
+import com.ibay.tea.dao.TbFavorableCompanyMapper;
 import com.ibay.tea.entity.TbFavorableCompany;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-public interface CmsFavorableCompanyService {
-    List<TbFavorableCompany> findAll();
+@Service
+public class CmsFavorableCompanyService {
 
-    void addFavorableCompany(TbFavorableCompany favorableCompany);
+    @Resource
+    private TbFavorableCompanyMapper tbFavorableCompanyMapper;
 
-    void deleteFavorableCompany(int id);
+    public List<TbFavorableCompany> findAll() {
+        return tbFavorableCompanyMapper.findAll();
+    }
 
-    void updateFavorableCompany(TbFavorableCompany favorableCompany);
+    public void addFavorableCompany(TbFavorableCompany favorableCompany) {
+        tbFavorableCompanyMapper.insert(favorableCompany);
+    }
+
+    public void deleteFavorableCompany(int id) {
+        tbFavorableCompanyMapper.deleteByPrimaryKey(id);
+    }
+
+    public void updateFavorableCompany(TbFavorableCompany favorableCompany) {
+        tbFavorableCompanyMapper.updateByPrimaryKey(favorableCompany);
+    }
+
 }

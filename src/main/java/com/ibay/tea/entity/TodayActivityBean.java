@@ -1,8 +1,11 @@
 package com.ibay.tea.entity;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Map;
 
+@Data
 public class TodayActivityBean {
 
     private TbActivity tbActivity;
@@ -10,37 +13,4 @@ public class TodayActivityBean {
     private Map<Integer,TbCoupons> couponsMap;
 
     private List<TbActivityCouponsRecord> tbActivityCouponsRecordList;
-
-    public TbActivity getTbActivity() {
-        return tbActivity;
-    }
-
-    public void setTbActivity(TbActivity tbActivity) {
-        this.tbActivity = tbActivity;
-    }
-
-    public Map<Integer, TbCoupons> getCouponsMap() {
-        return couponsMap;
-    }
-
-    public void setCouponsMap(Map<Integer, TbCoupons> couponsMap) {
-        this.couponsMap = couponsMap;
-    }
-
-    public List<TbActivityCouponsRecord> getTbActivityCouponsRecordList() {
-        return tbActivityCouponsRecordList;
-    }
-
-    public void setTbActivityCouponsRecordList(List<TbActivityCouponsRecord> tbActivityCouponsRecordList) {
-        this.tbActivityCouponsRecordList = tbActivityCouponsRecordList;
-    }
-
-    @Override
-    public String toString() {
-        return "TodayActivityBean{" +
-                "tbActivity=" + tbActivity +
-                ", couponsMap=" + couponsMap +
-                ", tbActivityCouponsRecordList=" + tbActivityCouponsRecordList +
-                '}';
-    }
 }

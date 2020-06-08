@@ -1,16 +1,34 @@
 package com.ibay.tea.cms.service.carousel;
 
+import com.ibay.tea.dao.TbCarouselMapper;
 import com.ibay.tea.entity.TbCarousel;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
-public interface CmsCarouselService {
+@Service
+public class CmsCarouselService {
 
-    List<TbCarousel> findAll();
+    @Resource
+    private TbCarouselMapper tbCarouselMapper;
 
-    void saveCarousel(TbCarousel tbCarousel);
+    public List<TbCarousel> findAll() {
+        return tbCarouselMapper.findAll();
+    }
 
-    void deleteCarousel(int id);
+    public void saveCarousel(TbCarousel tbCarousel) {
+        tbCarousel.setCreateTime(new Date());
+        tbCarouselMapper.saveCarousel(tbCarousel);
+    }
 
-    void updateCarousel(TbCarousel tbCarousel);
+    public void deleteCarousel(int id) {
+        tbCarouselMapper.deleteCarousel(id);
+    }
+
+    public void updateCarousel(TbCarousel tbCarousel) {
+        tbCarouselMapper.deleteCarousel(tbCarousel.getId());
+        tbCarouselMapper.saveUpdateCarousel(tbCarousel);
+    }
 }
