@@ -71,12 +71,6 @@ public interface SysUserMapper {
      */
     SysUser getSysUserById(@Param("id") Integer id);
 
-    /**
-     * 获取所有的tab权限
-     *
-     * @return
-     */
-    List<String> getAllTabAuth();
 
     /**
      * 更新用户信息

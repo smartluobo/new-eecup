@@ -7,7 +7,6 @@
         <result column="name" property="name"/>
         <result column="data_scope" property="dataScope"/>
         <result column="role_type" property="roleType"/>
-        <result column="tab_auth" property="tabAuth"/>
         <result column="create_by" property="createBy"/>
         <result column="update_by" property="updateBy"/>
         <result column="remarks" property="remarks"/>
@@ -32,7 +31,6 @@
         `name`,
         data_scope,
         role_type,
-        tab_auth,
         create_by,
         update_by,
         remarks,
@@ -45,7 +43,6 @@
         #{name},
         #{dataScope},
         #{roleType},
-        #{tabAuth},
         #{createBy},
         #{updateBy},
         #{remarks},
@@ -64,7 +61,6 @@
         `name`,
         data_scope,
         role_type,
-        tab_auth,
         create_by,
         update_by,
         remarks,
@@ -78,7 +74,6 @@
         #{name},
         #{dataScope},
         #{roleType},
-        #{tabAuth},
         #{createBy},
         #{updateBy},
         #{remarks},
@@ -159,9 +154,6 @@
     <update id="updateSysRole" parameterType="com.ibay.tea.entity.system.SysRole">
         update sys_new_role
         <set>
-            <if test="tabAuth != null">
-                tab_auth = #{tabAuth},
-            </if>
             <if test="remarks != null">
                 remarks = #{remarks},
             </if>

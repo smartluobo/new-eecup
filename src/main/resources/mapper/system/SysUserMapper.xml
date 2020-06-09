@@ -156,10 +156,6 @@
         WHERE b.role_id = #{roleId} AND a.del_flag = 0
     </select>
 
-    <!--根据用户角色id查询用户信息-->
-    <select id="getAllTabAuth" resultType="java.lang.String">
-        select distinct name from tm_machinetab_tabs where data_type=0
-    </select>
 
     <!-- 查询用户信息 -->
     <select id="getSysUserList" resultMap="BaseResultMap">
