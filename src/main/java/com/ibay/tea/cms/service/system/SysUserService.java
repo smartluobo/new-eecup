@@ -4,9 +4,12 @@ package com.ibay.tea.cms.service.system;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ibay.tea.common.CommonConstant;
+import com.ibay.tea.common.utils.StringSplitUtil;
+import com.ibay.tea.dao.TbStoreMapper;
 import com.ibay.tea.dao.system.SysRoleMapper;
 import com.ibay.tea.dao.system.SysUserMapper;
 import com.ibay.tea.dao.system.SysUserRoleMapper;
+import com.ibay.tea.entity.TbStore;
 import com.ibay.tea.entity.system.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +46,9 @@ public class SysUserService {
     @Resource
     private UserCacheService userCacheService;
 
+    @Resource
+    private TbStoreMapper tbStoreMapper;
+
     /**
      * 根据用户id获取用户名称
      * @param id
@@ -74,6 +80,13 @@ public class SysUserService {
             BeanUtils.copyProperties(sysUser, request);
             List<SysRole> sysRoleList = sysRoleMapper.getSysRoleByUserId(sysUser.getId());
             request.setSysRoleList(sysRoleList);
+            if (!CollectionUtils.isEmpty(sysRoleList)){
+                List<Integer> sysRoleIds = new ArrayList<>();
+                for (SysRole sysRole : sysRoleList) {
+                    sysRoleIds.add(sysRole.getId());
+                }
+                request.setSysRoleIds(sysRoleIds);
+            }
         }
         return request;
     }
@@ -149,15 +162,16 @@ public class SysUserService {
         user.setUpdateDate(new Date());
         user.setRegisterDate(new Date());
         SysUser sysUser = new SysUser();
+        setSysUserStore(user);
         BeanUtils.copyProperties(user, sysUser);
         sysUser.setCreateBy(String.valueOf(userCacheService.getSysUser().getId()));
         sysUser.setUpdateBy(String.valueOf(userCacheService.getSysUser().getId()));
         sysUserMapper.save(sysUser);
 
-
-        List<SysRole> sysRoleList = user.getSysRoleList();
+        List<Integer> sysRoleIds = user.getSysRoleIds();
         //角色不为空,则保存用户与角色的关联关系
-        if (!CollectionUtils.isEmpty(sysRoleList)){
+        if (!CollectionUtils.isEmpty(sysRoleIds)){
+            List<SysRole> sysRoleList = sysRoleMapper.getSysRoleByIds(sysRoleIds);
             List<SysUserRole> sysUserRoleList = new ArrayList<>();
             sysRoleList.forEach(sysRole -> {
                 SysUserRole sysUserRole = new SysUserRole(sysUser.getId(), sysRole.getId());
@@ -166,6 +180,21 @@ public class SysUserService {
             sysUserRoleMapper.batchSaveSysUserRole(sysUserRoleList);
         }
 
+    }
+
+    private void setSysUserStore(SysUserRequest user) {
+        String storeIds = user.getStoreIds();
+        if (StringUtils.isNotEmpty(storeIds)){
+            List<TbStore> byIds = tbStoreMapper.findByIds(StringSplitUtil.split(storeIds));
+            if (!CollectionUtils.isEmpty(byIds)){
+                String storeName = "";
+                for (TbStore store : byIds) {
+                    storeName += store.getStoreName()+",";
+                }
+                storeName = storeName.substring(0,storeName.length()-1);
+                user.setStoreName(storeName);
+            }
+        }
     }
 
     /**
@@ -181,11 +210,7 @@ public class SysUserService {
         if (null == sysUser){
             return;
         }
-        SysUser oldSysUser = sysUserMapper.getSysUserByLoginNameOld(sysUser.getLoginName());
-        if (null != oldSysUser){
-            return;
-        }
-        sysUserMapper.saveOld(sysUser);
+
         List<SysUserRole> sysUserRoleList = new ArrayList<>();
         List<SysRole> sysRoles = sysRoleMapper.getSysRoleOldList();
         if (!CollectionUtils.isEmpty(sysRoles)) {
@@ -263,12 +288,9 @@ public class SysUserService {
      * @return
      */
     public PageInfo<SysUser> getSysUserByPage(int pageNum, int pageSize, String loginName, String name){
-        List<Long> dataTypeList = userCacheService.getDataType();
-        if (userCacheService.getSysUser().isAdmin()) {
-            dataTypeList = null;
-        }
+
         PageHelper.startPage(pageNum, pageSize,"register_date desc");
-        List<SysUser> sysUserList = sysUserMapper.getSysUserList(loginName, name, dataTypeList);
+        List<SysUser> sysUserList = sysUserMapper.getSysUserList(loginName, name);
         if (!CollectionUtils.isEmpty(sysUserList)) {
             sysUserList.forEach(sysUser -> {
                 SysUserPage sysUserPage = new SysUserPage();

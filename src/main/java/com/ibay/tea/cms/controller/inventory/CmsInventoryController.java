@@ -3,20 +3,17 @@ package com.ibay.tea.cms.controller.inventory;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.inventory.CmsInventoryService;
 import com.ibay.tea.entity.TbStoreGoods;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("/cms/inventory")
 public class CmsInventoryController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsInventoryController.class);
 
     @Resource
     private CmsInventoryService cmsInventoryService;
@@ -28,7 +25,7 @@ public class CmsInventoryController {
         try {
            return cmsInventoryService.findAll(param);
         }catch (Exception e){
-            LOGGER.error("list happen exception ",e);
+            log.error("list happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
 
@@ -41,7 +38,7 @@ public class CmsInventoryController {
         }
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsInventoryService.addStoreGoods(storeGoods);
             return resultInfo;
         }catch (Exception e){
@@ -54,7 +51,7 @@ public class CmsInventoryController {
     public ResultInfo deleteStoreGoods(@PathVariable("id") int id){
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsInventoryService.deleteStoreGoods(id);
             return resultInfo;
         }catch (Exception e){
@@ -71,7 +68,7 @@ public class CmsInventoryController {
         }
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsInventoryService.updateStoreGoods(storeGoods);
             return resultInfo;
         }catch (Exception e){
@@ -88,11 +85,11 @@ public class CmsInventoryController {
         }
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsInventoryService.initStoreGoods(storeId);
         	return resultInfo;
         }catch (Exception e){
-            LOGGER.error("happen exception ",e);
+            log.error("happen exception ",e);
         	return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -105,11 +102,11 @@ public class CmsInventoryController {
         }
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsInventoryService.clearStoreGoods(storeId);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error("happen exception ",e);
+            log.error("happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

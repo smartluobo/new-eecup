@@ -14,7 +14,8 @@ public class ResultInfo {
     }
 
     public ResultInfo(){
-
+        code = ReturnCodeEnum.REQUEST_SUCCESS.getStatus();
+        msg = ReturnCodeEnum.REQUEST_SUCCESS.getMsg();
     }
 
     public int getCode() {
@@ -61,6 +62,10 @@ public class ResultInfo {
         resultInfo.setCode(200);
         resultInfo.setMsg("success");
         return resultInfo;
+    }
+
+    public static ResultInfo newCmsSuccessResultInfo(){
+        return new ResultInfo(ReturnCodeEnum.REQUEST_SUCCESS);
     }
 
     public static ResultInfo newEmptyResultInfo(){

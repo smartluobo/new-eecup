@@ -182,4 +182,7 @@ public class ApiUserService {
         return tbUserCoupons == null;
     }
 
+    public boolean userCharge(Map<String, Integer> params) {
+        return false;
+    }
 }

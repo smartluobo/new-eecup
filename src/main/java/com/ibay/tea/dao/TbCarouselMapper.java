@@ -17,4 +17,6 @@ public interface TbCarouselMapper {
     void saveUpdateCarousel(TbCarousel tbCarousel);
 
     List<TbCarousel> findCarouselByStoreId(int storeId);
+
+    List<TbCarousel> findCmsCarouselByStoreId(int storeId);
 }

@@ -31,4 +31,8 @@ public class CmsCarouselService {
         tbCarouselMapper.deleteCarousel(tbCarousel.getId());
         tbCarouselMapper.saveUpdateCarousel(tbCarousel);
     }
+
+    public List<TbCarousel> findCarouselByStoreId(int storeId) {
+        return tbCarouselMapper.findCmsCarouselByStoreId(storeId);
+    }
 }

@@ -21,6 +21,9 @@
         <result column="del_flag" property="delFlag"/>
         <result column="create_date" property="createDate"/>
         <result column="update_date" property="updateDate"/>
+        <result column="is_admin" property="isAdmin"/>
+        <result column="store_ids" property="storeIds"/>
+        <result column="store_name" property="storeName"/>
     </resultMap>
 
     <sql id="BASE_TABLE">
@@ -28,7 +31,8 @@
     </sql>
 
     <sql id="BASE_COLUMN">
-        id, login_name,`name`, password, salt, register_date, email, phone, mobile, user_type, login_ip, login_date, create_by, update_by, remarks, del_flag, create_date, update_date
+        id, login_name,`name`, `password`, salt, register_date, email, phone, mobile, user_type, login_ip, login_date, create_by, update_by, remarks,
+        del_flag, create_date, update_date,is_admin,store_ids,store_name
     </sql>
 
     <!--保存用户数据-->
@@ -38,7 +42,7 @@
         (
         login_name,
         `name`,
-        password,
+        `password`,
         salt,
         register_date,
         email,
@@ -52,7 +56,10 @@
         remarks,
         del_flag,
         create_date,
-        update_date
+        update_date,
+        is_admin,
+        store_ids,
+        store_name
         )
         VALUES
         (
@@ -72,56 +79,13 @@
         #{remarks},
         #{delFlag},
         #{createDate},
-        #{updateDate}
+        #{updateDate},
+        #{isAdmin},
+        #{storeIds},
+        #{storeName}
         )
     </insert>
 
-    <!--保存用户数据-->
-    <insert id="saveOld" parameterType="com.ibay.tea.entity.system.SysUser">
-        INSERT INTO
-          sys_user
-        (
-        id,
-        login_name,
-        `name`,
-        password,
-        salt,
-        register_date,
-        email,
-        phone,
-        mobile,
-        user_type,
-        login_ip,
-        login_date,
-        create_by,
-        update_by,
-        remarks,
-        del_flag,
-        create_date,
-        update_date
-        )
-        VALUES
-        (
-        #{id},
-        #{loginName},
-        #{name},
-        #{password},
-        #{salt},
-        #{registerDate},
-        #{email},
-        #{phone},
-        #{mobile},
-        #{userType},
-        #{loginIp},
-        #{loginDate},
-        #{createBy},
-        #{updateBy},
-        #{remarks},
-        #{delFlag},
-        #{createDate},
-        #{updateDate}
-        )
-    </insert>
     <!-- 根据登录名称查询用户信息 -->
     <select id="getSysUserByLoginName" resultMap="BaseResultMap">
         SELECT
@@ -129,14 +93,6 @@
         FROM
         <include refid="BASE_TABLE"/>
         WHERE login_name = #{loginName}  AND del_flag = 0
-    </select>
-   <!-- 根据登录名称查询用户信息 -->
-    <select id="getSysUserByLoginNameOld" resultMap="BaseResultMap">
-        SELECT
-        <include refid="BASE_COLUMN"/>
-        FROM
-          sys_user
-        WHERE login_name = #{loginName}
     </select>
 
     <!-- 根据id查询用户信息 -->
@@ -161,29 +117,12 @@
     <select id="getSysUserList" resultMap="BaseResultMap">
         SELECT a.* FROM sys_new_user a
         <where>
-            a.id IN (
-            SELECT b.user_id
-            FROM sys_new_role c
-            LEFT JOIN sys_new_user_role b
-            ON b.role_id = c.id
-            <where>
-                <if test="dataTypeList != null and dataTypeList.size() > 0">
-                    AND b.user_id != 1
-                    AND c.role_type in
-                    <foreach collection="dataTypeList" item="item" open="(" close=")" separator=",">
-                        #{item}
-                    </foreach>
-                </if>
-            </where>
-            )
             <if test="loginName != null">
-            AND a.login_name LIKE CONCAT(CONCAT('%', #{loginName}), '%')
+              a.login_name LIKE CONCAT(CONCAT('%', #{loginName}), '%')
             </if>
-
             <if test="name != null">
             AND a.`name` LIKE CONCAT(CONCAT('%', #{name}), '%')
             </if>
-
             AND a.del_flag = 0
         </where>
     </select>
@@ -239,6 +178,13 @@
             <if test="updateDate != null">
                 update_date = #{updateDate},
             </if>
+            <if test="storeIds != null">
+                store_ids = #{storeIds},
+            </if>
+            <if test="storeName != null">
+                store_name = #{storeName},
+            </if>
+
 
         </set>
         where id = #{id} AND del_flag = 0

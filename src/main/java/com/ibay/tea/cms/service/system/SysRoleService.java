@@ -68,7 +68,7 @@ public class SysRoleService {
 
         SysRoleShowInfo sysRoleShoInfo = new SysRoleShowInfo();
         //获取菜单树形结构
-        sysRoleShoInfo.setSysMenuTree(sysMenuService.querySysMenuTree(null, true));
+        sysRoleShoInfo.setSysMenuTree(sysMenuService.querySysMenuTree(null, false));
 
         //角色类型
         Map<Integer, String> roleType = new HashMap<>(4);
@@ -98,20 +98,6 @@ public class SysRoleService {
         List<SysRole> operateSysRoleList = sysRoleMapper.getAllSysRoleByRoleType(1);
         resultMap.put("testRoles", testSysRoleList);
         resultMap.put("operateRoles", operateSysRoleList);
-        if (userCacheService.getSysUser().isAdmin()) {
-            return resultMap;
-        }
-        List<SysRole> currentSysRoles = userCacheService.getSysRoles();
-        if (!CollectionUtils.isEmpty(currentSysRoles)) {
-            //测试
-            if (currentSysRoles.get(0).getRoleType() == 0) {
-                resultMap.put("operateRoles", null);
-            }
-            //运营
-            if (currentSysRoles.get(0).getRoleType() == 1) {
-                resultMap.put("testRoles", null);
-            }
-        }
         return resultMap;
     }
 
@@ -261,9 +247,8 @@ public class SysRoleService {
      * @return
      */
     public PageInfo<SysRole> getSysRoleByPage(int pageNum, int pageSize, String roleName) {
-        List<Long> dataTypeList = userCacheService.getDataType();
         PageHelper.startPage(pageNum, pageSize, "create_date desc");
-        List<SysRole> sysRoleList = sysRoleMapper.getSysRoleList(roleName, dataTypeList);
+        List<SysRole> sysRoleList = sysRoleMapper.getSysRoleList(roleName);
         if (!CollectionUtils.isEmpty(sysRoleList)) {
             sysRoleList.forEach(sysRole -> {
                 if (StringUtils.isNotBlank(sysRole.getUpdateBy())) {

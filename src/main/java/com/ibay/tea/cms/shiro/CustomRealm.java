@@ -53,16 +53,27 @@ public class CustomRealm  extends AuthorizingRealm {
             return null;
         }
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        List<SysMenuRequest> list = sysMenuService.getSysMenuList();
-        if (!CollectionUtils.isEmpty(list)) {
-            list.forEach(menu -> {
-                if (!StringUtils.isEmpty(menu.getPermission())) {
-                    // 添加基于Permission的权限信息
-                    info.addStringPermission(menu.getPermission());
+        if(sysUser.getIsAdmin() == 1){
+            List<String> permissionList = sysMenuService.getAllSysMenuPermission();
+            if (!CollectionUtils.isEmpty(permissionList)){
+                for (String permission : permissionList) {
+                    info.addStringPermission(permission);
                 }
-            });
+            }
+            info.addStringPermission("sys:user:edit");
+            info.addStringPermission("sys:role:edit");
+            info.addStringPermission("sys:menu:edit");
+        }else{
+            List<SysMenuRequest> list = sysMenuService.getSysMenuList();
+            if (!CollectionUtils.isEmpty(list)) {
+                list.forEach(menu -> {
+                    if (!StringUtils.isEmpty(menu.getPermission())) {
+                        // 添加基于Permission的权限信息
+                        info.addStringPermission(menu.getPermission());
+                    }
+                });
+            }
         }
-
         log.info("login host:{}, id:{}, user loginName:{}", SecurityUtils.getSubject().getSession().getHost(),
                 shiroUser.getId(), shiroUser.getLoginName());
         return info;

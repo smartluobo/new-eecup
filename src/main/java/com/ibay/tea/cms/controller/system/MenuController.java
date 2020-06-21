@@ -57,7 +57,7 @@ public class MenuController {
         if (StringUtils.isBlank(menuId)) {
             return ResultInfo.newEmptyResultInfo();
         }
-        SysMenuTree menuTree = sysMenuService.querySysMenuTree(menuId, true);
+        SysMenuTree menuTree = sysMenuService.querySysMenuTree(menuId, false);
         resultInfo.setData(menuTree);
         return resultInfo;
     }

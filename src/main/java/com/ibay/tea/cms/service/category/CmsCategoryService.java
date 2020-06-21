@@ -17,6 +17,10 @@ public class CmsCategoryService {
         return tbItemCatMapper.findAll();
     }
 
+    public List<TbItemCat> findByStoreId(int storeId){
+        return tbItemCatMapper.findByStoreId(String.valueOf(storeId));
+    }
+
     public void addCategory(TbItemCat tbItemCat) {
         tbItemCatMapper.addCategory(tbItemCat);
     }

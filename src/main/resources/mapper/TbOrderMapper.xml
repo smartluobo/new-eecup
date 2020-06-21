@@ -41,7 +41,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     order_id, payment, payment_type, post_fee, `status`, create_time, update_time, payment_time,
-    consign_time, end_time, close_time, shipping_name, shipping_code, user_id, buyer_message, 
+    consign_time, end_time, close_time, shipping_name, shipping_code, user_id, buyer_message,
     buyer_nick, buyer_comment, oppen_id, self_get, address, phone_num, poster_url,goods_total_count,order_payment,
     coupons_reduce_amount,make_complete_send_status,close_send_status,store_id,store_name,goods_name,take_code,user_coupons_id,user_coupons_name,user_address_id,is_first_order
   </sql>
@@ -72,7 +72,7 @@
     <if test="orderStatus != -1">
       AND `status` = #{orderStatus}
     </if>
-    <if test="takeCode != -1">
+    <if test="takeCode != null">
       AND take_code = #{takeCode}
     </if>
     order by create_time desc
@@ -85,7 +85,7 @@
       <if test="orderStatus != -1">
         AND `status` = #{orderStatus}
       </if>
-      <if test="takeCode != -1">
+      <if test="takeCode != null">
         AND take_code = #{takeCode}
       </if>
   </select>
@@ -130,22 +130,22 @@
   </update>
 
     <insert id="insert" parameterType="com.ibay.tea.entity.TbOrder">
-    insert into tb_order (order_id, payment, payment_type, 
+    insert into tb_order (order_id, payment, payment_type,
       post_fee, `status`, create_time,
-      update_time, payment_time, consign_time, 
-      end_time, close_time, shipping_name, 
-      shipping_code, user_id, buyer_message, 
-      buyer_nick, buyer_comment, oppen_id, 
-      self_get, address, phone_num, 
+      update_time, payment_time, consign_time,
+      end_time, close_time, shipping_name,
+      shipping_code, user_id, buyer_message,
+      buyer_nick, buyer_comment, oppen_id,
+      self_get, address, phone_num,
       poster_url,goods_total_count,order_payment,
       coupons_reduce_amount,store_id,store_name,goods_name,take_code,user_coupons_id,user_coupons_name,user_address_id,is_first_order)
-    values (#{orderId,jdbcType=VARCHAR}, #{payment,jdbcType=DECIMAL}, #{paymentType,jdbcType=INTEGER}, 
-      #{postFee,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP}, #{consignTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{closeTime,jdbcType=TIMESTAMP}, #{shippingName,jdbcType=VARCHAR}, 
-      #{shippingCode,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, #{buyerMessage,jdbcType=VARCHAR}, 
-      #{buyerNick,jdbcType=VARCHAR}, #{buyerComment,jdbcType=BIT}, #{oppenId,jdbcType=VARCHAR}, 
-      #{selfGet,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR}, 
+    values (#{orderId,jdbcType=VARCHAR}, #{payment,jdbcType=DECIMAL}, #{paymentType,jdbcType=INTEGER},
+      #{postFee,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{paymentTime,jdbcType=TIMESTAMP}, #{consignTime,jdbcType=TIMESTAMP},
+      #{endTime,jdbcType=TIMESTAMP}, #{closeTime,jdbcType=TIMESTAMP}, #{shippingName,jdbcType=VARCHAR},
+      #{shippingCode,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, #{buyerMessage,jdbcType=VARCHAR},
+      #{buyerNick,jdbcType=VARCHAR}, #{buyerComment,jdbcType=BIT}, #{oppenId,jdbcType=VARCHAR},
+      #{selfGet,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, #{phoneNum,jdbcType=VARCHAR},
       #{posterUrl,jdbcType=VARCHAR},#{goodsTotalCount,jdbcType=INTEGER}, #{orderPayment,jdbcType=DECIMAL},
       #{couponsReduceAmount,jdbcType=DECIMAL},#{storeId},#{storeName},#{goodsName},#{takeCode},#{userCouponsId},#{userCouponsName},#{userAddressId},#{isFirstOrder})
   </insert>

@@ -48,7 +48,7 @@ public class LoginController {
      * 退出接口
      * @return
      */
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Object logout() {
         ResultInfo resultInfo = new ResultInfo();
         Subject currentUser = SecurityUtils.getSubject();

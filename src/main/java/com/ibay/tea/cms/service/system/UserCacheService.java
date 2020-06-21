@@ -71,10 +71,11 @@ public class UserCacheService {
     public List<SysMenuRequest> getSysMenuList() {
         List<SysMenuRequest> sysMenuList = null;
         SysUser sysUser = getSysUser();
-        if (sysUser.isAdmin()) {
+        if (sysUser.isAdmin() || sysUser.getIsAdmin() == 1) {
             sysMenuList = sysMenuService.buildSysMenuRequest(sysMenuMapper.getAllSysMenu());
         } else {
             sysMenuList = sysMenuService.buildSysMenuRequest(sysMenuMapper.getSysMenuByUserId(sysUser.getId()));
+
         }
         return sysMenuList;
     }

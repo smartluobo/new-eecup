@@ -22,13 +22,6 @@ public interface SysUserMapper {
      */
     Integer save(SysUser sysUser);
 
-    /**
-     * 保存到老的表中
-     *
-     * @param sysUser
-     * @return
-     */
-    Integer saveOld(SysUser sysUser);
 
     /**
      * 根据用户登录名查询用户信息
@@ -38,30 +31,16 @@ public interface SysUserMapper {
      */
     SysUser getSysUserByLoginName(@Param("loginName") String loginName);
 
-    /**
-     * 根据用户登录名查询用户信息
-     *
-     * @param loginName
-     * @return
-     */
-    SysUser getSysUserByLoginNameOld(@Param("loginName") String loginName);
 
-    /**
-     * 根据id删除用户
-     * @param id
-     */
-//    void deleteSysUserById(@Param("id") Integer id);
 
     /**
      * 查询用户列表
      *
      * @param loginName
      * @param name
-     * @param dataTypeList
      * @return
      */
-    List<SysUser> getSysUserList(@Param("loginName") String loginName, @Param("name") String name,
-                                 @Param("dataTypeList") List<Long> dataTypeList);
+    List<SysUser> getSysUserList(@Param("loginName") String loginName, @Param("name") String name);
 
     /**
      * 根据id查询用户信息

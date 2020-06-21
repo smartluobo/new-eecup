@@ -19,25 +19,26 @@
     <result column="poster_image" jdbcType="VARCHAR" property="posterImage" />
     <result column="is_ingredients" jdbcType="INTEGER" property="isIngredients" />
     <result column="tejia_price" jdbcType="DOUBLE" property="tejiaPrice" />
-
+    <result column="store_id" jdbcType="DOUBLE" property="storeId" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, title, sku_type_ids, simple_desc,sell_point, price, num, limit_num, image, cid, `status`, created, updated,default_sku_detail_ids,poster_image,is_ingredients,tejia_price
+    id, title, sku_type_ids, simple_desc,sell_point, price, num, limit_num, image, cid, `status`, created, updated,default_sku_detail_ids,
+    poster_image,is_ingredients,tejia_price,store_id
   </sql>
   <insert id="addGoods" parameterType="com.ibay.tea.entity.TbItem">
     INSERT INTO tb_item (title, sell_point, price, num, limit_num, image, cid, `status`,
-                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image,is_ingredients,tejia_price)
+                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image,is_ingredients,tejia_price,store_id)
     VALUES (#{title},#{sellPoint},#{price},#{num},#{limitNum},#{image},#{cid},#{status},
-      #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage},#{isIngredients},#{tejiaPrice}
+      #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage},#{isIngredients},#{tejiaPrice},#{storeId}
     )
   </insert>
 
   <insert id="saveUpdateGoods" parameterType="com.ibay.tea.entity.TbItem">
     INSERT INTO tb_item (id,title, sell_point, price, num, limit_num, image, cid, `status`,
-                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image,is_ingredients,tejia_price)
+                         created, sku_type_ids, simple_desc,default_sku_detail_ids,poster_image,is_ingredients,tejia_price,store_id)
     VALUES (#{id},#{title},#{sellPoint},#{price},#{num},#{limitNum},#{image},#{cid},#{status},
-                     #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage},#{isIngredients},#{tejiaPrice}
+                     #{created},#{skuTypeIds},#{simpleDesc},#{defaultSkuDetailIds},#{posterImage},#{isIngredients},#{tejiaPrice},#{storeId}
     )
   </insert>
 
@@ -61,6 +62,9 @@
         <if test="cid != null">
           and cid = #{cid}
         </if>
+          <if test="storeId != null">
+              and store_id = #{storeId}
+          </if>
       </where>
       LIMIT #{startIndex} , #{pageSize}
   </select>
@@ -73,6 +77,9 @@
           <if test="cid != null">
               and cid = #{cid}
           </if>
+          <if test="storeId != null">
+              and store_id = #{storeId}
+          </if>
       </where>
   </select>
   <select id="findGoodsListByCatIds" resultMap="BaseResultMap">
@@ -82,7 +89,11 @@
     </foreach>
   </select>
 
-  <delete id="deleteGoods" parameterType="java.lang.Long">
+    <select id="countGoodsByStoreId" resultType="java.lang.Long" parameterType="int">
+        select count(1) from tb_item where store_id = #{storeId}
+  </select>
+
+    <delete id="deleteGoods" parameterType="java.lang.Long">
     delete from tb_item where id = #{id,jdbcType=BIGINT}
   </delete>
 

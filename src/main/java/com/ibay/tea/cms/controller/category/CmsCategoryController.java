@@ -2,10 +2,9 @@ package com.ibay.tea.cms.controller.category;
 
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.category.CmsCategoryService;
-import com.ibay.tea.entity.Category;
 import com.ibay.tea.entity.TbItemCat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -14,21 +13,25 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping("cms/category")
+@Slf4j
 public class CmsCategoryController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsCategoryController.class);
 
     @Resource
     private CmsCategoryService cmsCategoryService;
 
+
     @RequestMapping("list")
-    public ResultInfo list(){
+    public ResultInfo list(int storeId){
+        if (storeId == 0){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-            List<TbItemCat> categories = cmsCategoryService.findAll();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
+            List<TbItemCat> categories = cmsCategoryService.findByStoreId(storeId);
             resultInfo.setData(categories);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error(" category find list happen exception",e);
+            log.error(" category find list happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -40,7 +43,7 @@ public class CmsCategoryController {
         }
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsCategoryService.addCategory(tbItemCat);
             return resultInfo;
         }catch (Exception e){
@@ -52,7 +55,7 @@ public class CmsCategoryController {
     public ResultInfo deleteCategory(@PathVariable("id") long id){
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsCategoryService.deleteCategoryById(id);
         	return resultInfo;
         }catch (Exception e){
@@ -68,7 +71,7 @@ public class CmsCategoryController {
             	return ResultInfo.newEmptyParamsResultInfo();
             }
             try {
-            	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             	cmsCategoryService.updateCategory(tbItemCat);
             	return resultInfo;
             }catch (Exception e){

@@ -114,6 +114,18 @@ public class SysMenuService {
         if (CollectionUtils.isEmpty(sysMenuList)){
             return result;
         }
+        boolean flag = false;
+        for (SysMenu sysMenu : sysMenuList) {
+            if (sysMenu.getParentId() == 0){
+                flag = true;
+                break;
+            }
+        }
+        if (!flag){
+            SysMenu topMenu = sysMenuMapper.getTopMenu();
+            sysMenuList.add(topMenu);
+        }
+
         sysMenuList.forEach(sysMenu -> {
             Integer parentId = sysMenu.getParentId();
             SysMenuRequest sysMenuRequest = new SysMenuRequest();
@@ -274,5 +286,10 @@ public class SysMenuService {
         SysUser sysUser = userCacheService.getSysUser();
         List<SysMenuRequest> sysMenuList = buildSysMenuRequest(sysMenuMapper.getSysMenuByUserId(sysUser.getId()));
         return sysMenuList;
+    }
+
+    public List<String> getAllSysMenuPermission() {
+        return sysMenuMapper.getAllSysMenuPermission();
+
     }
 }

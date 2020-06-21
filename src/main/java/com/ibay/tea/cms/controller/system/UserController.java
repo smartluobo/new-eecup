@@ -134,6 +134,7 @@ public class UserController {
                 && sysUserService.getUserByLoginName(loginName) != null) {
             return new ResultInfo(ReturnCodeEnum.USER_NAME_IS_EXITS);
         }
+
         sysUserService.saveSysUserById(sysUser);
         return resultInfo;
     }

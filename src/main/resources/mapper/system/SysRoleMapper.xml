@@ -125,12 +125,6 @@
             <if test="roleName != null">
                 AND `name` LIKE CONCAT(CONCAT('%', #{roleName}), '%')
             </if>
-            <if test="roleTypeList != null and roleTypeList.size() > 0">
-                AND role_type in
-                <foreach collection="roleTypeList" item="item" open="(" close=")" separator=",">
-                    #{item}
-                </foreach>
-            </if>
             AND del_flag = 0
         </where>
     </select>
@@ -147,6 +141,15 @@
     <!-- 根据角色名称查询角色信息 -->
     <select id="getSysRoleOldList" resultMap="BaseResultMap">
         SELECT * FROM sys_role
+    </select>
+
+    <select id="getSysRoleByIds" resultMap="BaseResultMap" parameterType="list">
+        select * from sys_new_role where id in
+        <foreach item="item" index="index" collection="sysRoleIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
     </select>
 
 

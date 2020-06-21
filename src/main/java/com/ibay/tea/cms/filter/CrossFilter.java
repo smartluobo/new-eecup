@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -12,6 +13,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 @Component
 @ServletComponentScan
@@ -30,7 +32,7 @@ public class CrossFilter implements Filter {
         log.error("--------------------CrossFilter-------------------------");
         String origin = req.getHeader("Origin");
         if (origin == null ){
-            resp.setHeader("Access-Control-Allow-Origin", "http://47.106.172.126:8668");
+            resp.setHeader("Access-Control-Allow-Origin", "http://47.106.172.126:8888");
         }
 
         resp.setHeader("Access-Control-Allow-Origin", origin);            // 允许指定域访问跨域资源
@@ -51,6 +53,19 @@ public class CrossFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    private void addSameSiteCookieAttribute(HttpServletResponse response) {
+        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+        boolean firstHeader = true;
+        for (String header : headers) { // there can be multiple Set-Cookie attributes
+            if (firstHeader) {
+                response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=Strict"));
+                firstHeader = false;
+                continue;
+            }
+            response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=Strict"));
+        }
     }
 
     private void setHeaders( HttpServletResponse response){

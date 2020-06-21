@@ -13,4 +13,6 @@ public class SysUserRequest extends SysUser {
     private String confirmPassword;
     /** 角色名称 **/
     private List<SysRole> sysRoleList;
+
+    private List<Integer> sysRoleIds;
 }

@@ -12,4 +12,6 @@ public class CommonConstant {
     public static final String DEFAULT_ENCODING = "UTF-8";
 
     public static final String IMAGE_URL_PREFIX = "http://localhost:8080/tea/image";
+
+    public static final String SUCCESS = "success";
 }

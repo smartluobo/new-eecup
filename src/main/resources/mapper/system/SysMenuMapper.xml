@@ -97,6 +97,14 @@
         WHERE parent_ids LIKE CONCAT(CONCAT('%,', #{parentIds}), ',%')
     </select>
 
+    <select id="getTopMenu" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE parent_id = 0
+    </select>
+
     <!-- 查询用户下所有的菜单信息 -->
     <select id="getSysMenuByUserId" resultMap="BaseResultMap">
         SELECT a.* FROM sys_new_menu a
@@ -106,6 +114,11 @@
         ON b.role_id = c.role_id
         WHERE c.user_id = #{userId} AND a.del_flag = 0
     </select>
+
+    <select id="getAllSysMenuPermission" resultType="java.lang.String">
+        SELECT DISTINCT permission FROM `sys_new_menu` WHERE permission IS NOT NULL AND permission<![CDATA[ <> '' ]]>
+    </select>
+
 
     <!-- 根据id更新数据库 -->
     <update id="update" parameterType="com.ibay.tea.entity.system.SysMenu">

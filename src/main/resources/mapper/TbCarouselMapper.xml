@@ -33,4 +33,8 @@
     SELECT <include refid="Base_Column_List" /> FROM tb_carousel WHERE store_id = -1 OR store_id = #{storeId}
   </select>
 
+    <select id="findCmsCarouselByStoreId" resultMap="BaseResultMap" parameterType="int">
+        SELECT <include refid="Base_Column_List" /> FROM tb_carousel WHERE store_id = #{storeId}
+    </select>
+
 </mapper>

@@ -86,10 +86,9 @@ public interface SysRoleMapper {
     /**
      * 查询系统角色列表
      * @param roleName
-     * @param roleTypeList
      * @return
      */
-    List<SysRole> getSysRoleList(@Param("roleName") String roleName, @Param("roleTypeList") List<Long> roleTypeList);
+    List<SysRole> getSysRoleList(@Param("roleName") String roleName);
 
     /**
      * 查询当前角色关联的角色信息
@@ -97,4 +96,6 @@ public interface SysRoleMapper {
      * @return
      */
     List<SysRole> getSysRoleAssociatedRole(@Param("id") Integer id);
+
+    List<SysRole> getSysRoleByIds(@Param("sysRoleIds") List<Integer> sysRoleIds);
 }

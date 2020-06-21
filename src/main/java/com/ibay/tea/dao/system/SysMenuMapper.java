@@ -61,4 +61,9 @@ public interface SysMenuMapper {
      * @return
      */
     List<SysMenu> getSysMenuByParentIds(@Param("parentIds") String parentIds);
+
+    List<String> getAllSysMenuPermission();
+
+    SysMenu getTopMenu();
+
 }

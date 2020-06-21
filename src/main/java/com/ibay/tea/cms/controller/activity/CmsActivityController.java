@@ -12,22 +12,23 @@ import com.ibay.tea.entity.TbActivity;
 import com.ibay.tea.entity.TbActivityCouponsRecord;
 import com.ibay.tea.entity.TbCoupons;
 import com.ibay.tea.entity.TbExperienceCouponsPool;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("/cms/activity")
 public class CmsActivityController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsActivityController.class);
 
     @Resource
     private CmsActivityService cmsActivityService;
@@ -44,20 +45,18 @@ public class CmsActivityController {
     @Resource
     private TbExperienceCouponsPoolMapper tbExperienceCouponsPoolMapper;
 
-    @RequestMapping("/list/{storeId}")
-    @RequiresPermissions("ui:wicket:view")
-    public ResultInfo list(@PathVariable("storeId") int storeId){
-
-        try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
-        	List<TbActivity> activityList =cmsActivityService.findByStoreId(storeId);
-            resultInfo.setData(activityList);
-        	return resultInfo;
-        }catch (Exception e){
-            LOGGER.error("activity list happen exception",e);
-        	return ResultInfo.newExceptionResultInfo();
+    @RequestMapping("/list")
+    public ResultInfo list(@RequestBody Map<String,String> params){
+        if (CollectionUtils.isEmpty(params)){
+            return ResultInfo.newEmptyParamsResultInfo();
         }
 
+        try {
+        	return cmsActivityService.findByStoreId(params);
+        }catch (Exception e){
+            log.error("activity list happen exception",e);
+        	return ResultInfo.newExceptionResultInfo();
+        }
     }
 
     @RequestMapping("/add")
@@ -68,11 +67,11 @@ public class CmsActivityController {
         }
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsActivityService.addActivity(tbActivity);
         	return resultInfo;
         }catch (Exception e){
-            LOGGER.error("addActivity list happen exception",e);
+            log.error("addActivity list happen exception",e);
         	return ResultInfo.newExceptionResultInfo();
         }
 
@@ -82,11 +81,11 @@ public class CmsActivityController {
     public ResultInfo deleteActivity(@PathVariable("id") int id){
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsActivityService.deleteActivity(id);
         	return resultInfo;
         }catch (Exception e){
-            LOGGER.error("addActivity list happen exception",e);
+            log.error("addActivity list happen exception",e);
         	return ResultInfo.newExceptionResultInfo();
         }
 
@@ -100,7 +99,7 @@ public class CmsActivityController {
         }
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsActivityService.updateActivity(tbActivity);
         	return resultInfo;
         }catch (Exception e){
@@ -116,7 +115,7 @@ public class CmsActivityController {
             return ResultInfo.newEmptyParamsResultInfo();
         }
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             List<TbActivityCouponsRecord> recordList = tbActivityCouponsRecordMapper.findCouponsByActivityId(activityId);
             resultInfo.setData(recordList);
             return resultInfo;
@@ -128,12 +127,12 @@ public class CmsActivityController {
 
     @RequestMapping("/addCoupons")
     public ResultInfo activityAddCoupons(@RequestBody TbActivityCouponsRecord tbActivityCouponsRecord){
-        LOGGER.info("tbActivityCouponsRecord : {}",tbActivityCouponsRecord);
+        log.info("tbActivityCouponsRecord : {}",tbActivityCouponsRecord);
         if (tbActivityCouponsRecord == null){
             return ResultInfo.newEmptyParamsResultInfo();
         }
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             int activityId = tbActivityCouponsRecord.getActivityId();
             int couponsId = tbActivityCouponsRecord.getCouponsId();
 
@@ -161,7 +160,7 @@ public class CmsActivityController {
                     experienceCouponsPool.setCouponsName(tbCoupons.getCouponsName());
                     pools.add(experienceCouponsPool);
                 }
-                LOGGER.info("insert store coupons count :{}",pools.size());
+                log.info("insert store coupons count :{}",pools.size());
                 tbExperienceCouponsPoolMapper.insertBatch(pools);
                 return resultInfo;
             }else {
@@ -169,7 +168,7 @@ public class CmsActivityController {
                 tbActivityCouponsRecord.setActivityName(tbActivity.getActivityName());
                 tbActivityCouponsRecord.setCouponsName(tbCoupons.getCouponsName());
                 tbActivityCouponsRecord.setCouponsPoster(tbCoupons.getCouponsPoster());
-                LOGGER.info("activity add coupons tbActivityCouponsRecord : {}",tbActivityCouponsRecord);
+                log.info("activity add coupons tbActivityCouponsRecord : {}",tbActivityCouponsRecord);
                 if(tbActivityCouponsRecord.getId() != 0){
                     tbActivityCouponsRecordMapper.updateRecord(tbActivityCouponsRecord);
                 }else {
@@ -178,7 +177,7 @@ public class CmsActivityController {
                 return resultInfo;
             }
         }catch (Exception e){
-            LOGGER.error("add activity coupons happen exception",e);
+            log.error("add activity coupons happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -187,11 +186,11 @@ public class CmsActivityController {
     @RequestMapping("/deleteCoupons/{activityId}/{id}")
     public ResultInfo activityDeleteCoupons(@PathVariable("activityId") int activityId,@PathVariable("id") int id){
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             tbActivityCouponsRecordMapper.activityDeleteCoupons(activityId,id);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error("");
+            log.error("");
             return ResultInfo.newExceptionResultInfo();
         }
     }

@@ -96,6 +96,12 @@ public class SysUser {
      */
     private String updateUser;
 
+    private int isAdmin;
+
+    private String storeIds;
+
+    private String storeName;
+
     /**
      * 判断当前用户是否为admin用户
      * @return
