@@ -29,4 +29,7 @@ public interface TbItemMapper {
     List<TbItem> findGoodsListByCatIds(List<Long> storeCatIds);
 
     Long countGoodsByStoreId(@Param("storeId") Integer storeId);
+
+    List<TbItem> findGoodsByStoreId(int storeId);
+
 }

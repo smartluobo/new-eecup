@@ -43,4 +43,6 @@ public interface TbApiUserMapper {
     List<TbApiUser> findNoBindStoreUser();
 
     void updateApiUserStore(@Param("oppenId") String oppenId, @Param("storeId") int storeId);
+
+    TbApiUser findApiUserById(int apiUserId);
 }

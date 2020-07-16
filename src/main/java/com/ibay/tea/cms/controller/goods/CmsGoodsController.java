@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -71,6 +72,25 @@ public class CmsGoodsController {
 
     }
 
+    @RequestMapping("/findGoodsByStore")
+    public ResultInfo findGoodsByStore(@RequestBody Map<String,String> params){
+        if (params == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+
+        try {
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
+            String storeId = params.get("storeId");
+            Integer storeIdInt = Integer.valueOf(storeId);
+            List<TbItem> items = cmsGoodsService.findGoodsByStoreId(storeIdInt);
+            resultInfo.setData(items);
+            return resultInfo;
+        }catch (Exception e){
+            return ResultInfo.newExceptionResultInfo();
+        }
+
+    }
+
     @RequestMapping("/delete/{id}")
     public ResultInfo deleteGoods(@PathVariable("id") long id){
         try {
@@ -100,24 +120,7 @@ public class CmsGoodsController {
 
     }
 
-    @RequestMapping("/copyStoreGoods")
-    public ResultInfo copyStoreGoods(@RequestBody Map<String,Integer> params){
 
-       if (CollectionUtils.isEmpty(params)){
-           return ResultInfo.newEmptyParamsResultInfo();
-       }
-        Integer currentStoreId = params.get("currentStoreId");
-        Integer targetStoreId = params.get("targetStoreId");
-        if (currentStoreId == null || targetStoreId == null){
-            return ResultInfo.newEmptyParamsResultInfo();
-        }
-        String result = cmsGoodsService.copyStoreGoods(currentStoreId,targetStoreId);
-        if (CommonConstant.SUCCESS.equals(result)){
-            return new ResultInfo();
-        }else {
-            return ResultInfo.newFailResultInfo(result);
-        }
-    }
 
 
 }

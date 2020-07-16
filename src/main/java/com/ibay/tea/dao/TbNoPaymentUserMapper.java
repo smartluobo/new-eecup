@@ -19,4 +19,6 @@ public interface TbNoPaymentUserMapper {
     void insert(TbNoPaymentUser tbNoPaymentUser);
 
     void deleteById(int id);
+
+    List<TbNoPaymentUser> findByStoreId(int storeId);
 }

@@ -93,6 +93,9 @@
         select count(1) from tb_item where store_id = #{storeId}
   </select>
 
+    <select id="findGoodsByStoreId" resultMap="BaseResultMap" parameterType="int">
+        select * from tb_item where store_id = #{storeId}
+    </select>
     <delete id="deleteGoods" parameterType="java.lang.Long">
     delete from tb_item where id = #{id,jdbcType=BIGINT}
   </delete>

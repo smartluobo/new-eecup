@@ -68,4 +68,6 @@ public class CmsInventoryService {
     public void clearStoreGoods(int storeId) {
         tbStoreGoodsMapper.clearStoreGoods(storeId);
     }
+
+
 }

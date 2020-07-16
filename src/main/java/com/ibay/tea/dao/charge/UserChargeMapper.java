@@ -10,5 +10,7 @@ import java.util.List;
 @Component
 public interface UserChargeMapper {
 
-    public List<TbChargeConfig> findAllChargeConfig();
+    List<TbChargeConfig> findAllChargeConfig();
+
+    TbChargeConfig findChargeConfigById(int chargeConfigId);
 }

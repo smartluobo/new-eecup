@@ -29,12 +29,12 @@ public class CmsNoPaymentUserController {
     }
 
     @RequestMapping("/add")
-    public ResultInfo addNoPaymentUserByPage(@RequestBody TbNoPaymentUser tbNoPaymentUser){
-        if (tbNoPaymentUser == null){
+    public ResultInfo addNoPaymentUserByPage(@RequestBody Map<String,String> params){
+        if (params == null){
             return ResultInfo.newEmptyParamsResultInfo();
         }
         try {
-            String result = cmsNoPaymentUserService.addNoPaymentUserByPage(tbNoPaymentUser);
+            String result = cmsNoPaymentUserService.addNoPaymentUserByPage(params);
             if (CommonConstant.SUCCESS.equals(result)){
                 return ResultInfo.newCmsSuccessResultInfo();
             }

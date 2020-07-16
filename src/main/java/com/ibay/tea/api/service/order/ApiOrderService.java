@@ -89,6 +89,9 @@ public class ApiOrderService {
     @Resource
     private CalculateService calculateService;
 
+    @Resource
+    private TbNoPaymentUserMapper tbNoPaymentUserMapper;
+
     public Map<String, Object> createOrderByCart(CartOrderParamVo cartOrderParamVo) throws Exception{
 
         int selfGet = cartOrderParamVo.getSelfGet();
@@ -189,19 +192,21 @@ public class ApiOrderService {
         if (selfGet == ApiConstant.ORDER_TAKE_WAY_SEND){
             tbOrder.setPostFee(store.getSendCost());
         }
-
-        if ("oHqQ75F9LGcWIblYeuGpHgla5G8k".equals(oppenId) ||
-                "oHqQ75BT_yefBUhcpnDNPLlWXgIE".equals(oppenId) || "oHqQ75PK0MINLseURXzalNfxeZ-o".equals(oppenId)
-                || "oHqQ75K9Izeu_imTMw26ZQo2mLgY".equals(oppenId)){
-            log.info("current oppenId : {} create order no pay",oppenId);
-            Map<String, Object> payMap = new HashMap<>();
-            //代下单订单状态
-            tbOrder.setStatus(8);
-            tbOrderMapper.insert(tbOrder);
-            //调用打印机
-            printService.printOrder(tbOrder,store,ApiConstant.PRINT_TYPE_ORDER_ALL);
-            tbCartMapper.deleteCartItemByIds(Arrays.asList(cartItemIdArr));
-            return payMap;
+        List<TbNoPaymentUser> noPaymentUsers = tbNoPaymentUserMapper.findByStoreId(storeId);
+        if (!CollectionUtils.isEmpty(noPaymentUsers)){
+            for (TbNoPaymentUser noPaymentUser : noPaymentUsers) {
+                if (noPaymentUser.getOppenId().equals(oppenId)){
+                    log.info("current oppenId : {} create order no pay",oppenId);
+                    Map<String, Object> payMap = new HashMap<>();
+                    //代下单订单状态
+                    tbOrder.setStatus(8);
+                    tbOrderMapper.insert(tbOrder);
+                    //调用打印机
+                    printService.printOrder(tbOrder,store,ApiConstant.PRINT_TYPE_ORDER_ALL);
+                    tbCartMapper.deleteCartItemByIds(Arrays.asList(cartItemIdArr));
+                    return payMap;
+                }
+            }
         }
         tbOrderMapper.insert(tbOrder);
         //判断是否需要调起支付

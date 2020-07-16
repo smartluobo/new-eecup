@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.charge.UserAccountRecordMapper">
+    <resultMap id="BaseResultMap" type="com.ibay.tea.entity.charge.UserAccountRecord">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="amount" jdbcType="VARCHAR" property="amount"/>
+        <result column="order_id" jdbcType="VARCHAR" property="orderId"/>
+        <result column="store_id" jdbcType="INTEGER" property="storeId"/>
+        <result column="pre_amount" jdbcType="VARCHAR" property="preAmount"/>
+        <result column="after_amount" jdbcType="VARCHAR" property="afterAmount"/>
+        <result column="cms_user_id" jdbcType="INTEGER" property="cmsUserId"/>
+        <result column="cms_user_name" jdbcType="VARCHAR" property="cmsUserName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.ibay.tea.entity.charge.UserAccountRecord">
+      insert into tb_api_user_account_record (`type`,amount,order_id,store_id,pre_amount,after_amount,cms_user_id,cms_user_name,create_time)
+      values (#{type},#{amount},#{orderId},#{storeId},#{preAmount},#{afterAmount},#{cmsUserId},#{cmsUserName},#{createTime})
+    </insert>
+
+
+</mapper>

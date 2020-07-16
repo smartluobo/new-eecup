@@ -3,18 +3,20 @@
 <mapper namespace="com.ibay.tea.dao.TbNoPaymentUserMapper">
     <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbNoPaymentUser">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
-        <result column="oppen_id" jdbcType="VARCHAR" property="oppenId"/>
-        <result column="user_phone" jdbcType="VARCHAR" property="userPhone"/>
-        <result column="store_id" jdbcType="INTEGER" property="storeId"/>
-        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="oppen_id"  property="oppenId"/>
+        <result column="user_phone"  property="userPhone"/>
+        <result column="store_id"  property="storeId"/>
+        <result column="real_name"  property="realName"/>
+        <result column="create_time"  property="createTime"/>
+        <result column="update_time"  property="updateTime"/>
+        <result column="operation_user"  property="operationUser"/>
+        <result column="operation_user_id"  property="operationUserId"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.ibay.tea.entity.TbNoPaymentUser">
-        insert into tb_no_payment_user (nick_name,oppen_id,user_phone,store_id,real_name,create_time,update_time)
-        values (#{nickName},#{oppenId},#{userPhone},#{storeId},#{realName},#{createTime},#{updateTime})
+        insert into tb_no_payment_user (nick_name,oppen_id,user_phone,store_id,real_name,create_time,update_time,operation_user,operation_user_id)
+        values (#{nickName},#{oppenId},#{userPhone},#{storeId},#{realName},#{createTime},#{updateTime},#{operationUser},#{operationUserId})
     </insert>
 
     <delete id="deleteById" parameterType="int">
@@ -48,6 +50,9 @@
             </if>
         </where>
         limit #{startIndex},#{pageSize}
+    </select>
+    <select id="findByStoreId" resultMap="BaseResultMap" parameterType="int">
+        select * from tb_no_payment_user where store_id = #{storeId}
     </select>
 
 

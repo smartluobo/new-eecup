@@ -17,7 +17,7 @@ import java.util.Map;
 public class LoginController {
 
     @PostMapping("/login")
-    public ResultInfo doLogin(@RequestBody Map<String,String> params) {
+    public ResultInfo doLogin() {
         Subject currentUser = SecurityUtils.getSubject();
         if (currentUser.isAuthenticated()){
             return new ResultInfo(ReturnCodeEnum.LOGIN_SUCCESS);

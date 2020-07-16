@@ -95,7 +95,11 @@
     SELECT user_bind_phone_num FROM tb_api_user where user_bind_phone_num IS NOT NULL
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="findApiUserById" resultMap="BaseResultMap" parameterType="int">
+        select * from tb_api_user where id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_api_user where id = #{id,jdbcType=INTEGER}
   </delete>
 

@@ -4,6 +4,7 @@ import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.company.CmsFavorableCompanyService;
 import com.ibay.tea.entity.TbFavorableCompany;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -35,14 +36,28 @@ public class CmsFavorableCompanyController {
     }
 
     @RequestMapping("/add")
-    public ResultInfo addFavorableCompany(@RequestBody TbFavorableCompany printer){
-        if (printer == null){
+    public ResultInfo addFavorableCompany(@RequestBody TbFavorableCompany favorableCompany){
+        if (favorableCompany == null){
             return ResultInfo.newEmptyParamsResultInfo();
         }
 
         try {
             ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
-            cmsFavorableCompanyService.addFavorableCompany(printer);
+            if (favorableCompany.getCouponsType() == 0){
+                //优惠企业新增
+                if (StringUtils.isEmpty(favorableCompany.getCompanyRatio())){
+                    return ResultInfo.newFailResultInfo("优惠企业折扣率不能为空");
+                }
+                try {
+                    double v = Double.parseDouble(favorableCompany.getCompanyRatio());
+                    if (v <= 0){
+                        return ResultInfo.newFailResultInfo("优惠企业折扣率不能小于等于0");
+                    }
+                }catch (Exception e){
+                    return ResultInfo.newFailResultInfo("优惠企业折扣率只能为数字");
+                }
+            }
+            cmsFavorableCompanyService.addFavorableCompany(favorableCompany);
             return resultInfo;
         }catch (Exception e){
             log.error("cms FavorableCompany add happen exception ",e);

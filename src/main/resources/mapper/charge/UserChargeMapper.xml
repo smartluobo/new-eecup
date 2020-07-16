@@ -14,7 +14,9 @@
         select * from tb_charge_config ;
     </select>
 
-
+    <select id="findChargeConfigById" resultMap="ConfigResultMap" parameterType="int">
+        select * from tb_charge_config where id = #{id}
+    </select>
 
 
 </mapper>

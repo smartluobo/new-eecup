@@ -1,15 +1,17 @@
 package com.ibay.tea.cms.controller.store;
 
 import com.ibay.tea.api.response.ResultInfo;
+import com.ibay.tea.cms.service.goods.CmsGoodsService;
 import com.ibay.tea.cms.service.store.CmsStoreService;
+import com.ibay.tea.common.CommonConstant;
 import com.ibay.tea.entity.TbStore;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -19,6 +21,9 @@ public class CmsStoreController {
 
     @Resource
     private CmsStoreService cmsStoreService;
+
+    @Resource
+    private CmsGoodsService cmsGoodsService;
 
     @RequestMapping("/getStoreByUser")
     public ResultInfo getStoreByUser(){
@@ -93,5 +98,24 @@ public class CmsStoreController {
         	return ResultInfo.newExceptionResultInfo();
         }
 
+    }
+
+    @RequestMapping("/copyStoreGoods")
+    public ResultInfo copyStoreGoods(@RequestBody Map<String,Integer> params){
+
+        if (CollectionUtils.isEmpty(params)){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        Integer currentStoreId = params.get("currentStoreId");
+        Integer targetStoreId = params.get("targetStoreId");
+        if (currentStoreId == null || targetStoreId == null){
+            return ResultInfo.newEmptyParamsResultInfo();
+        }
+        String result = cmsGoodsService.copyStoreGoods(currentStoreId,targetStoreId);
+        if (CommonConstant.SUCCESS.equals(result)){
+            return new ResultInfo();
+        }else {
+            return ResultInfo.newFailResultInfo(result);
+        }
     }
 }
