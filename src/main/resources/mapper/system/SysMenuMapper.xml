@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ibay.tea.dao.system.SysMenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.ibay.tea.entity.system.SysMenu" >
+        <id column="id" property="id"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_ids" property="parentIds"/>
+        <result column="name" property="name"/>
+        <result column="sort" property="sort"/>
+        <result column="is_show" property="isShow"/>
+        <result column="permission" property="permission"/>
+        <result column="target" property="target"/>
+        <result column="href" property="href"/>
+        <result column="icon" property="icon"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remarks" property="remarks"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+
+    <sql id="BASE_TABLE">
+        sys_new_menu
+    </sql>
+
+    <sql id="BASE_COLUMN">
+        id, parent_id, parent_ids, `name`, sort, is_show, permission, target, href, icon, create_by, update_by, remarks, del_flag, create_date, update_date
+    </sql>
+
+    <!--保存菜单数据-->
+    <insert id="save" parameterType="com.ibay.tea.entity.system.SysMenu" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        (
+        parent_id,
+        parent_ids,
+        `name`,
+        sort,
+        is_show,
+        permission,
+        target,
+        href,
+        icon,
+        create_by,
+        update_by,
+        remarks,
+        del_flag,
+        create_date,
+        update_date
+        )
+        VALUES
+        (
+        #{parentId},
+        #{parentIds},
+        #{name},
+        #{sort},
+        #{isShow},
+        #{permission},
+        #{target},
+        #{href},
+        #{icon},
+        #{createBy},
+        #{updateBy},
+        #{remarks},
+        #{delFlag},
+        #{createDate},
+        #{updateDate}
+        )
+    </insert>
+
+    <!-- 根据id查询菜单信息 -->
+    <select id="getSysMenuById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE id = #{id} AND del_flag = 0
+    </select>
+
+    <!-- 查询所有的菜单信息 -->
+    <select id="getAllSysMenu" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE del_flag = 0
+    </select>
+
+    <!-- 根据父级菜单Id查询菜单信息 -->
+    <select id="getSysMenuByParentIds" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE parent_ids LIKE CONCAT(CONCAT('%,', #{parentIds}), ',%')
+    </select>
+
+    <select id="getTopMenu" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE parent_id = 0
+    </select>
+
+    <!-- 查询用户下所有的菜单信息 -->
+    <select id="getSysMenuByUserId" resultMap="BaseResultMap">
+        SELECT a.* FROM sys_new_menu a
+        JOIN sys_new_role_menu b
+        ON a.id = b.menu_id
+        JOIN sys_new_user_role c
+        ON b.role_id = c.role_id
+        WHERE c.user_id = #{userId} AND a.del_flag = 0
+    </select>
+
+    <select id="getAllSysMenuPermission" resultType="java.lang.String">
+        SELECT DISTINCT permission FROM `sys_new_menu` WHERE permission IS NOT NULL AND permission<![CDATA[ <> '' ]]>
+    </select>
+
+
+    <!-- 根据id更新数据库 -->
+    <update id="update" parameterType="com.ibay.tea.entity.system.SysMenu">
+        update sys_new_menu
+        <set>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="parentIds != null">
+                parent_ids = #{parentIds},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="isShow != null">
+                is_show = #{isShow},
+            </if>
+            <if test="target != null">
+                target = #{target},
+            </if>
+            <if test="href != null">
+                href = #{href},
+            </if>
+            <if test="permission != null">
+                permission = #{permission},
+            </if>
+            <if test="icon != null">
+                icon = #{icon},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+
+        </set>
+        where id = #{id} AND del_flag = 0
+    </update>
+
+    <!-- 根据id更新数据库 -->
+    <update id="deleteSysMenuById">
+        update sys_new_menu
+        <set>
+            del_flag = 1,
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+
+        </set>
+        WHERE parent_ids LIKE CONCAT(CONCAT('%,', #{id}), ',%') OR id = #{id}
+    </update>
+</mapper>

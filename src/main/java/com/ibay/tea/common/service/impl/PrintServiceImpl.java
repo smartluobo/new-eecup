@@ -61,26 +61,21 @@ public class PrintServiceImpl implements PrintService {
             TbPrinter printer = tbPrinterMapper.findById(store.getOrderPrinterId());
             if (printer.getPrinterBrand() == 0){
                 //飞蛾打印机打应订单
-                String printContent = buildOrderPrintContent(tbOrder);
+                String printContent = buildOrderPrintContent(tbOrder,store);
                 printUtil.print(printer.getPrinterSn(),printContent);
             }else if (printer.getPrinterBrand() == 1){
                 //易联云打印机打印订单
-                String content = buildOrderPrintByYiLianYun(tbOrder);
+                String content = buildOrderPrintByYiLianYun(tbOrder,store);
                 yiLianYunPrintUtil.sendContent(printer,content);
-            /*    for (int i = 0; i < 2; i++) {
-                    yiLianYunPrintUtil.sendContent(printer,content);
-                }*/
             }
 
         }else if (printType == ApiConstant.PRINT_TYPE_ORDER){
             TbPrinter printer = tbPrinterMapper.findById(store.getOrderPrinterId());
             if (printer.getPrinterBrand() == 0){
-                String printContent = buildOrderPrintContent(tbOrder);
+                String printContent = buildOrderPrintContent(tbOrder,store);
                 printUtil.print(printer.getPrinterSn(),printContent);
             } else if(printer.getPrinterBrand() == 1){
-
-                yiLianYunPrintUtil.sendContent(printer,buildOrderPrintByYiLianYun(tbOrder));
-
+                yiLianYunPrintUtil.sendContent(printer,buildOrderPrintByYiLianYun(tbOrder,store));
             }
 
         }else if (printType == ApiConstant.PRINT_TYPE_ORDER_ITEM){
@@ -90,7 +85,7 @@ public class PrintServiceImpl implements PrintService {
        return null;
     }
 
-    private String buildOrderPrintByYiLianYun(TbOrder tbOrder) {
+    private String buildOrderPrintByYiLianYun(TbOrder tbOrder,TbStore store) {
 
         List<TbOrderItem> orderItemList = tbOrderItemMapper.findOrderItemByOrderId(tbOrder.getOrderId());
 
@@ -116,7 +111,7 @@ public class PrintServiceImpl implements PrintService {
             }
         }
 
-        String printContent = "<center><FH2><FS><FW>  EECUP TCL国际E店 </FS></FW></FH2>\\r\\r</center>" +
+        String printContent = "<center><FH2><FS><FW>  EECUP "+store.getStoreName() +"</FS></FW></FH2>\\r\\r</center>" +
                 "<center><FH2>取餐码:"+ tbOrder.getTakeCode()+" </FH2>\\r\\r</center>" +
                 "................................\\r\n" +
                 "下单时间："+tbOrder.getCreateDateStr()+"\\r\n" +
@@ -133,10 +128,11 @@ public class PrintServiceImpl implements PrintService {
         return printContent;
     }
 
-    private String buildOrderPrintContent(TbOrder tbOrder) {
+    private String buildOrderPrintContent(TbOrder tbOrder,TbStore store) {
         List<TbOrderItem> orderItemList = tbOrderItemMapper.findOrderItemByOrderId(tbOrder.getOrderId());
         String printContent = "";
-        printContent += "<CB>eecup南山分店</CB><BR>";
+        String title = "<CB>EECUP " + store.getStoreName() + "</CB><BR>";
+        printContent += title;
         printContent += "<CB>结账单</CB><BR>";
         printContent += "时间: "+tbOrder.getCreateDateStr()+"<BR>";
         printContent += "单号: "+tbOrder.getTakeCode()+"<BR>";

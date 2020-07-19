@@ -1,16 +1,37 @@
 package com.ibay.tea.cms.service.sku;
 
+import com.ibay.tea.dao.TbSkuTypeMapper;
 import com.ibay.tea.entity.TbSkuType;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-public interface CmsSkuTypeService {
+@Service
+public class CmsSkuTypeService {
 
-    List<TbSkuType> findAll();
+    @Resource
+    private TbSkuTypeMapper tbSkuTypeMapper;
 
-    void addSkuType(TbSkuType tbSkuType);
+    public List<TbSkuType> findAll() {
+        return tbSkuTypeMapper.findAll();
+    }
 
-    void deleteSkuType(int id);
+    public void addSkuType(TbSkuType tbSkuType) {
+        tbSkuTypeMapper.addSkuType(tbSkuType);
 
-    void updateSkuType(TbSkuType tbSkuType);
+    }
+
+    public void deleteSkuType(int id) {
+        tbSkuTypeMapper.deleteByPrimaryKey(id);
+    }
+
+    public void updateSkuType(TbSkuType tbSkuType) {
+        TbSkuType dbSkuType = tbSkuTypeMapper.selectByPrimaryKey(tbSkuType.getId());
+        if (dbSkuType == null){
+            return;
+        }
+        tbSkuTypeMapper.deleteByPrimaryKey(tbSkuType.getId());
+        tbSkuTypeMapper.saveUpdateSkuType(tbSkuType);
+    }
 }

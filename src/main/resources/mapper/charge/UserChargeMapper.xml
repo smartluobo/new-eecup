@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.charge.UserChargeMapper">
+  <resultMap id="ConfigResultMap" type="com.ibay.tea.entity.charge.TbChargeConfig">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="charge_amount" jdbcType="INTEGER" property="chargeAmount" />
+    <result column="give_amount" jdbcType="INTEGER" property="giveAmount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+    <select id="findAllChargeConfig" resultMap="ConfigResultMap">
+        select * from tb_charge_config ;
+    </select>
+
+    <select id="findChargeConfigById" resultMap="ConfigResultMap" parameterType="int">
+        select * from tb_charge_config where id = #{id}
+    </select>
+
+
+</mapper>

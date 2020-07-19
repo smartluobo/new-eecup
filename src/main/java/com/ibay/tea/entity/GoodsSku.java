@@ -1,7 +1,12 @@
 package com.ibay.tea.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
+@Data
 public class GoodsSku {
     private Integer id;
 
@@ -11,67 +16,13 @@ public class GoodsSku {
 
     private Integer skuTypeId;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getSkuName() {
-        return skuName;
-    }
-
-    public void setSkuName(String skuName) {
-        this.skuName = skuName == null ? null : skuName.trim();
-    }
-
-    public String getSkuPrice() {
-        return skuPrice;
-    }
-
-    public void setSkuPrice(String skuPrice) {
-        this.skuPrice = skuPrice == null ? null : skuPrice.trim();
-    }
-
-    public Integer getSkuTypeId() {
-        return skuTypeId;
-    }
-
-    public void setSkuTypeId(Integer skuTypeId) {
-        this.skuTypeId = skuTypeId;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "GoodsSku{" +
-                "id=" + id +
-                ", skuName='" + skuName + '\'' +
-                ", skuPrice='" + skuPrice + '\'' +
-                ", skuTypeId=" + skuTypeId +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                '}';
-    }
 }

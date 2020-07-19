@@ -1,4 +1,7 @@
 package com.ibay.tea.cms.service.cart;
 
-public interface CmsCartService {
+import org.springframework.stereotype.Service;
+
+@Service
+public class CmsCartService {
 }

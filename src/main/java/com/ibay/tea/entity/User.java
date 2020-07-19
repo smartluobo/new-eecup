@@ -1,7 +1,12 @@
 package com.ibay.tea.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
+@Data
 public class User {
     private Integer id;
 
@@ -15,85 +20,11 @@ public class User {
 
     private String phone;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getWechatNickName() {
-        return wechatNickName;
-    }
-
-    public void setWechatNickName(String wechatNickName) {
-        this.wechatNickName = wechatNickName == null ? null : wechatNickName.trim();
-    }
-
-    public String getWechatNumber() {
-        return wechatNumber;
-    }
-
-    public void setWechatNumber(String wechatNumber) {
-        this.wechatNumber = wechatNumber == null ? null : wechatNumber.trim();
-    }
-
-    public String getWechatOppenId() {
-        return wechatOppenId;
-    }
-
-    public void setWechatOppenId(String wechatOppenId) {
-        this.wechatOppenId = wechatOppenId == null ? null : wechatOppenId.trim();
-    }
-
-    public String getWechatPhone() {
-        return wechatPhone;
-    }
-
-    public void setWechatPhone(String wechatPhone) {
-        this.wechatPhone = wechatPhone == null ? null : wechatPhone.trim();
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", wechatNickName='" + wechatNickName + '\'' +
-                ", wechatNumber='" + wechatNumber + '\'' +
-                ", wechatOppenId='" + wechatOppenId + '\'' +
-                ", wechatPhone='" + wechatPhone + '\'' +
-                ", phone='" + phone + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                '}';
-    }
 }

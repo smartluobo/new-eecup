@@ -34,4 +34,8 @@ public interface TbActivityMapper {
 
 
     List<TbActivity> findByStoreId(int storeId);
+
+    long countByCondition(Map<String, Object> condition);
+
+    List<TbActivity> findActivityByCondition(Map<String, Object> condition);
 }

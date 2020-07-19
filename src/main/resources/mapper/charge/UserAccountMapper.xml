@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.charge.UserAccountMapper">
+    <resultMap id="BaseResultMap" type="com.ibay.tea.entity.charge.UserAccount">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="api_user_id" jdbcType="INTEGER" property="apiUserId"/>
+        <result column="user_phone" jdbcType="VARCHAR" property="userPhone"/>
+        <result column="oppen_id" jdbcType="VARCHAR" property="oppenId"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="account_amount" jdbcType="VARCHAR" property="accountAmount"/>
+        <result column="first_store_id" jdbcType="INTEGER" property="firstStoreId"/>
+        <result column="cms_user_id" jdbcType="INTEGER" property="cmsUserId"/>
+        <result column="cms_user_name" jdbcType="VARCHAR" property="cmsUserName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="last_charge_time" jdbcType="TIMESTAMP" property="lastChargeTime"/>
+        <result column="last_consumer_time" jdbcType="TIMESTAMP" property="lastConsumerTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.ibay.tea.entity.charge.UserAccount">
+        insert into tb_api_user_account (api_user_id,user_phone,oppen_id,nick_name,account_amount,first_store_id,cms_user_id,cms_user_name,create_time,update_time,last_charge_time)
+        values (#{apiUserId},#{userPhone},#{oppenId},#{nickName},#{accountAmount},#{firstStoreId},#{cmsUserId},#{cmsUserName},#{createTime},#{updateTime},#{lastChargeTime})
+    </insert>
+
+
+    <select id="findByApiUserId" resultMap="BaseResultMap" parameterType="int">
+        select * from tb_api_user_account where api_user_id = #{apiUserId}
+    </select>
+
+
+
+</mapper>

@@ -1,10 +1,14 @@
 package com.ibay.tea.entity;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ibay.tea.common.utils.DateUtil;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+@Data
 public class TbUserCoupons {
 
     private Integer id;
@@ -17,12 +21,16 @@ public class TbUserCoupons {
 
     private Integer receiveDate;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     private Integer status;
 
     private String couponsPoster;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date expireDate;
 
     private String expireDateStr;
@@ -72,75 +80,11 @@ public class TbUserCoupons {
     //是否当日过期 0 不是 1 是
     private int currentDayExpire;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getOppenId() {
-        return oppenId;
-    }
-
-    public void setOppenId(String oppenId) {
-        this.oppenId = oppenId;
-    }
-
-    public Integer getCouponsId() {
-        return couponsId;
-    }
-
-    public void setCouponsId(Integer couponsId) {
-        this.couponsId = couponsId;
-    }
-
-    public String getCouponsName() {
-        return couponsName;
-    }
-
-    public void setCouponsName(String couponsName) {
-        this.couponsName = couponsName == null ? null : couponsName.trim();
-    }
-
-    public Integer getReceiveDate() {
-        return receiveDate;
-    }
-
-    public void setReceiveDate(Integer receiveDate) {
-        this.receiveDate = receiveDate;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
         if (createTime != null){
             createTimeStr = DateUtil.viewDateFormat(createTime);
         }
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getCouponsPoster() {
-        return couponsPoster;
-    }
-
-    public void setCouponsPoster(String couponsPoster) {
-        this.couponsPoster = couponsPoster;
-    }
-
-    public Date getExpireDate() {
-        return expireDate;
     }
 
     public void setExpireDate(Date expireDate) {
@@ -150,198 +94,14 @@ public class TbUserCoupons {
         this.expireDate = expireDate;
     }
 
-    public String getExpireDateStr() {
-        return expireDateStr;
-    }
-
     public void setExpireDateStr(String expireDateStr) {
         if (this.expireDateStr == null){
             this.expireDateStr = expireDateStr;
         }
     }
 
-    public String getBigNum() {
-        return bigNum;
-    }
-
-    public void setBigNum(String bigNum) {
-        this.bigNum = bigNum;
-    }
-
-    public String getSmallNum() {
-        return smallNum;
-    }
-
-    public void setSmallNum(String smallNum) {
-        this.smallNum = smallNum;
-    }
-
-    public int getCouponsType() {
-        return couponsType;
-    }
-
-    public void setCouponsType(int couponsType) {
-        this.couponsType = couponsType;
-    }
-
-    public String getUseRules() {
-        return useRules;
-    }
-
-    public void setUseRules(String useRules) {
-        this.useRules = useRules;
-    }
-
-    public String getUseScope() {
-        return useScope;
-    }
-
-    public void setUseScope(String useScope) {
-        this.useScope = useScope;
-    }
-
-    public int getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(int activityId) {
-        this.activityId = activityId;
-    }
-
-    public int getIsReferrer() {
-        return isReferrer;
-    }
-
-    public void setIsReferrer(int isReferrer) {
-        this.isReferrer = isReferrer;
-    }
-
-    public String getCouponsRatio() {
-        return couponsRatio;
-    }
-
-    public void setCouponsRatio(String couponsRatio) {
-        this.couponsRatio = couponsRatio;
-    }
-
-    public int getCouponsSource() {
-        return couponsSource;
-    }
-
-    public void setCouponsSource(int couponsSource) {
-        this.couponsSource = couponsSource;
-    }
-
-    public String getCouponsCode() {
-        return couponsCode;
-    }
-
-    public void setCouponsCode(String couponsCode) {
-        this.couponsCode = couponsCode;
-    }
-
-    public String getSourceName() {
-        return sourceName;
-    }
-
-    public void setSourceName(String sourceName) {
-        this.sourceName = sourceName;
-    }
-
-    public String getCreateTimeStr() {
-        return createTimeStr;
-    }
-
-    public int getUseWay() {
-        return useWay;
-    }
-
-    public void setUseWay(int useWay) {
-        this.useWay = useWay;
-    }
-
-    public int getExpireType() {
-        return expireType;
-    }
-
-    public void setExpireType(int expireType) {
-        this.expireType = expireType;
-    }
-
-    public int getConsumeAmount() {
-        return consumeAmount;
-    }
-
-    public void setConsumeAmount(int consumeAmount) {
-        this.consumeAmount = consumeAmount;
-    }
-
-    public int getReduceAmount() {
-        return reduceAmount;
-    }
-
-    public void setReduceAmount(int reduceAmount) {
-        this.reduceAmount = reduceAmount;
-    }
-
-    public int getConsumeCount() {
-        return consumeCount;
-    }
-
-    public void setConsumeCount(int consumeCount) {
-        this.consumeCount = consumeCount;
-    }
-
-    public int getGiveCount() {
-        return giveCount;
-    }
-
-    public void setGiveCount(int giveCount) {
-        this.giveCount = giveCount;
-    }
-
-    public String getCashAmount() {
-        return cashAmount;
-    }
-
-    public void setCashAmount(String cashAmount) {
-        this.cashAmount = cashAmount;
-    }
-
-    public int getCurrentDayExpire() {
-        return currentDayExpire;
-    }
-
-    public void setCurrentDayExpire(int currentDayExpire) {
-        this.currentDayExpire = currentDayExpire;
-    }
-
     public TbUserCoupons copy() {
         String thisStr = JSONObject.toJSONString(this);
         return JSONObject.parseObject(thisStr, TbUserCoupons.class);
-    }
-
-    @Override
-    public String toString() {
-        return "TbUserCoupons{" +
-                "id=" + id +
-                ", oppenId='" + oppenId + '\'' +
-                ", couponsId=" + couponsId +
-                ", couponsName='" + couponsName + '\'' +
-                ", receiveDate=" + receiveDate +
-                ", createTime=" + createTime +
-                ", status=" + status +
-                ", couponsPoster='" + couponsPoster + '\'' +
-                ", expireDate=" + expireDate +
-                ", expireDateStr='" + expireDateStr + '\'' +
-                ", bigNum=" + bigNum +
-                ", smallNum=" + smallNum +
-                ", couponsType=" + couponsType +
-                ", useRules='" + useRules + '\'' +
-                ", useScope='" + useScope + '\'' +
-                ", activityId=" + activityId +
-                ", isReferrer=" + isReferrer +
-                ", couponsRatio='" + couponsRatio + '\'' +
-                '}';
     }
 }

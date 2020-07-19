@@ -4,8 +4,7 @@ import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.sku.CmsSkuDetailService;
 import com.ibay.tea.cms.service.sku.CmsSkuTypeService;
 import com.ibay.tea.entity.TbSkuType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,10 +13,10 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("cms/skuType")
 public class CmsSkuTypeController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsSkuTypeController.class);
 
     @Resource
     private CmsSkuTypeService cmsSkuTypeService;
@@ -28,7 +27,7 @@ public class CmsSkuTypeController {
     @RequestMapping("/list")
     public ResultInfo list(){
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             List<TbSkuType> skuTypeList = cmsSkuTypeService.findAll();
             if (CollectionUtils.isEmpty(skuTypeList)){
                 return resultInfo;
@@ -39,7 +38,7 @@ public class CmsSkuTypeController {
             resultInfo.setData(skuTypeList);
         	return resultInfo;
         }catch (Exception e){
-            LOGGER.error("sku type list happen exception ",e);
+            log.error("sku type list happen exception ",e);
         	return ResultInfo.newExceptionResultInfo();
         }
 
@@ -53,7 +52,7 @@ public class CmsSkuTypeController {
         }
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsSkuTypeService.addSkuType(tbSkuType);
         	return resultInfo;
         }catch (Exception e){
@@ -66,7 +65,7 @@ public class CmsSkuTypeController {
     public ResultInfo deleteSkuType(@PathVariable("id") int id){
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsSkuTypeService.deleteSkuType(id);
         	return resultInfo;
         }catch (Exception e){
@@ -83,7 +82,7 @@ public class CmsSkuTypeController {
         }
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsSkuTypeService.updateSkuType(tbSkuType);
         	return resultInfo;
         }catch (Exception e){

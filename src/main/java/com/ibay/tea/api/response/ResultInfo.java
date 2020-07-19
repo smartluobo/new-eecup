@@ -1,10 +1,22 @@
 package com.ibay.tea.api.response;
 
+import com.ibay.tea.common.ReturnCodeEnum;
+
 public class ResultInfo {
     private int code;
     private String msg;
     private Object data;
     private long total;
+
+    public ResultInfo(ReturnCodeEnum returnCodeEnum){
+        code = returnCodeEnum.getStatus();
+        msg = returnCodeEnum.getMsg();
+    }
+
+    public ResultInfo(){
+        code = ReturnCodeEnum.REQUEST_SUCCESS.getStatus();
+        msg = ReturnCodeEnum.REQUEST_SUCCESS.getMsg();
+    }
 
     public int getCode() {
         return code;
@@ -50,6 +62,10 @@ public class ResultInfo {
         resultInfo.setCode(200);
         resultInfo.setMsg("success");
         return resultInfo;
+    }
+
+    public static ResultInfo newCmsSuccessResultInfo(){
+        return new ResultInfo(ReturnCodeEnum.REQUEST_SUCCESS);
     }
 
     public static ResultInfo newEmptyResultInfo(){

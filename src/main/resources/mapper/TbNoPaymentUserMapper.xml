@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ibay.tea.dao.TbNoPaymentUserMapper">
+    <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbNoPaymentUser">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="oppen_id"  property="oppenId"/>
+        <result column="user_phone"  property="userPhone"/>
+        <result column="store_id"  property="storeId"/>
+        <result column="real_name"  property="realName"/>
+        <result column="create_time"  property="createTime"/>
+        <result column="update_time"  property="updateTime"/>
+        <result column="operation_user"  property="operationUser"/>
+        <result column="operation_user_id"  property="operationUserId"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.ibay.tea.entity.TbNoPaymentUser">
+        insert into tb_no_payment_user (nick_name,oppen_id,user_phone,store_id,real_name,create_time,update_time,operation_user,operation_user_id)
+        values (#{nickName},#{oppenId},#{userPhone},#{storeId},#{realName},#{createTime},#{updateTime},#{operationUser},#{operationUserId})
+    </insert>
+
+    <delete id="deleteById" parameterType="int">
+        delete from tb_no_payment_user where id = #{id}
+    </delete>
+
+    <select id="getNoPaymentUser" resultMap="BaseResultMap" parameterType="map">
+        select * from tb_no_payment_user where oppen_id = #{oppenId} and store_id = #{storeId} limit 0,1
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long" parameterType="map">
+        select count(1) from tb_no_payment_user
+        <where>
+            <if test="userPhone != null">
+                user_phone = #{userPhone}
+            </if>
+            <if test="storeId != null">
+                and store_id = #{storeId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllByCondition" resultMap="BaseResultMap" parameterType="map">
+        select * from tb_no_payment_user
+        <where>
+            <if test="userPhone != null">
+                user_phone = #{userPhone}
+            </if>
+            <if test="storeId != null">
+                and store_id = #{storeId}
+            </if>
+        </where>
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="findByStoreId" resultMap="BaseResultMap" parameterType="int">
+        select * from tb_no_payment_user where store_id = #{storeId}
+    </select>
+
+
+</mapper>

@@ -2,11 +2,9 @@ package com.ibay.tea.cms.controller.coupons;
 
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.coupons.CmsCouponsService;
-import com.ibay.tea.entity.TbApiUser;
 import com.ibay.tea.entity.TbCoupons;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -16,9 +14,9 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("cms/coupons")
 public class CmsCouponsController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsCouponsController.class);
 
     @Resource
     private CmsCouponsService cmsCouponsService;
@@ -26,7 +24,7 @@ public class CmsCouponsController {
     @RequestMapping("/list")
     public ResultInfo list(){
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             List<TbCoupons> couponsList = cmsCouponsService.findAll();
             resultInfo.setData(couponsList);
         	return resultInfo;
@@ -43,7 +41,7 @@ public class CmsCouponsController {
         	return ResultInfo.newEmptyParamsResultInfo();
         }
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsCouponsService.addCoupons(tbCoupons);
         	return resultInfo;
         }catch (Exception e){
@@ -54,7 +52,7 @@ public class CmsCouponsController {
     @RequestMapping("/delete/{id}")
     public ResultInfo deleteCoupons(@PathVariable("id") int id){
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsCouponsService.deleteCoupons(id);
         	return resultInfo;
         }catch (Exception e){
@@ -70,7 +68,7 @@ public class CmsCouponsController {
         }
 
         try {
-        	ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+        	ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
         	cmsCouponsService.updateCoupons(tbCoupons);
         	return resultInfo;
         }catch (Exception e){
@@ -82,7 +80,7 @@ public class CmsCouponsController {
     @RequestMapping("/experienceList")
     public ResultInfo experienceList(@RequestBody Map<String,String> params){
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             int pageNum = Integer.valueOf(params.get("pageNum"));
             int pageSize = Integer.valueOf(params.get("pageSize"));
             String couponsCode = params.get("couponsCode");
@@ -107,7 +105,7 @@ public class CmsCouponsController {
     @RequestMapping("/updateExperience/{userCouponsId}/{useStatus}")
     public ResultInfo updateExperience(@PathVariable("userCouponsId") int userCouponsId, @PathVariable("useStatus") int useStatus){
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             if (useStatus == 0 || useStatus == 2){
                 cmsCouponsService.updateExperience(userCouponsId,useStatus);
             }else {
@@ -120,9 +118,9 @@ public class CmsCouponsController {
     }
     @RequestMapping("/generateShoppingCard/{count}/{amount}/{type}")
     public ResultInfo generateShoppingCard(@PathVariable("count") int count, @PathVariable("amount") int amount,@PathVariable("type") int type){
-        LOGGER.info("generateShoppingCard count : {},amount : {}, type : {}",count,amount,type);
+        log.info("generateShoppingCard count : {},amount : {}, type : {}",count,amount,type);
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             if (count == 0 || amount == 0){
                 return ResultInfo.newParameterErrorResultInfo();
 

@@ -3,8 +3,7 @@ package com.ibay.tea.cms.controller.sms;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.sms.CmsSmsService;
 import com.ibay.tea.entity.TbSmsConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -12,10 +11,10 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("/cms/sms")
 public class CmsSmsController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsSmsController.class);
 
     @Resource
     private CmsSmsService cmsSmsService;
@@ -23,12 +22,12 @@ public class CmsSmsController {
     @RequestMapping("list")
     public ResultInfo list(){
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             List<TbSmsConfig> categories = cmsSmsService.findAll();
             resultInfo.setData(categories);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error(" sms config find list happen exception",e);
+            log.error(" sms config find list happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -40,11 +39,11 @@ public class CmsSmsController {
         }
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsSmsService.addSmsConfig(smsConfig);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error(" sms config addSmsConfig happen exception",e);
+            log.error(" sms config addSmsConfig happen exception",e);
             return ResultInfo.newExceptionResultInfo();
 
         }
@@ -54,11 +53,11 @@ public class CmsSmsController {
     public ResultInfo deleteSmsConfig(@PathVariable("id") int id){
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsSmsService.deleteSmsConfig(id);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error(" sms config deleteSmsConfig happen exception",e);
+            log.error(" sms config deleteSmsConfig happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
 
@@ -71,11 +70,11 @@ public class CmsSmsController {
             return ResultInfo.newEmptyParamsResultInfo();
         }
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsSmsService.updateSmsConfig(smsConfig);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error(" sms config updateSmsConfig happen exception",e);
+            log.error(" sms config updateSmsConfig happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }
@@ -84,11 +83,11 @@ public class CmsSmsController {
     public ResultInfo updateSmsConfig( @PathVariable("id") int id){
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsSmsService.sendSms(id);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error(" sms config updateSmsConfig happen exception",e);
+            log.error(" sms config updateSmsConfig happen exception",e);
             return ResultInfo.newExceptionResultInfo();
         }
     }

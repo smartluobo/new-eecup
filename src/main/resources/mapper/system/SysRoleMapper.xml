@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ibay.tea.dao.system.SysRoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.ibay.tea.entity.system.SysRole" >
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="data_scope" property="dataScope"/>
+        <result column="role_type" property="roleType"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remarks" property="remarks"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+    </resultMap>
+
+    <sql id="BASE_TABLE">
+        sys_new_role
+    </sql>
+
+    <sql id="BASE_COLUMN">
+        id, `name`, data_scope, role_type, tab_auth, create_by, update_by, remarks, del_flag, create_date, update_date
+    </sql>
+
+    <!--保存角色数据-->
+    <insert id="saveSysRole" parameterType="com.ibay.tea.entity.system.SysRole" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        (
+        `name`,
+        data_scope,
+        role_type,
+        create_by,
+        update_by,
+        remarks,
+        del_flag,
+        create_date,
+        update_date
+        )
+        VALUES
+        (
+        #{name},
+        #{dataScope},
+        #{roleType},
+        #{createBy},
+        #{updateBy},
+        #{remarks},
+        #{delFlag},
+        #{createDate},
+        #{updateDate}
+        )
+    </insert>
+
+    <!--保存角色数据-->
+    <insert id="saveSysRoleOld" parameterType="com.ibay.tea.entity.system.SysRole" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        sys_role
+        (
+        id,
+        `name`,
+        data_scope,
+        role_type,
+        create_by,
+        update_by,
+        remarks,
+        del_flag,
+        create_date,
+        update_date
+        )
+        VALUES
+        (
+        #{id},
+        #{name},
+        #{dataScope},
+        #{roleType},
+        #{createBy},
+        #{updateBy},
+        #{remarks},
+        #{delFlag},
+        #{createDate},
+        #{updateDate}
+        )
+    </insert>
+
+    <!-- 根据角色类型查询系统角色信息 -->
+    <select id="getAllSysRoleByRoleType" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE role_type = #{roleType} AND del_flag = 0
+    </select>
+
+    <!-- 查询角色关联的角色信息 -->
+    <select id="getSysRoleAssociatedRole" resultMap="BaseResultMap">
+        SELECT a.* FROM sys_new_role a
+        JOIN sys_new_role_role b
+        ON a.id = b.low_role_id
+        WHERE b.role_id = #{id} AND a.del_flag = 0
+    </select>
+
+    <!-- 根据id查询菜单信息 -->
+    <select id="getSysRoleById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE id = #{id} AND del_flag = 0
+    </select>
+
+    <!-- 根据用户id查询角色信息 -->
+    <select id="getSysRoleByUserId" resultMap="BaseResultMap">
+       SELECT a.* FROM sys_new_role a
+        JOIN sys_new_user_role b
+        ON a.id = b.role_id
+        WHERE b.user_id = #{userId} AND a.del_flag = 0
+        ORDER BY a.id
+    </select>
+
+    <!-- 分页查询角色信息 -->
+    <select id="getSysRoleList" resultMap="BaseResultMap">
+        SELECT * FROM sys_new_role
+        <where>
+            <if test="roleName != null">
+                AND `name` LIKE CONCAT(CONCAT('%', #{roleName}), '%')
+            </if>
+            AND del_flag = 0
+        </where>
+    </select>
+
+    <!-- 根据角色名称查询角色信息 -->
+    <select id="getSysRole" resultMap="BaseResultMap">
+        SELECT * FROM sys_new_role where `name` = #{roleName}
+    </select>
+    <!-- 根据角色名称查询角色信息 -->
+    <select id="getSysRoleOld" resultMap="BaseResultMap">
+        SELECT * FROM sys_role where `name` = #{roleName}
+    </select>
+
+    <!-- 根据角色名称查询角色信息 -->
+    <select id="getSysRoleOldList" resultMap="BaseResultMap">
+        SELECT * FROM sys_role
+    </select>
+
+    <select id="getSysRoleByIds" resultMap="BaseResultMap" parameterType="list">
+        select * from sys_new_role where id in
+        <foreach item="item" index="index" collection="sysRoleIds"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+
+    <!-- 根据id更新数据库 -->
+    <update id="updateSysRole" parameterType="com.ibay.tea.entity.system.SysRole">
+        update sys_new_role
+        <set>
+            <if test="remarks != null">
+                remarks = #{remarks},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+
+        </set>
+        where id = #{id} AND del_flag = 0
+    </update>
+
+    <!-- 根据id更新数据库 -->
+    <update id="deleteSysRoleById">
+        update sys_new_role
+        <set>
+            del_flag = 1,
+            <if test="updateUser != null">
+                update_by = #{updateUser},
+            </if>
+            <if test="updateTime != null">
+                update_date = #{updateTime},
+            </if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

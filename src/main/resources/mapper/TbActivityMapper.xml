@@ -84,8 +84,22 @@
     AND <![CDATA[ start_date <= #{currentDate} AND end_date >= #{currentDate}]]> limit 0,1
   </select>
 
+  <select id="countByCondition" resultType="java.lang.Long" parameterType="map">
+        select count(1) from tb_activity where store_id = #{storeId}
+      <if test="activityType != -1">
+          and activity_type = #{activityType}
+      </if>
+  </select>
+  <select id="findActivityByCondition" resultMap="BaseResultMap" parameterType="map">
+        select * from tb_activity where store_id = #{storeId}
+        <if test="activityType != -1">
+            and activity_type = #{activityType}
+        </if>
+        limit #{startIndex},#{pageSize}
+  </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_activity where id = #{id,jdbcType=INTEGER}
   </delete>
 

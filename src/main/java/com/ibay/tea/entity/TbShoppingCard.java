@@ -1,7 +1,12 @@
 package com.ibay.tea.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
+@Data
 public class TbShoppingCard {
     private int id;
 
@@ -9,101 +14,21 @@ public class TbShoppingCard {
 
     private String cardCode;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
     private int useStatus;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receiveTime;
 
     private int amount;
 
     private int type;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber == null ? null : cardNumber.trim();
-    }
-
-    public String getCardCode() {
-        return cardCode;
-    }
-
-    public void setCardCode(String cardCode) {
-        this.cardCode = cardCode == null ? null : cardCode.trim();
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public int getUseStatus() {
-        return useStatus;
-    }
-
-    public void setUseStatus(int useStatus) {
-        this.useStatus = useStatus;
-    }
-
-    public Date getReceiveTime() {
-        return receiveTime;
-    }
-
-    public void setReceiveTime(Date receiveTime) {
-        this.receiveTime = receiveTime;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "TbShoppingCard{" +
-                "id=" + id +
-                ", cardNumber='" + cardNumber + '\'' +
-                ", cardCode='" + cardCode + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", useStatus=" + useStatus +
-                ", receiveTime=" + receiveTime +
-                ", amount=" + amount +
-                '}';
-    }
 }

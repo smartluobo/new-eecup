@@ -15,11 +15,13 @@
     <result column="company_id" jdbcType="INTEGER" property="companyId" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
     <result column="gift_receive_status" jdbcType="INTEGER" property="giftReceiveStatus" />
+      <result column="store_id" jdbcType="INTEGER" property="storeId" />
+      <result column="store_name" jdbcType="VARCHAR" property="storeName" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, nick_name, wechat_num, oppen_id, wechat_phone_num, user_bind_phone_num, create_time, 
-    update_time, user_head_image,referrer_oppen_id,company_id,company_name,gift_receive_status
+    id, nick_name, wechat_num, oppen_id, wechat_phone_num, user_bind_phone_num, create_time,
+    update_time, user_head_image,referrer_oppen_id,company_id,company_name,gift_receive_status,store_id,store_name
   </sql>
 
   <update id="updateApiUserInfo" parameterType="map">
@@ -93,7 +95,11 @@
     SELECT user_bind_phone_num FROM tb_api_user where user_bind_phone_num IS NOT NULL
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="findApiUserById" resultMap="BaseResultMap" parameterType="int">
+        select * from tb_api_user where id = #{id}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tb_api_user where id = #{id,jdbcType=INTEGER}
   </delete>
 
@@ -103,7 +109,7 @@
       create_time, update_time, user_head_image,referrer_oppen_id,gift_receive_status
       )
     values (#{nickName,jdbcType=VARCHAR}, #{wechatNum,jdbcType=VARCHAR},
-      #{oppenId,jdbcType=VARCHAR}, #{wechatPhoneNum,jdbcType=VARCHAR}, #{userBindPhoneNum,jdbcType=VARCHAR}, 
+      #{oppenId,jdbcType=VARCHAR}, #{wechatPhoneNum,jdbcType=VARCHAR}, #{userBindPhoneNum,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{userHeadImage,jdbcType=VARCHAR},#{referrerOppenId,jdbcType=VARCHAR},#{giftReceiveStatus}
       )
   </insert>

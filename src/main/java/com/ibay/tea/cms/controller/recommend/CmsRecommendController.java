@@ -3,8 +3,7 @@ package com.ibay.tea.cms.controller.recommend;
 import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.cms.service.recommend.CmsRecommendService;
 import com.ibay.tea.entity.TbRecommend;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -12,10 +11,10 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("cms/recommend")
 public class CmsRecommendController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CmsRecommendController.class);
 
     @Resource
     private CmsRecommendService cmsRecommendService;
@@ -24,12 +23,12 @@ public class CmsRecommendController {
     public ResultInfo list(@PathVariable("storeId") int storeId){
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             List<TbRecommend> recommends = cmsRecommendService.findRecommendByStoreId(storeId);
             resultInfo.setData(recommends);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error("list happen exception ",e);
+            log.error("list happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
 
@@ -42,11 +41,11 @@ public class CmsRecommendController {
         }
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsRecommendService.addRecommend(recommend);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error("cms recommend add happen exception ",e);
+            log.error("cms recommend add happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
 
@@ -56,11 +55,11 @@ public class CmsRecommendController {
     public ResultInfo deleteRecommend(@PathVariable("id") int id){
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsRecommendService.deleteRecommend(id);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error("cms recommend delete id : {} happen exception ",id,e);
+            log.error("cms recommend delete id : {} happen exception ",id,e);
             return ResultInfo.newExceptionResultInfo();
         }
 
@@ -74,11 +73,11 @@ public class CmsRecommendController {
         }
 
         try {
-            ResultInfo resultInfo = ResultInfo.newSuccessResultInfo();
+            ResultInfo resultInfo = ResultInfo.newCmsSuccessResultInfo();
             cmsRecommendService.updateRecommend(recommend);
             return resultInfo;
         }catch (Exception e){
-            LOGGER.error("cms printer update happen exception ",e);
+            log.error("cms printer update happen exception ",e);
             return ResultInfo.newExceptionResultInfo();
         }
 

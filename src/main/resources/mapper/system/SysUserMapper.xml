@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ibay.tea.dao.system.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.ibay.tea.entity.system.SysUser" >
+        <id column="id" property="id"/>
+        <result column="login_name" property="loginName"/>
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="email" property="email"/>
+        <result column="register_date" property="registerDate"/>
+        <result column="phone" property="phone"/>
+        <result column="mobile" property="mobile"/>
+        <result column="user_type" property="userType"/>
+        <result column="login_ip" property="loginIp"/>
+        <result column="login_date" property="loginDate"/>
+        <result column="create_by" property="createBy"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="remarks" property="remarks"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_date" property="createDate"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="is_admin" property="isAdmin"/>
+        <result column="store_ids" property="storeIds"/>
+        <result column="store_name" property="storeName"/>
+    </resultMap>
+
+    <sql id="BASE_TABLE">
+        sys_new_user
+    </sql>
+
+    <sql id="BASE_COLUMN">
+        id, login_name,`name`, `password`, salt, register_date, email, phone, mobile, user_type, login_ip, login_date, create_by, update_by, remarks,
+        del_flag, create_date, update_date,is_admin,store_ids,store_name
+    </sql>
+
+    <!--保存用户数据-->
+    <insert id="save" parameterType="com.ibay.tea.entity.system.SysUser" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        <include refid="BASE_TABLE"/>
+        (
+        login_name,
+        `name`,
+        `password`,
+        salt,
+        register_date,
+        email,
+        phone,
+        mobile,
+        user_type,
+        login_ip,
+        login_date,
+        create_by,
+        update_by,
+        remarks,
+        del_flag,
+        create_date,
+        update_date,
+        is_admin,
+        store_ids,
+        store_name
+        )
+        VALUES
+        (
+        #{loginName},
+        #{name},
+        #{password},
+        #{salt},
+        #{registerDate},
+        #{email},
+        #{phone},
+        #{mobile},
+        #{userType},
+        #{loginIp},
+        #{loginDate},
+        #{createBy},
+        #{updateBy},
+        #{remarks},
+        #{delFlag},
+        #{createDate},
+        #{updateDate},
+        #{isAdmin},
+        #{storeIds},
+        #{storeName}
+        )
+    </insert>
+
+    <!-- 根据登录名称查询用户信息 -->
+    <select id="getSysUserByLoginName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE login_name = #{loginName}  AND del_flag = 0
+    </select>
+
+    <!-- 根据id查询用户信息 -->
+    <select id="getSysUserById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="BASE_COLUMN"/>
+        FROM
+        <include refid="BASE_TABLE"/>
+        WHERE id = #{id} AND del_flag = 0
+    </select>
+
+    <!--根据用户角色id查询用户信息-->
+    <select id="getSysUserByRoleId" resultMap="BaseResultMap">
+        SELECT a.* FROM sys_new_user a
+        JOIN sys_new_user_role b
+        ON a.id = b.user_id
+        WHERE b.role_id = #{roleId} AND a.del_flag = 0
+    </select>
+
+
+    <!-- 查询用户信息 -->
+    <select id="getSysUserList" resultMap="BaseResultMap">
+        SELECT a.* FROM sys_new_user a
+        <where>
+            <if test="loginName != null">
+              a.login_name LIKE CONCAT(CONCAT('%', #{loginName}), '%')
+            </if>
+            <if test="name != null">
+            AND a.`name` LIKE CONCAT(CONCAT('%', #{name}), '%')
+            </if>
+            AND a.del_flag = 0
+        </where>
+    </select>
+
+    <select id="getUserById" resultMap="BaseResultMap" parameterType="int">
+        select * from sys_new_user where id = #{id}
+    </select>
+    <select id="getUserByName" resultMap="BaseResultMap" parameterType="string">
+        select * from sys_new_user where login_name = #{name}
+    </select>
+
+
+    <!-- 根据id更新数据库 -->
+    <update id="update" parameterType="com.ibay.tea.entity.system.SysUser">
+        update sys_new_user
+        <set>
+            <if test="loginName != null">
+                login_name = #{loginName},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="salt != null">
+                salt = #{salt},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="loginIp != null">
+                login_ip = #{loginIp},
+            </if>
+            <if test="loginDate != null">
+                login_date = #{loginDate},
+            </if>
+             <if test="updateBy != null">
+                 update_by = #{updateBy},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="storeIds != null">
+                store_ids = #{storeIds},
+            </if>
+            <if test="storeName != null">
+                store_name = #{storeName},
+            </if>
+
+
+        </set>
+        where id = #{id} AND del_flag = 0
+    </update>
+</mapper>

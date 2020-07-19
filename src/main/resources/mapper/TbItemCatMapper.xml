@@ -2,29 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ibay.tea.dao.TbItemCatMapper">
   <resultMap id="BaseResultMap" type="com.ibay.tea.entity.TbItemCat">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="sort_order" jdbcType="INTEGER" property="sortOrder" />
-    <result column="is_parent" jdbcType="BIT" property="isParent" />
-    <result column="icon" jdbcType="VARCHAR" property="icon" />
-    <result column="remark" jdbcType="VARCHAR" property="remark" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    <id column="id"  property="id" />
+    <result column="parent_id" property="parentId" />
+    <result column="name"  property="name" />
+    <result column="status"  property="status" />
+    <result column="sort_order"  property="sortOrder" />
+    <result column="is_parent"  property="isParent" />
+    <result column="icon"  property="icon" />
+    <result column="remark"  property="remark" />
+    <result column="created"  property="created" />
+    <result column="updated"  property="updated" />
+    <result column="store_id"  property="storeId" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, parent_id, `name`, `status`, sort_order, is_parent, icon, remark, created, updated
+    id, parent_id, `name`, `status`, sort_order, is_parent, icon, remark, created, updated,store_id
   </sql>
 
   <insert id="addCategory" parameterType="com.ibay.tea.entity.TbItemCat">
-    INSERT INTO tb_item_cat(parent_id, name, status, sort_order, is_parent, created)
-    VALUES (#{parentId},#{name},#{status},#{sortOrder},#{isParent},#{created})
+    INSERT INTO tb_item_cat(parent_id, name, status, sort_order, is_parent, created,updated,store_id)
+    VALUES (#{parentId},#{name},#{status},#{sortOrder},#{isParent},#{created},#{updated},#{storeId})
   </insert>
   <insert id="saveUpdateCategory">
-    INSERT INTO tb_item_cat(id,parent_id, name, status, sort_order, is_parent, created)
-    VALUES (#{id},#{parentId},#{name},#{status},#{sortOrder},#{isParent},#{created})
+    INSERT INTO tb_item_cat(id,parent_id, name, status, sort_order, is_parent, created,updated,store_id)
+    VALUES (#{id},#{parentId},#{name},#{status},#{sortOrder},#{isParent},#{created},#{updated},#{storeId})
   </insert>
 
 
@@ -37,11 +38,11 @@
   </select>
 
   <select id="findByStoreId" resultMap="BaseResultMap" parameterType="string">
-      select * from tb_item_cat where `status` = 1 and find_in_set(#{storeId},store_id) ORDER BY sort_order DESC
+      select * from tb_item_cat where `status` = 1 and store_id = #{storeId} ORDER BY sort_order DESC
   </select>
 
   <select id="findCatIdByStoreId" resultType="java.lang.Long">
-    select id from tb_item_cat where find_in_set(#{storeId},store_id)
+    select id from tb_item_cat where store_id = #{storeId}
   </select>
 
     <delete id="deleteCategoryById" parameterType="int">

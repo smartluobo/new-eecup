@@ -4,6 +4,7 @@ import com.ibay.tea.api.response.ResultInfo;
 import com.ibay.tea.api.service.goods.ApiGoodsService;
 import com.ibay.tea.cache.ActivityCache;
 import com.ibay.tea.cache.StoreCache;
+import com.ibay.tea.cms.service.goods.CmsGoodsService;
 import com.ibay.tea.common.utils.DateUtil;
 import com.ibay.tea.dao.*;
 import com.ibay.tea.entity.*;
@@ -38,6 +39,9 @@ public class ApiGoodsController {
 
     @Resource
     private TbStoreMapper tbStoreMapper;
+
+    @Resource
+    private CmsGoodsService cmsGoodsService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiGoodsController.class);
 
@@ -124,21 +128,9 @@ public class ApiGoodsController {
             LOGGER.info("initStoreGoods storeCatIds : {}",storeCatIds);
             List<TbItem> goodsList = tbItemMapper.findGoodsListByCatIds(storeCatIds);
             LOGGER.info("initStoreGoods goodsList size : {}",goodsList.size());
-            List<TbStoreGoods> storeGoodsList = new ArrayList<>();
             Date currentDate = new Date();
-            for (TbItem tbItem : goodsList) {
-                TbStoreGoods tbStoreGoods = new TbStoreGoods();
-                tbStoreGoods.setGoodsId(tbItem.getId().intValue());
-                tbStoreGoods.setGoodsName(tbItem.getTitle());
-                tbStoreGoods.setCreateTime(currentDate);
-                tbStoreGoods.setUpdateTime(currentDate);
-                tbStoreGoods.setStoreId(storeId.intValue());
-                tbStoreGoods.setStoreName(store.getStoreName());
-                tbStoreGoods.setGoodsInventory(10);
-                storeGoodsList.add(tbStoreGoods);
-            }
+            List<TbStoreGoods> storeGoodsList = cmsGoodsService.buildStoreGoodsInventory(store, goodsList, currentDate);
             tbStoreGoodsMapper.insertBatch(storeGoodsList);
-
             return resultInfo;
         }catch (Exception e){
             LOGGER.error("getGoodsDetailById happen exception ",e);
